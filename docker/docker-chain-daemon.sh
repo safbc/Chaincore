@@ -26,20 +26,19 @@ The instance is configured for default settings.
 This script is installed as part of springblock/Chaincore Git repo and requires all 
 files from that repo to be present in the path as configured in the WORKDIR variable below. 
 
-This script can be used to perform the first time tasks of setting up a personal account and diagnostic testing.
-In this regard see the Git repo instruction step 2 under "Starting the Chain Core Node"
+See the Git repo instructions under "Starting the Chain Core Node"
 
-Please also make appropriate changes to the NODEID, NETID values below for your node.
+Please also make appropriate changes to the WORKDIR value below for your environment.
 
 Once the node is running you can access the Web gui at the specified URL
 
 "
 
 # remove any previous version of the docker image
-docker rm chainnode
+docker rm chain
 
 # get IPs from ifconfig and dig and display for information
-LOCALIP=$(ifconfig | grep 'inet ' | grep -v '127.0.0.1' | head -n1 | awk '{print $2}' | cut -d':' -f2)
+LOCALIP=$(ifconfig | grep 'inet ' | grep -v '172.17' | head -n1 | awk '{print $2}' | cut -d':' -f2)
 #IP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 
 echo "Local IP: $LOCALIP"
@@ -49,21 +48,41 @@ echo "Local IP: $LOCALIP"
 
 #DO NOT CHANGE THESE VALUES
 PORT=1999
-WORKDIR="/Chaincore"
-OTHERPARAMS=""
+WORKDIR="/Chaincore/node"
+CHAINDATA="$WORKDIR/data"
+CHAINLOGS="$WORKDIR/logs"
+
+if [ ! -d "$WORKDIR" ]; then
+mkdir $WORKDIR
+mkdir $CHAINDATA
+mkdir $CHAINLOGS
+fi
+
 
 # Display the settings being used on startup
 echo "Startup parameters: (edit script to alter)"
-echo "WORKDIR"
-echo " "
+echo "WORKDIR    = $WORKDIR"
+echo "DATA       = $POSTGRESS"
+echo "LOGS       = $CHAINLOG"
 
 echo " 
 
 Starting up node...
 
 "
-docker run -it --name chainnode -v $WORKDIR:$WORKDIR \
+docker run -d --name chain \
     --network="host" \
+    -v $CHAINDATA:/var/lib/postgresql/data -v $CHAINLOGS:/var/log/chain \
     -p $PORT:$PORT \
-    -w="$WORKDIR" \
     chaincore/developer 
+
+echo "
+
+Client token:"
+tail $CHAINLOGS/client-token
+#tail $CHAINLOGS/init.log
+
+echo "
+
+Web GUI: http://$LOCALIP:1999/"
+#tail -f $CHAINLOGS/cored.log
