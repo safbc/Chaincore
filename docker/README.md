@@ -3,12 +3,12 @@
 Chain Core DE is a docker container that runs Chain Core, exposed on port 1999.
 
 ##Quickstart
-####Build the image
+This start script incorporates much of the additional options mentioned futher below.
 ```
-$ sh bin/build-ccde
+$ ./docker-chain-daemon.sh
 ```
 
-####Run the container
+####Manually running the container
 >**Note:** The `--name` flag allows you to name the container and refer to that name in subsequent commands.
 
 ```
