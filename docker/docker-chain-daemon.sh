@@ -53,17 +53,19 @@ CHAINDATA="$WORKDIR/data"
 CHAINLOGS="$WORKDIR/logs"
 
 if [ ! -d "$WORKDIR" ]; then
-mkdir $WORKDIR
-mkdir $CHAINDATA
-mkdir $CHAINLOGS
+ mkdir $WORKDIR
+ if [ ! -d "$CHAINDATA" ]; then
+  mkdir $CHAINDATA
+  mkdir $CHAINLOGS
+ fi
 fi
 
 
 # Display the settings being used on startup
 echo "Startup parameters: (edit script to alter)"
 echo "WORKDIR    = $WORKDIR"
-echo "DATA       = $POSTGRESS"
-echo "LOGS       = $CHAINLOG"
+echo "DATA       = $CHAINDATA"
+echo "LOGS       = $CHAINLOGS"
 
 echo " 
 
@@ -78,11 +80,16 @@ docker run -d --name chain \
 
 echo "
 
-Client token:"
+Please wait 30 seconds and the execute the following to retrieve your Client token:
+
 tail $CHAINLOGS/client-token
+
+"
 #tail $CHAINLOGS/init.log
 
 echo "
 
-Web GUI: http://$LOCALIP:1999/"
-#tail -f $CHAINLOGS/cored.log
+Access the Web interface at: http://$LOCALIP:1999/
+
+"
+
