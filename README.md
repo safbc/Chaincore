@@ -21,7 +21,7 @@ http://localhost:1999
 ### Traditional instance
 To install and run a host instance of Chain please see the official Chain repo documentation @ https://github.com/chain/chain
 
-## Chain basiscs
+## Chain basics
 
 ### Components 
 The Chain based system consists of the following software components:
