@@ -32,12 +32,12 @@ The Chain based system consists of the following software components:
 ### Functional Architecture
 A node instance in a Chain network can be one of two types:
 
-* **Generator
+* **Generator** Node
 
    There is always one **Generator** node in the network and is the first to be configured.  
    The **Generator** node is responsible for the establishment of the network identity and the creation of new blocks.
 
-* **Participant** (or Signer)
+* **Participant** Node (also known as a Signer)
 
    All other nodes in a network are **Participant** type nodes and perform the function of block validation and local network interface.  
    **Participant** nodes require authentication access keys in order to join a Chain network.
