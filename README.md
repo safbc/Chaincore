@@ -15,7 +15,7 @@ The fastest way to get a Chain node up and running is to use a Docker. A sample 
 
 The docker instance also includes full Chain documentation which is accessible via the web based interface after start up.
 ```
-http://localhost:1999
+http://localhost:1999/docs
 ```
 
 ### Traditional instance
