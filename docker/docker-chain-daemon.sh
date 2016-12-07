@@ -76,13 +76,17 @@ docker run -d --name chain \
     --network="host" \
     -v $CHAINDATA:/var/lib/postgresql/data -v $CHAINLOGS:/var/log/chain \
     -p $PORT:$PORT \
-    chaincore/developer 
+    chaincore/developer:latest 
 
 echo "
 
 Please wait 30 seconds and the execute the following to retrieve your Client token:
 
 tail $CHAINLOGS/client-token
+
+    or
+
+docker logs chain
 
 "
 #tail $CHAINLOGS/init.log
