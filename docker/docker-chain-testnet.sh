@@ -18,7 +18,7 @@ The instance is configured to connect to the Chain Test Network.
 
 # Script name       : docker-chain-testnet.sh
 # Author            : Gary De Beer (BankservAfrica)
-# Last Modifiy Date : 29/10/2016 
+# Last Modifiy Date : 07/12/2016 
 
 #USAGE NOTES:
 ===========

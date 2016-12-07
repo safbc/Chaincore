@@ -18,7 +18,7 @@ The instance is configured for default settings.
 
 # Script name       : docker-chain-daemon.sh
 # Author            : Gary De Beer (BankservAfrica)
-# Last Modifiy Date : 26/10/2016 
+# Last Modifiy Date : 07/12/2016 
 
 #USAGE NOTES:
 ===========
