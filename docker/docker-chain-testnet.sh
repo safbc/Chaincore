@@ -34,8 +34,9 @@ Once the node is running you can access the Web gui at the specified URL
 
 "
 
-# remove any previous version of the docker image
+# remove any previous version of the docker container
 docker rm chaintest
+
 
 # get IPs from ifconfig and dig and display for information
 LOCALIP=$(ifconfig | grep 'inet ' | grep -v '172.17' | head -n1 | awk '{print $2}' | cut -d':' -f2)
@@ -51,6 +52,9 @@ PORT=1999
 WORKDIR="/Chaincore/testnode"
 CHAINDATA="$WORKDIR/data"
 CHAINLOGS="$WORKDIR/logs"
+
+# remove the docker data folders because the testnet is reset weekly anyway
+rm -rf $WORKDIR
 
 if [ ! -d "$WORKDIR" ]; then
  mkdir $WORKDIR
