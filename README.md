@@ -42,3 +42,6 @@ A node instance in a Chain network can be one of two types:
    All other nodes in a network are **Participant** type nodes and perform the function of block validation and local network interface.  
    **Participant** nodes require authentication access keys in order to join a Chain network.
 
+### Additional Documentation Links
+
+* **RESTful API** - https://github.com/chain/chain/blob/main/core/api-spec.md
