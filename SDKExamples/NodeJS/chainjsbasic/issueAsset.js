@@ -3,6 +3,8 @@
 /// Author  : Gary de Beer
 /// Date    : 24/01/2017
 /// Usage   : node issueAsset.js assetAlias accountAlias assetAmount
+/// Notes   : The values in the variables below are specific to a private instance of Chain
+///           They need to be replaced if using in another environment.
 
 const chain = require('chain-sdk')
 
