@@ -1,0 +1,52 @@
+/// Title   : issueAsset.js
+/// Purpose : Create a new asset in the blockchain
+/// Author  : Gary de Beer
+/// Date    : 24/01/2017
+/// Usage   : node issueAsset.js assetAlias accountAlias assetAmount
+
+const chain = require('chain-sdk')
+
+const baseurl = 'http://172.16.101.93:1999'
+const hsmurl = baseurl + '/mockhsm'
+const clienttoken = 'nodejsclient:6fdbf32d489770615c906087fbea3dbdc0a89bada87811cb4afcc5123464ccd9'
+
+const client = new chain.Client(baseurl, clienttoken)
+client.mockHsm.signerConnection = { baseUrl: hsmurl, token: clienttoken }
+const signer = new chain.HsmSigner()
+
+var argv = require('minimist')(process.argv.slice(2));
+
+var assetAlias = argv._[0];
+var accountAlias = argv._[1];
+var assetAmount = argv._[2];
+
+var signKeyAlias = 'OriginKey';
+
+console.log('client is', client)
+console.log('Intention: Issue ' + assetAmount + ' ' + assetAlias + ' and give it to ' + accountAlias)
+let signKey
+
+Promise.all([
+    client.mockHsm.keys.queryAll({ aliases: [signKeyAlias] }, (key, next, done) => {
+        if (key.alias == signKeyAlias) {
+            signKey = key.xpub
+            signer.addKey(signKey, client.mockHsm.signerConnection)
+            console.log(signer.signers)
+        }
+        next()
+    })])
+    .then(() =>
+        client.transactions.build(builder => {
+            builder.issue({
+                assetAlias: assetAlias,
+                amount: assetAmount
+            })
+            builder.controlWithAccount({
+                accountAlias: accountAlias,
+                assetAlias: assetAlias,
+                amount: assetAmount
+            })
+        }).then(issuance => signer.sign(issuance))
+            .then(signed => client.transactions.submit(signed))
+            .then(result => console.log(result))
+    ).catch(err => process.nextTick(() => { throw err }))

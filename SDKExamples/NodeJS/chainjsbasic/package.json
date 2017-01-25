@@ -1,0 +1,22 @@
+{
+  "name": "chainjsbasic",
+  "version": "1.0.0",
+  "description": "1st test of chainsdk in node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gary",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.1.4",
+    "chain-sdk": "^1.0.0",
+    "express": "^4.14.0",
+    "minimist": "^1.2.0"
+  },
+  "devDependencies": {
+    "async": "^2.1.4",
+    "jsdoc": "^3.4.3",
+    "mocha": "^3.2.0"
+  }
+}
