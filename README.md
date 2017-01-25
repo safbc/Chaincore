@@ -23,7 +23,7 @@ To install and run a host instance of Chain please see the official Chain repo d
 
 ## Chain basics
 
-### Components 
+### Components
 The Chain based system consists of the following software components:
 * Chain application (written in the GO language)
 * Postgress based database
@@ -34,14 +34,16 @@ A node instance in a Chain network can be one of two types:
 
 * **Generator** Node
 
-   There is always one **Generator** node in the network and is the first to be configured.  
+   There is always one **Generator** node in the network and is the first to be configured.
    The **Generator** node is responsible for the establishment of the network identity and the creation of new blocks.
 
 * **Participant** Node (also known as a Signer)
 
-   All other nodes in a network are **Participant** type nodes and perform the function of block validation and local network interface.  
+   All other nodes in a network are **Participant** type nodes and perform the function of block validation and local network interface.
    **Participant** nodes require authentication access keys in order to join a Chain network.
 
-### Additional Documentation Links
+### Developing on Chaincore
 
-* **RESTful API** - https://github.com/chain/chain/blob/main/core/api-spec.md
+* **Download Chain Core SDKs** - https://chain.com/docs/core/get-started/sdk
+
+   SDKs for Java, Ruby and NodeJS are available.
