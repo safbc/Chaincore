@@ -8,8 +8,8 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceRoot}\\issueAsset.js",
-            "cwd": "${workspaceRoot}",
+            "program": "${workspaceRoot}\\SDKExamples\\NodeJS\\chainjsbasic\\issueAsset.js",
+            "cwd": "${workspaceRoot}\\SDKExamples\\NodeJS\\chainjsbasic",
             "args": [
                 "silver",
                 "alice-",
