@@ -1,6 +1,10 @@
-const chain = require('chain-sdk')
-
-var async = require('async');
+/// Title   : account-new.js
+/// Purpose : Create accounts in the blockchain with Alias
+/// Author  : Gary de Beer @ BankservAfrica
+/// Date    : 25/01/2017
+/// Usage   : node account-new.js [accountAlias]
+///         : The values in the variables below are specific to a private instance of Chain
+///           They need to be replaced if using in another environment.
 
 const baseurl = 'http://172.16.101.93:1999'
 const clienttoken = 'nodejsclient:6fdbf32d489770615c906087fbea3dbdc0a89bada87811cb4afcc5123464ccd9'
@@ -11,43 +15,24 @@ const signer = new chain.HsmSigner()
 var argv = require('minimist')(process.argv.slice(2));
 
 var accountAlias = argv._[0];
-var keyAlias = accountAlias + 'Key';
-var keyList = [];
-var accountList = [];
-var accountKey = void 0,
-  accountId = void 0;
+var keyAlias = 'OriginKey';
+var accountId = void 0;
+let signKey
 
-
-/// Get HSM key
-client.mockHsm.keys.queryAll({ aliases: [keyAlias] }, (key, next, done) => {
-  keyList.push(key)
-}).then(() =>
-  Promise.all([function () {
-    if (keyList.length != 1) {
-      client.mockHsm.keys.create({ alias: keyAlias })
-        .then(key => {
-          keyList.push(key);
-          console.log('KeyList length: ' + keyList.length);
-        })
+/// Get HSM key - should be looking for key associated with account, but default key will do.
+Promise.all([
+  client.mockHsm.keys.queryAll({ aliases: [keyAlias] }, (key, next, done) => {
+    if (key.alias == keyAlias) {
+      signKey = key.xpub
+      signer.addKey(signKey, client.mockHsm.signerConnection)
+      console.log(signer.signers)
     }
-  }])
-  ).then(() =>
-    /// Get Account list
-    client.accounts.queryAll({ filter: 'alias=$1', filterParams: [accountAlias] }, (account, next, done) => {
-      console.log(account);
-      accountList.push(account)
-      next()
+    next()
+  })])
+  .then(() =>
+    client.accounts.create({ alias: accountAlias, rootXpubs: [signKey], quorum: 1 }).then(accounts => {
+      accountId = accounts[0].id;
+      console.log("Account created: " + accountId + "(" + accountAlias + ")");
     })
-  ).then(() => {
-    if (accountList.length != 1) {
-      // If account doesn't exist create account
-      client.accounts.create({ alias: accountAlias, rootXpubs: [accountKey.xpub], quorum: 1 }).then(accounts => {
-        accountId = accounts[0].id;
-        console.log("Account created: " + accountId + "(" + accountAlias + ")");
-      });
-    }
-    else {
-      console.log("Account already exists.");
-    }
 
-  });
+  );
