@@ -47,3 +47,10 @@ A node instance in a Chain network can be one of two types:
 * **Download Chain Core SDKs** - https://chain.com/docs/core/get-started/sdk
 
    SDKs for Java, Ruby and NodeJS are available.
+
+* **Recommended Tools**
+
+* NodeJS
+
+  The examples I have provided where develped using Microsoft's Visual Studio Code (https://code.visualstudio.com/download).
+  This editor is great because it really fast, customizable and runs on just about any OS.
