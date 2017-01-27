@@ -1,11 +1,11 @@
 /// Title   : issueAsset.js
 /// Purpose : Create a new asset in the blockchain
 /// Author  : Gary de Beer
-/// Date    : 24/01/2017
+/// Creation: 24/01/2017
+/// Updated : 27/01/2017
 /// Usage   : node issueAsset.js assetAlias accountAlias assetAmount
 /// Notes   : The values in the variables below are specific to a private instance of Chain
 ///           They need to be replaced if using in another environment.
-///           This code does not currently work against a remote node due to unresolved bug in chain-sdk/core
 
 const chain = require('chain-sdk')
 
