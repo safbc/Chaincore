@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "async": "^2.1.4",
-    "chain-sdk": "^1.0.1",
+    "chain-sdk": "^1.0.2",
     "express": "^4.14.0",
     "minimist": "^1.2.0"
   },

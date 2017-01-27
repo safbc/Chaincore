@@ -14,7 +14,7 @@ const hsmurl = baseurl + '/mockhsm'
 const clienttoken = 'nodejsclient:6fdbf32d489770615c906087fbea3dbdc0a89bada87811cb4afcc5123464ccd9'
 
 const client = new chain.Client(baseurl, clienttoken)
-client.mockHsm.signerConnection = { baseUrl: hsmurl, token: clienttoken }
+const hsmConnection = new chain.Connection(hsmurl, clienttoken)
 const signer = new chain.HsmSigner()
 
 var argv = require('minimist')(process.argv.slice(2));
@@ -33,7 +33,7 @@ Promise.all([
     client.mockHsm.keys.queryAll({ aliases: [signKeyAlias] }, (key, next, done) => {
         if (key.alias == signKeyAlias) {
             signKey = key.xpub
-            signer.addKey(signKey, client.mockHsm.signerConnection)
+            signer.addKey(signKey, hsmConnection)
             console.log(signer.signers)
         }
         next()
