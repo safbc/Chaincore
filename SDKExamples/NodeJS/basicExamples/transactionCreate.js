@@ -1,9 +1,9 @@
-/// Title   : issueAsset.js
-/// Purpose : Create a new asset in the blockchain
+/// Title   : transactionCreate.js
+/// Purpose : Create transaction to spend from one account to another
 /// Author  : Gary de Beer
-/// Creation: 24/01/2017
+/// Date    : 25/01/2017
 /// Updated : 27/01/2017
-/// Usage   : node issueAsset.js assetAlias accountAlias assetAmount
+/// Usage   : node transactionCreate.js accountFrom accountTo assetAlias assetAmount
 /// Notes   : The values in the variables below are specific to a private instance of Chain
 ///           They need to be replaced if using in another environment.
 
@@ -19,14 +19,16 @@ const signer = new chain.HsmSigner()
 
 var argv = require('minimist')(process.argv.slice(2));
 
-var assetAlias = argv._[0];
-var accountAlias = argv._[1];
-var assetAmount = argv._[2];
+var accountFrom = argv._[0];
+var accountTo = argv._[1];
+var assetAlias = argv._[2];
+var assetAmount = argv._[3];
 
 var signKeyAlias = 'OriginKey';
 
-console.log('client is', client)
-console.log('Intention: Issue ' + assetAmount + ' ' + assetAlias + ' and give it to ' + accountAlias)
+//console.log('client is', client)
+console.log('Intention: Spend ' + assetAmount + ' ' + assetAlias + ' from ' + accountFrom + ' and give it to ' + accountTo)
+
 let signKey
 
 Promise.all([
@@ -40,12 +42,13 @@ Promise.all([
     })])
     .then(() =>
         client.transactions.build(builder => {
-            builder.issue({
+            builder.spendFromAccount({
+                accountAlias: accountFrom,
                 assetAlias: assetAlias,
                 amount: assetAmount
             })
             builder.controlWithAccount({
-                accountAlias: accountAlias,
+                accountAlias: accountTo,
                 assetAlias: assetAlias,
                 amount: assetAmount
             })

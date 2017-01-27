@@ -1,9 +1,9 @@
-/// Title   : account-new.js
+/// Title   : accountCreate.js
 /// Purpose : Create accounts in the blockchain with Alias
 /// Author  : Gary de Beer @ BankservAfrica
 /// Creation: 24/01/2017
 /// Updated : 27/01/2017
-/// Usage   : node account-new.js [accountAlias]
+/// Usage   : node accountCreate.js [accountAlias]
 ///         : The values in the variables below are specific to a private instance of Chain
 ///           They need to be replaced if using in another environment.
 
