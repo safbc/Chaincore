@@ -21,7 +21,14 @@ var assetAlias = argv._[0];
 var signKeyAlias = 'OriginKey';
 
 console.log('Intention: List Assets in system')
-
-client.asset.queryAll({ filter: 'alias=$1', filterParams: [assetAlias] }, (asset, next, done) => {
-    console.log('Asset: ' + asset.id + ' (' + asset.alias + ')');
-});
+if (assetAlias == undefined) {
+    client.asset.queryAll({}, (asset, next, done) => {
+        console.log('Asset: ' + asset.id + ' (' + asset.alias + ')')
+        next()
+    });
+} else {
+    client.asset.queryAll({ filter: 'alias=$1', filterParams: [assetAlias] }, (asset, next, done) => {
+        console.log('Asset: ' + asset.id + ' (' + asset.alias + ')')
+        next()
+    });
+}

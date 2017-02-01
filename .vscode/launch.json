@@ -8,12 +8,10 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceRoot}\\SDKExamples\\NodeJS\\basicExamples\\issueAsset.js",
+            "program": "${workspaceRoot}\\SDKExamples\\NodeJS\\basicExamples\\accountList.js",
             "cwd": "${workspaceRoot}\\SDKExamples\\NodeJS\\basicExamples",
             "args": [
-                "silver",
-                "alice-",
-                "1000"
+                "alice-"
             ]
         },
         {
