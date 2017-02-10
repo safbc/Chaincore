@@ -7,3 +7,10 @@ I found that I had to constantly reference
 http://13.95.95.38:1999/docs/core/build-applications/transaction-basics#creating-transactions 
 to know what action i had to do on certain transactions but it was really easy to do once we got into it.
 
+Important note for the coders at Foundery: 
+https://golang.org/doc/install
+https://golang.org/doc/code.html#Workspaces
+https://kubernetes.io/docs/user-guide/prereqs/
+golang was needed on your workstation if you wanted to run and setup the server yourself. 
+I will provide the scripts needed to get the hosting done. 
+The docker and config files will be provided by me for the setup to our server at Foundery.
