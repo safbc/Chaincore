@@ -52,7 +52,7 @@ Promise.all([
                 assetAlias: assetAlias,
                 amount: assetAmount
             })
-        }).then(issuance => signer.sign(issuance))
+        }).then(transaction => signer.sign(transaction))
             .then(signed => client.transactions.submit(signed))
             .then(result => console.log(result))
     ).catch(err => process.nextTick(() => { throw err }))
