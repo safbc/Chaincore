@@ -1,0 +1,16 @@
+Chain is fairly easy to use  and the UI is easy to get around.
+What makes it hard to use is remembering all the steps. As the steps to each action has a clear structure.
+Gary pointed out a clear problem that he and myself relied heavy on the slack group to communicate with each other.
+We needed to send each other asset ID, account ID and more, this was excluding the Network access tokens, Generator URL and Blockchain ID 
+that were needed to connect on the same Network.
+I found that I had to constantly reference 
+http://13.95.95.38:1999/docs/core/build-applications/transaction-basics#creating-transactions 
+to know what action i had to do on certain transactions but it was really easy to do once we got into it.
+
+Important note for the coders at Foundery: 
+https://golang.org/doc/install
+https://golang.org/doc/code.html#Workspaces
+https://kubernetes.io/docs/user-guide/prereqs/
+golang was needed on your workstation if you wanted to run and setup the server yourself. 
+I will provide the scripts needed to get the hosting done. 
+The docker and config files will be provided by me for the setup to our server at Foundery.
