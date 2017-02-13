@@ -12,7 +12,7 @@ info:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 host: "virtserver.swaggerhub.com"
-basePath: "/DibbsZA/Offer2Trade/0.0.1"
+basePath: "/BlockExAPI/0.0.1"
 tags:
 - name: "AppIO"
   description: "The AppIO controller defines paths that deal with the logic of the\
