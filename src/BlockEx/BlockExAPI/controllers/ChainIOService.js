@@ -294,108 +294,178 @@ exports.getTransactions = function (args, res, next) {
    * connection NodeConnection Connection data for Chain Node (optional)
    * returns List
    **/
-  var examples = {};
-  examples['application/json'] = [{
-    "outputs": [{
-      "amount": 123,
-      "purpose": "receive or change",
-      "asset_is_local": "aeiou",
-      "account_tags": "{}",
-      "reference_data": "{}",
-      "asset_id": "aeiou",
-      "type": "aeiou",
-      "asset_definition": "{}",
-      "account_id": "aeiou",
-      "asset_tags": "{}",
-      "position": 123,
-      "account_alias": "aeiou",
-      "is_local": "no",
-      "control_program": "aeiou"
-    }],
-    "inputs": [{
-      "amount": 123,
-      "asset_is_local": "yes",
-      "account_tags": "{}",
-      "reference_data": "{}",
-      "asset_id": "aeiou",
-      "type": "aeiou",
-      "asset_definition": "{}",
-      "asset_alias": "aeiou",
-      "account_id": "aeiou",
-      "spent_output": "{}",
-      "asset_tags": "{}",
-      "account_alias": "aeiou",
-      "is_local": "yes"
-    }],
-    "reference_data": "{}",
-    "id": "af3c8f3e42f35072ab1286225e2b3cd73552b9ce3a3cf3cd936f6e3a9d3f40df",
-    "block_height": 123,
-    "position": 123,
-    "is_local": "no",
-    "block_id": "aeiou",
-    "timestamp": "2017-02-09T14:20:24.000Z"
-  }];
-  if (Object.keys(examples).length > 0) {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-  } else {
-    res.end();
-  }
+
+  // TODO: Convert to ChainRequest query parameter for consistency.
+  // TODO: Return fixed number of results? Paginate the result? What order is this returning in?
+
+  const chain = require('chain-sdk');
+
+  var connection = args.connection.value;
+
+  // set up chain node connection properties
+  const baseurl = connection.nodeURL;
+  const clienttoken = connection.clientToken
+
+  // define chain client connection
+  const client = new chain.Client(baseurl, clienttoken)
+
+  var transactions = [];
+
+  client.transactions.queryAll({}, (transaction, next, done) => {
+    console.log('Transaction: ' + transaction.id + ')')
+    transactions.push(transaction)
+    next()
+  })
+    .then(() => {
+      if (transactions.length > 0) {
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(transactions || {}, null, 2));
+      } else {
+        res.end();
+      }
+    });
+
+
+  // var examples = {};
+  // examples['application/json'] = [{
+  //   "outputs": [{
+  //     "amount": 123,
+  //     "purpose": "receive or change",
+  //     "asset_is_local": "aeiou",
+  //     "account_tags": "{}",
+  //     "reference_data": "{}",
+  //     "asset_id": "aeiou",
+  //     "type": "aeiou",
+  //     "asset_definition": "{}",
+  //     "account_id": "aeiou",
+  //     "asset_tags": "{}",
+  //     "position": 123,
+  //     "account_alias": "aeiou",
+  //     "is_local": "no",
+  //     "control_program": "aeiou"
+  //   }],
+  //   "inputs": [{
+  //     "amount": 123,
+  //     "asset_is_local": "yes",
+  //     "account_tags": "{}",
+  //     "reference_data": "{}",
+  //     "asset_id": "aeiou",
+  //     "type": "aeiou",
+  //     "asset_definition": "{}",
+  //     "asset_alias": "aeiou",
+  //     "account_id": "aeiou",
+  //     "spent_output": "{}",
+  //     "asset_tags": "{}",
+  //     "account_alias": "aeiou",
+  //     "is_local": "yes"
+  //   }],
+  //   "reference_data": "{}",
+  //   "id": "af3c8f3e42f35072ab1286225e2b3cd73552b9ce3a3cf3cd936f6e3a9d3f40df",
+  //   "block_height": 123,
+  //   "position": 123,
+  //   "is_local": "no",
+  //   "block_id": "aeiou",
+  //   "timestamp": "2017-02-09T14:20:24.000Z"
+  // }];
+  // if (Object.keys(examples).length > 0) {
+  //   res.setHeader('Content-Type', 'application/json');
+  //   res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
+  // } else {
+  //   res.end();
+  // }
 }
 
 exports.signTransaction = function (args, res, next) {
   /**
-   * sign this transaction partial
+   * Submit transaction or sign transaction partial
    *
    * request ChainRequest Request includes Node connection details and transaction information  (optional)
    * returns List
    **/
-  var examples = {};
-  examples['application/json'] = [{
-    "outputs": [{
-      "amount": 123,
-      "purpose": "receive or change",
-      "asset_is_local": "aeiou",
-      "account_tags": "{}",
-      "reference_data": "{}",
-      "asset_id": "aeiou",
-      "type": "aeiou",
-      "asset_definition": "{}",
-      "account_id": "aeiou",
-      "asset_tags": "{}",
-      "position": 123,
-      "account_alias": "aeiou",
-      "is_local": "no",
-      "control_program": "aeiou"
-    }],
-    "inputs": [{
-      "amount": 123,
-      "asset_is_local": "yes",
-      "account_tags": "{}",
-      "reference_data": "{}",
-      "asset_id": "aeiou",
-      "type": "aeiou",
-      "asset_definition": "{}",
-      "asset_alias": "aeiou",
-      "account_id": "aeiou",
-      "spent_output": "{}",
-      "asset_tags": "{}",
-      "account_alias": "aeiou",
-      "is_local": "yes"
-    }],
-    "reference_data": "{}",
-    "id": "af3c8f3e42f35072ab1286225e2b3cd73552b9ce3a3cf3cd936f6e3a9d3f40df",
-    "block_height": 123,
-    "position": 123,
-    "is_local": "no",
-    "block_id": "aeiou",
-    "timestamp": "2017-02-09T14:20:24.000Z"
-  }];
-  if (Object.keys(examples).length > 0) {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-  } else {
-    res.end();
-  }
-}
 
+  const chain = require('chain-sdk');
+
+  var request = args.request.value;
+
+  // set up chain node connection properties
+  const baseurl = request.connection.nodeURL;
+  const hsmurl = baseurl + '/mockhsm'
+  const clienttoken = request.connection.clientToken
+
+  // define chain client connection
+  const client = new chain.Client(baseurl, clienttoken)
+  const hsmConnection = new chain.Connection(hsmurl, clienttoken)
+  const signer = new chain.HsmSigner()
+
+  var keys = [];
+  var keyAliases = [];
+  var transactions = [];
+
+  var accountSpender = request.transaction.spend.account.alias;
+  var assetSpender = request.transaction.spend.asset.alias;
+  var amountSpender = request.transaction.spend.amount;
+  var accountSpenderXpub = '';
+
+  var accountController = request.transaction.control.account.alias;
+  var assetController = request.transaction.control.asset.alias;
+  var amountController = request.transaction.control.amount;
+
+  var allowAdditionalActions = request.transaction.allowAdditionalActions;
+
+  //console.log('client is', client)
+  console.log('Spend ' + amountSpender + ' ' + assetSpender + ' from ' + accountSpender);
+  console.log('in return for ' + amountController + ' ' + assetController + ' from ' + accountController);
+  let signKey
+
+  // Step 1:Look up Seller Account information
+  //        Get keys[0].rootXpub
+  //        Add this xpub to the signer
+
+  client.accounts.queryAll({ filter: 'alias=$1', filterParams: [accountSpender] }, (account, next, done) => {
+    accountSpenderXpub = account.keys[0].rootXpub
+    console.log('Account: ' + account.alias + ' (' + accountSpenderXpub + ')')
+    next()
+  })
+    .then(() => {
+      signer.addKey(accountSpenderXpub, hsmConnection)
+      console.log(signer.signers)
+    })
+    .then(() =>
+      // Step 2:Build Transaction template
+      //        If this is muti-party phase 2 then add baseTransaction data
+      client.transactions.build(builder => {
+        // Check if basetransaction was supplied
+        if (allowAdditionalActions == 'no' && request.transaction.baseTransaction != undefined) {
+          builder.baseTransaction(request.transaction.baseTransaction)
+        }
+        builder.spendFromAccount({
+          accountAlias: accountSpender,
+          assetAlias: assetSpender,
+          amount: amountSpender
+        })
+        builder.controlWithAccount({
+          accountAlias: accountController,
+          assetAlias: assetController,
+          amount: amountController
+        })
+      })
+        .then((transaction) => {
+          // Step 3:If this is not multi-party transaction
+          //        Sign and submit transaction to blockchain
+          if (allowAdditionalActions == 'no') {
+            signer.sign(transaction, (signed, next) => {
+              return client.transactions.submit(signed)
+            })
+          } else {
+            // Step 3:This is multi-party transaction
+            //        Set allowAdditionalActions = true
+            //        Sign and return HexData instead.
+            transaction.allowAdditionalActions = true
+            return signer.sign(transaction)
+          }
+        })
+        .then(result => console.log(result))
+    ).catch(err => process.nextTick(() => { throw err }))
+
+
+}
