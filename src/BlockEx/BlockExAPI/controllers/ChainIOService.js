@@ -143,26 +143,75 @@ exports.getAssets = function (args, res, next) {
    * request ChainRequest ChainRequest object with Connection and optional Asset properties specified. (optional)
    * returns List
    **/
-  var examples = {};
-  examples['application/json'] = [{
-    "keys": [{
-      "accountXpub": "48764b4efe18bbf1c3ad9f60ab60a5eb6f6a8d72d560bdf07e261d4a707cd50244db49b4e64547a2686bc3eb282815bf1337cab4a3343ea1c95948b81e6f3df0",
-      "accountDerivationPath": ["AQYAAAAAAAAA"],
-      "rootXpub": "4abb21e69072a7b17357cc514847f556afd6e007a7c92ef4f898208c1103212aef4d36e42441888cd25d5e7d61a13a2811777c0b2f25ce66abb898141abe8f4a",
-      "alias": "aeiou"
-    }],
-    "quorum": "aeiou",
-    "alias": "BlockCoin",
-    "definition": "{}",
-    "id": "227f376b170560cc3c3243e09de3560b2ba732a9522217b3d87d0992a19e5341",
-    "tags": "{}"
-  }];
-  if (Object.keys(examples).length > 0) {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
+
+  const chain = require('chain-sdk');
+
+  var request = args.request.value;
+
+  // set up chain node connection properties
+  const baseurl = request.connection.nodeURL;
+  const clienttoken = request.connection.clientToken
+
+  // define chain client connection
+  const client = new chain.Client(baseurl, clienttoken)
+
+  var assets = [];
+  var filter = '';
+  // Is this going to be filtered search or not?
+
+  if (request.asset.alias == undefined) {
+    client.assets.queryAll({}, (asset, next, done) => {
+      console.log('Asset: ' + asset.id + ' (' + asset.alias + ')')
+      assets.push(asset)
+      next()
+    })
+      .then(() => {
+        if (assets.length > 0) {
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify(assets || {}, null, 2));
+        } else {
+          res.end();
+        }
+      });
   } else {
-    res.end();
+    client.assets.queryAll({ filter: 'alias=$1', filterParams: [request.asset.alias] }, (asset, next, done) => {
+      console.log('Asset: ' + asset.id + ' (' + asset.alias + ')')
+      assets.push(asset)
+      next()
+    })
+      .then(() => {
+        if (assets.length > 0) {
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify(assets || {}, null, 2));
+        } else {
+          res.end();
+        }
+      });
   }
+
+
+
+
+  // var examples = {};
+  // examples['application/json'] = [{
+  //   "keys": [{
+  //     "accountXpub": "48764b4efe18bbf1c3ad9f60ab60a5eb6f6a8d72d560bdf07e261d4a707cd50244db49b4e64547a2686bc3eb282815bf1337cab4a3343ea1c95948b81e6f3df0",
+  //     "accountDerivationPath": ["AQYAAAAAAAAA"],
+  //     "rootXpub": "4abb21e69072a7b17357cc514847f556afd6e007a7c92ef4f898208c1103212aef4d36e42441888cd25d5e7d61a13a2811777c0b2f25ce66abb898141abe8f4a",
+  //     "alias": "aeiou"
+  //   }],
+  //   "quorum": "aeiou",
+  //   "alias": "BlockCoin",
+  //   "definition": "{}",
+  //   "id": "227f376b170560cc3c3243e09de3560b2ba732a9522217b3d87d0992a19e5341",
+  //   "tags": "{}"
+  // }];
+  // if (Object.keys(examples).length > 0) {
+  //   res.setHeader('Content-Type', 'application/json');
+  //   res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
+  // } else {
+  //   res.end();
+  // }
 }
 
 exports.getKeys = function (args, res, next) {
