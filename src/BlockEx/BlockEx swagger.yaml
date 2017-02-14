@@ -51,13 +51,13 @@ tags:
       * **sign**        : submit transactions
       
 paths:
+
+
 # AppIO Paths
   /app/trades:
     get:
-      summary: Gets list of trade offers
+      description: List Trades posted in the system
       operationId: getTrades
-      description: |
-        List Trades posted in the system
       tags: 
       - AppIO
       responses:
@@ -74,7 +74,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/Trade'
-                
         400:
           description: bad input parameter
           schema:
@@ -90,10 +89,8 @@ paths:
                     type: string
           
     post:
-      summary: Adds a new offer item
+      description: Adds a new Trade Offer Item to the system
       operationId: postTrade
-      description: |
-        Adds a new Offer Item to the system
       tags: 
       - AppIO
       parameters:
@@ -144,9 +141,8 @@ paths:
                     type: string
           
     put:
-      summary: Updates an Offer Item
+      description: Updates an Offer Item
       operationId: updateTrade
-      description: update an item in the system
       tags: 
       - AppIO
       parameters:
@@ -207,10 +203,8 @@ paths:
         required: true
         
     get:
-      summary: Gets specified trade details
+      description: Gets specified trade details
       operationId: getTrade
-      description: |
-        Gets specified trade details
       tags: 
       - AppIO
       responses:
@@ -242,9 +236,8 @@ paths:
                     type: string
                  
     delete:
-      summary: deletes posted trade offer
-      operationId: deleteTrade
       description: Delete the specified trade from the system unless it has been completed
+      operationId: deleteTrade
       tags: 
       - AppIO
       responses:
@@ -278,10 +271,8 @@ paths:
 
   /app/users:
     get:
-      summary: Gets registered app users.
+      description: List users registered to use the app.
       operationId: getUsers
-      description: |
-        List users registered to use the app.
       tags: 
       - AppIO
       responses:
@@ -293,13 +284,10 @@ paths:
               $ref: '#/definitions/User'
         400:
           description: bad input parameter
-
           
     post:
-      summary: Register a new User to the system
+      description: Register a new User to the system
       operationId: postUser
-      description: |
-        Register a new User to the system
       tags: 
       - AppIO
       parameters:
@@ -324,9 +312,8 @@ paths:
         type: string
         required: true
     get:
-      summary: Get user detail
-      operationId: getUser
       description: Gets the specified user details
+      operationId: getUser
       tags: 
       - AppIO
       responses:
@@ -358,9 +345,8 @@ paths:
                     type: string       
                  
     delete:
-      summary: deletes posted trade offer
-      operationId: deleteUser
       description: Delete the specified user from the system unless they have completed/pending transactions
+      operationId: deleteUser
       tags: 
       - AppIO
       responses:
@@ -391,23 +377,23 @@ paths:
                   message:
                     type: string   
 
+
+
+
+
 # ChainIO Paths
-
-
-  /chain/account:
-    post:
-      summary: Create new account on local node.
+  /chain/accounts:
+    put:
+      description: Create new account on local node.
       operationId: createAccount
-      description: |
-        Create new account on local node.
       tags: 
       - ChainIO
       parameters:
       - in: body
         name: request
-        description: New Account data and Connection info
+        description: ChainRequest object with Connection and Account properties specified.
         schema:
-          $ref: '#/definitions/NewAccount'
+          $ref: '#/definitions/ChainRequest'
       responses:
         200:
           description: new account created, return account details
@@ -418,20 +404,17 @@ paths:
         400:
           description: bad input parameter
 
-  /chain/accounts:
     post:
-      summary: Gets list of local accounts.
+      description: Gets list of local accounts. If Account properties provided, will attempt search
       operationId: getAccounts
-      description: |
-        Gets list of local accounts.
       tags: 
       - ChainIO
       parameters:
       - in: body
-        name: connection
-        description: Connection data for Chain Node
+        name: request
+        description: ChainRequest object with Connection and optional Account properties specified.
         schema:
-          $ref: '#/definitions/NodeConnection'
+          $ref: '#/definitions/ChainRequest'
       responses:
         200:
           description: search results matching criteria
@@ -442,74 +425,19 @@ paths:
         400:
           description: bad input parameter
 
-  /chain/accounts/{alias}:
-    parameters:
-      - name: alias
-        description: Alias of account to find
-        in: path
-        type: string
-        required: true
-      - in: body
-        name: connection
-        description: Connection data for Chain Node
-        schema:
-          $ref: '#/definitions/NodeConnection'
-    post:
-      summary: Gets list of local accounts.
-      operationId: getAccount
-      description: |
-        Gets list of local accounts.
-      tags: 
-      - ChainIO
-      responses:
-        200:
-          description: search results matching criteria
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Account'
-        400:
-          description: bad input parameter
-
-          
-#  /chain/asset:
-#    post:
-#      summary: Creates new Asset on local node.
-#      operationId: createAsset
-#      description: |
-#        Creates new Asset on local node.
-#      tags: 
-#      - ChainIO
-#      parameters:
-#      - in: body
-#        name: connection
-#        description: New Asset and connection data for Chain Node
-#        schema:
-#          $ref: '#/definitions/NewAsset'
-#      responses:
-#        200:
-#          description: new sset created, return asset details
-#          schema:
-#            type: array
-#            items:
-#              $ref: '#/definitions/Asset'
-#        400:
-#          description: bad input parameter
           
   /chain/assets:
     post:
-      summary: Gets list of local assets.
+      description: Gets list of local assets. If Asset properties provided, will attempt search
       operationId: getAssets
-      description: |
-        Gets list of local assets.
       tags: 
       - ChainIO
       parameters:
       - in: body
-        name: connection
-        description: Connection data for Chain Node
+        name: request
+        description: ChainRequest object with Connection and optional Asset properties specified.
         schema:
-          $ref: '#/definitions/NodeConnection'
+          $ref: '#/definitions/ChainRequest'
       responses:
         200:
           description: search results matching criteria
@@ -519,51 +447,40 @@ paths:
               $ref: '#/definitions/Asset'
         400:
           description: bad input parameter
-          
-  /chain/assets/{alias}:
-    parameters:
-      - name: alias
-        description: Alias of account to find
-        in: path
-        type: string
-        required: true
-      - in: body
-        name: connection
-        description: Connection data for Chain Node
-        schema:
-          $ref: '#/definitions/NodeConnection'
-    post:
-      summary: Gets local asset.
-      operationId: getAsset
-      description: |
-        Gets local account details.
-      tags: 
-      - ChainIO
-      responses:
-        200:
-          description: search results matching criteria
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Account'
-        400:
-          description: bad input parameter    
   
-  
+#    put:
+#      operationId: createAsset
+#      description: Creates new Asset on local node.
+#      tags: 
+#      - ChainIO
+#      parameters:
+#      - in: body
+#        name: request
+#        description: ChainRequest object with Connection and optional Asset properties specified.
+#        schema:
+#          $ref: '#/definitions/ChainRequest'
+#      responses:
+#        200:
+#          description: new sset created, return asset details
+#          schema:
+#            type: array
+#            items:
+#              $ref: '#/definitions/Asset'
+#        400:
+#          description: bad input parameter
+
   /chain/keys:
     post:
-      summary: Gets list of local keys.
+      description: Gets list of local HSM keys.
       operationId: getKeys
-      description: |
-        Gets list of local HSM keys.
       tags: 
       - ChainIO
       parameters:
       - in: body
         name: request
-        description: Connection data for Chain Node
+        description: ChainRequest object with Connection and optional HSMKey properties specified.
         schema:
-          $ref: '#/definitions/NodeConnection'
+          $ref: '#/definitions/ChainRequest'
       responses:
         200:
           description: search results matching criteria
@@ -574,42 +491,11 @@ paths:
         400:
           description: bad input parameter
 
-  /chain/keys/{alias}:
-    parameters:
-      - name: alias
-        description: Alias of key to find
-        in: path
-        type: string
-        required: true
-      - in: body
-        name: connection
-        description: Connection data for Chain Node
-        schema:
-          $ref: '#/definitions/NodeConnection'
-    post:
-      summary: Gets local key data.
-      operationId: getKey
-      description: |
-        Gets local HSM key data.
-      tags: 
-      - ChainIO
-      responses:
-        200:
-          description: search results matching criteria
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/HSMKey'
-        400:
-          description: bad input parameter
-          
-          
+
   /chain/transactions:
     post:
-      summary: Gets list of recent transactions.
+      description: Gets list of recent transactions.
       operationId: getTransactions
-      description: |
-        Gets list of recent transactions.
       tags: 
       - ChainIO
       parameters:
@@ -631,9 +517,8 @@ paths:
 
   /chain/sign:
     post:
-      summary: sign this transaction partial
-      operationId: signTransaction
       description: sign this transaction partial
+      operationId: signTransaction
       tags:
       - ChainIO
       parameters:
@@ -642,7 +527,7 @@ paths:
         description: |
           Request includes Node connection details and transaction information
         schema:
-          $ref: '#/definitions/SignRequest'
+          $ref: '#/definitions/ChainRequest'
       responses:
         200:
           description: search results matching criteria
@@ -731,6 +616,7 @@ definitions:
 # Models of the Chain Core message objects
 
   NodeConnection:
+    description: Defines the remote node connection details
     required:
     - nodeURL
     - clientToken
@@ -738,90 +624,85 @@ definitions:
       nodeURL:
         type: string
         format: URL
-        example: http://22.22.22.22:1999
+        example: http://172.16.101.93:1999
       clientToken:
         type: string
-        example: client:908324750983745902837509
+        example: UbuntuDev:e72629518809db4f5176d084f80f2261a3f4c70e044c6339251977c79f73c4bb
 
   Asset:
-    required:
-    - assetAlias
+    description: Model defining the core information of a Chain Asset
     properties:
-      assetId:
+      id:
+        description: Used when referencing this asset from a remote node
         type: string
         example: 227f376b170560cc3c3243e09de3560b2ba732a9522217b3d87d0992a19e5341
-      assetAlias:
+      alias:
+        description: Friendly unique name for the Asset. Only visible on local node
         type: string
-        example:  Dollars
+        example:  BlockCoin
+      quorum:
+        description: When used, number of keys required to sign. Must be <= keys.length
+        type: string
+        format: number
+      tags:
+        description: The tag is an optional key-value field used for arbitrary storage or queries. This data is local to the Chain Core and not visible in the blockchain.
+        type: object
+      definition:
+        description: The definition is global data about the asset that is visible in the blockchain.
+        type: object
+      keys:
+        type: array
+        items:
+          $ref: '#/definitions/HSMKey'
 
   Account:
-    required:
-    - accountAlias
+    description: Model defining the core information of a Chain Account
     properties:
-      accountId:
+      id:
         type: string
         example: acc0RSDADNVG0804
-      accountAlias:
+      alias:
+        description: Friendly unique name for the Account. Only visible on local node
         type: string
         example:  BobAccount1
+      quorum:
+        description: When used, number of keys required to sign. Must be <= keys.length
+        type: string
+        format: number
+      tags:
+        description: The tag is an optional key-value field used for arbitrary storage or queries. This data is local to the Chain Core and not visible in the blockchain.
+        type: object
+      keys:
+        description: When used, array length must >= 1
+        type: array
+        items:
+          $ref: '#/definitions/HSMKey'
       controlProgram:
+        description: Used when paying to this account from a remote node.
         type: string
         example: 766baa20f19b55122a0404313b57fbdab7b59548a311dcf2fcf538f1d7cc025ca625e52b5151ad696c00c0
         
   HSMKey:
-    required:
-    - alias
+    description: Model defining the properties of Chain HSM Key
     properties:
       alias:
+        description: Freindly name for the key. Usually '{AccountAlias}Key'
         type: string
-      xpub:
+      rootXpub:
         type: string
-        
-  
-#  NewAsset:
-#    properties:
-#      connection:
-#        $ref: '#/definitions/NodeConnection'
-#      asset:
-#        $ref: '#/definitions/Asset'
-#      keycount:
-#        type: number
-#      quorum:
-#        type: number
-#        description: number of sign keys required to issue. Must be <= keycount
-#      keylist:
-#        type: array
-#        description: Array length must == keycount
-#        items:
-#          $ref: '#/definitions/HSMKey'
-#      definition:
-#        type: object
-#      tags:
-#        type: object
-        
-        
-  
-  NewAccount:
+        example: 4abb21e69072a7b17357cc514847f556afd6e007a7c92ef4f898208c1103212aef4d36e42441888cd25d5e7d61a13a2811777c0b2f25ce66abb898141abe8f4a
+      accountXpub:
+        type: string
+        example: 48764b4efe18bbf1c3ad9f60ab60a5eb6f6a8d72d560bdf07e261d4a707cd50244db49b4e64547a2686bc3eb282815bf1337cab4a3343ea1c95948b81e6f3df0
+      accountDerivationPath:
+        type: array
+        items:
+          type: string
+          example: AQYAAAAAAAAA
+          
+  Transaction:
+    description: Model defining the parameters of a Spend transaction.
     properties:
-      connection:
-        $ref: '#/definitions/NodeConnection'
-      account:
-        $ref: '#/definitions/Account'
-      keycount:
-        type: number
-        description: These number of new keys will be auto-generated
-        example: 1
-      quorum:
-        type: number
-        description: Number of keys required for transfer. Must be <= keycount
-        example: 1
-      tags:
-        type: object        
-
-  SignRequest:
-    properties:
-      connection:
-        $ref: '#/definitions/NodeConnection'
       spend:
         $ref: '#/definitions/TradeItem'
       control:
@@ -833,8 +714,24 @@ definitions:
         type: string
       referenceData:
         type: object
-        
-    
+  
+  ChainRequest:
+    description: Model used to search or create new objects on a Chain node
+    required:
+    - connection
+    properties:
+      connection:
+        $ref: '#/definitions/NodeConnection'
+      account:
+        $ref: '#/definitions/Account'
+      asset:
+        $ref: '#/definitions/Asset'
+      transaction:
+        $ref: '#/definitions/Transaction'
+      hsmkey:
+        type: array
+        items:
+          $ref: '#/definitions/HSMKey'
 
 
 # Models of Chain Core response objects

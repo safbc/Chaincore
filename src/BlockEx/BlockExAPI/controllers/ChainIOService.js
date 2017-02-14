@@ -4,15 +4,20 @@ exports.createAccount = function(args, res, next) {
   /**
    * Create new account on local node.
    *
-   * request NewAccount New Account data and Connection info (optional)
+   * request ChainRequest ChainRequest object with Connection and Account properties specified. (optional)
    * returns List
    **/
+
+
   const chain = require('chain-sdk');
 
   var request = args.request.value;
+
+  // set up chain node connection properties
   const baseurl = request.connection.nodeURL;
   const clienttoken = request.connection.clientToken
 
+  // Create new chain client connection
   const client = new chain.Client(baseurl, clienttoken)
 
   var accountAlias = request.account.accountAlias;
@@ -46,20 +51,28 @@ exports.createAccount = function(args, res, next) {
     );
 }
 
-exports.getAccount = function(args, res, next) {
+
+
+exports.getAccounts = function(args, res, next) {
   /**
-   * Gets list of local accounts.
-   * Gets list of local accounts. 
+   * Gets list of local accounts. If Account properties provided, will attempt search
    *
-   * alias String Alias of account to find
-   * connection NodeConnection Connection data for Chain Node (optional)
+   * request ChainRequest ChainRequest object with Connection and optional Account properties specified. (optional)
    * returns List
    **/
   var examples = {};
   examples['application/json'] = [ {
-  "accountAlias" : "BobAccount1",
-  "accountId" : "acc0RSDADNVG0804",
-  "controlProgram" : "766baa20f19b55122a0404313b57fbdab7b59548a311dcf2fcf538f1d7cc025ca625e52b5151ad696c00c0"
+  "keys" : [ {
+    "accountXpub" : "48764b4efe18bbf1c3ad9f60ab60a5eb6f6a8d72d560bdf07e261d4a707cd50244db49b4e64547a2686bc3eb282815bf1337cab4a3343ea1c95948b81e6f3df0",
+    "accountDerivationPath" : [ "AQYAAAAAAAAA" ],
+    "rootXpub" : "4abb21e69072a7b17357cc514847f556afd6e007a7c92ef4f898208c1103212aef4d36e42441888cd25d5e7d61a13a2811777c0b2f25ce66abb898141abe8f4a",
+    "alias" : "aeiou"
+  } ],
+  "controlProgram" : "766baa20f19b55122a0404313b57fbdab7b59548a311dcf2fcf538f1d7cc025ca625e52b5151ad696c00c0",
+  "quorum" : "aeiou",
+  "alias" : "BobAccount1",
+  "id" : "acc0RSDADNVG0804",
+  "tags" : "{}"
 } ];
   if (Object.keys(examples).length > 0) {
     res.setHeader('Content-Type', 'application/json');
@@ -69,20 +82,27 @@ exports.getAccount = function(args, res, next) {
   }
 }
 
-exports.getAccounts = function(args, res, next) {
+exports.getAssets = function(args, res, next) {
   /**
-   * Gets list of local accounts.
-   * Gets list of local accounts. 
+   * Gets list of local assets. If Asset properties provided, will attempt search
    *
-   * connection NodeConnection Connection data for Chain Node (optional)
+   * request ChainRequest ChainRequest object with Connection and optional Asset properties specified. (optional)
    * returns List
    **/
   var examples = {};
-  examples['application/json'] = [{
-    "accountAlias": "BobAccount1",
-    "accountId": "acc0RSDADNVG0804",
-    "controlProgram": "766baa20f19b55122a0404313b57fbdab7b59548a311dcf2fcf538f1d7cc025ca625e52b5151ad696c00c0"
-  }];
+  examples['application/json'] = [ {
+  "keys" : [ {
+    "accountXpub" : "48764b4efe18bbf1c3ad9f60ab60a5eb6f6a8d72d560bdf07e261d4a707cd50244db49b4e64547a2686bc3eb282815bf1337cab4a3343ea1c95948b81e6f3df0",
+    "accountDerivationPath" : [ "AQYAAAAAAAAA" ],
+    "rootXpub" : "4abb21e69072a7b17357cc514847f556afd6e007a7c92ef4f898208c1103212aef4d36e42441888cd25d5e7d61a13a2811777c0b2f25ce66abb898141abe8f4a",
+    "alias" : "aeiou"
+  } ],
+  "quorum" : "aeiou",
+  "alias" : "BlockCoin",
+  "definition" : "{}",
+  "id" : "227f376b170560cc3c3243e09de3560b2ba732a9522217b3d87d0992a19e5341",
+  "tags" : "{}"
+} ];
   if (Object.keys(examples).length > 0) {
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
@@ -91,85 +111,20 @@ exports.getAccounts = function(args, res, next) {
   }
 }
 
-exports.getAsset = function (args, res, next) {
+exports.getKeys = function(args, res, next) {
   /**
-   * Gets local asset.
-   * Gets local account details.
-   *
-   * alias String Alias of account to find
-   * connection NodeConnection Connection data for Chain Node (optional)
-   * returns List
-   **/
-  var examples = {};
-  examples['application/json'] = [{
-    "accountAlias": "BobAccount1",
-    "accountId": "acc0RSDADNVG0804",
-    "controlProgram": "766baa20f19b55122a0404313b57fbdab7b59548a311dcf2fcf538f1d7cc025ca625e52b5151ad696c00c0"
-  }];
-  if (Object.keys(examples).length > 0) {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-  } else {
-    res.end();
-  }
-}
-
-exports.getAssets = function (args, res, next) {
-  /**
-   * Gets list of local assets.
-   * Gets list of local assets.
-   *
-   * connection NodeConnection Connection data for Chain Node (optional)
-   * returns List
-   **/
-  var examples = {};
-  examples['application/json'] = [{
-    "assetId": "227f376b170560cc3c3243e09de3560b2ba732a9522217b3d87d0992a19e5341",
-    "assetAlias": "Dollars"
-  }];
-  if (Object.keys(examples).length > 0) {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-  } else {
-    res.end();
-  }
-}
-
-exports.getKey = function (args, res, next) {
-  /**
-   * Gets local key data.
-   * Gets local HSM key data.
-   *
-   * alias String Alias of key to find
-   * connection NodeConnection Connection data for Chain Node (optional)
-   * returns List
-   **/
-  var examples = {};
-  examples['application/json'] = [{
-    "alias": "aeiou",
-    "xpub": "aeiou"
-  }];
-  if (Object.keys(examples).length > 0) {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
-  } else {
-    res.end();
-  }
-}
-
-exports.getKeys = function (args, res, next) {
-  /**
-   * Gets list of local keys.
    * Gets list of local HSM keys.
    *
-   * request NodeConnection Connection data for Chain Node (optional)
+   * request ChainRequest ChainRequest object with Connection and optional HSMKey properties specified. (optional)
    * returns List
    **/
   var examples = {};
-  examples['application/json'] = [{
-    "alias": "aeiou",
-    "xpub": "aeiou"
-  }];
+  examples['application/json'] = [ {
+  "accountXpub" : "48764b4efe18bbf1c3ad9f60ab60a5eb6f6a8d72d560bdf07e261d4a707cd50244db49b4e64547a2686bc3eb282815bf1337cab4a3343ea1c95948b81e6f3df0",
+  "accountDerivationPath" : [ "AQYAAAAAAAAA" ],
+  "rootXpub" : "4abb21e69072a7b17357cc514847f556afd6e007a7c92ef4f898208c1103212aef4d36e42441888cd25d5e7d61a13a2811777c0b2f25ce66abb898141abe8f4a",
+  "alias" : "aeiou"
+} ];
   if (Object.keys(examples).length > 0) {
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
@@ -178,9 +133,8 @@ exports.getKeys = function (args, res, next) {
   }
 }
 
-exports.getTransactions = function (args, res, next) {
+exports.getTransactions = function(args, res, next) {
   /**
-   * Gets list of recent transactions.
    * Gets list of recent transactions.
    *
    * connection NodeConnection Connection data for Chain Node (optional)
@@ -235,12 +189,11 @@ exports.getTransactions = function (args, res, next) {
   }
 }
 
-exports.signTransaction = function (args, res, next) {
+exports.signTransaction = function(args, res, next) {
   /**
    * sign this transaction partial
-   * sign this transaction partial
    *
-   * request SignRequest Request includes Node connection details and transaction information  (optional)
+   * request ChainRequest Request includes Node connection details and transaction information  (optional)
    * returns List
    **/
   var examples = {};

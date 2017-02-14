@@ -36,8 +36,7 @@ paths:
     get:
       tags:
       - "AppIO"
-      summary: "Gets list of trade offers"
-      description: "List Trades posted in the system\n"
+      description: "List Trades posted in the system"
       operationId: "getTrades"
       parameters: []
       responses:
@@ -53,8 +52,7 @@ paths:
     post:
       tags:
       - "AppIO"
-      summary: "Adds a new offer item"
-      description: "Adds a new Offer Item to the system\n"
+      description: "Adds a new Trade Offer Item to the system"
       operationId: "postTrade"
       parameters:
       - in: "body"
@@ -80,8 +78,7 @@ paths:
     put:
       tags:
       - "AppIO"
-      summary: "Updates an Offer Item"
-      description: "update an item in the system"
+      description: "Updates an Offer Item"
       operationId: "updateTrade"
       parameters:
       - in: "body"
@@ -108,8 +105,7 @@ paths:
     get:
       tags:
       - "AppIO"
-      summary: "Gets specified trade details"
-      description: "Gets specified trade details\n"
+      description: "Gets specified trade details"
       operationId: "getTrade"
       parameters:
       - name: "tradeId"
@@ -131,7 +127,6 @@ paths:
     delete:
       tags:
       - "AppIO"
-      summary: "deletes posted trade offer"
       description: "Delete the specified trade from the system unless it has been\
         \ completed"
       operationId: "deleteTrade"
@@ -156,8 +151,7 @@ paths:
     get:
       tags:
       - "AppIO"
-      summary: "Gets registered app users."
-      description: "List users registered to use the app.\n"
+      description: "List users registered to use the app."
       operationId: "getUsers"
       parameters: []
       responses:
@@ -173,8 +167,7 @@ paths:
     post:
       tags:
       - "AppIO"
-      summary: "Register a new User to the system"
-      description: "Register a new User to the system\n"
+      description: "Register a new User to the system"
       operationId: "postUser"
       parameters:
       - in: "body"
@@ -195,7 +188,6 @@ paths:
     get:
       tags:
       - "AppIO"
-      summary: "Get user detail"
       description: "Gets the specified user details"
       operationId: "getUser"
       parameters:
@@ -217,7 +209,6 @@ paths:
     delete:
       tags:
       - "AppIO"
-      summary: "deletes posted trade offer"
       description: "Delete the specified user from the system unless they have completed/pending\
         \ transactions"
       operationId: "deleteUser"
@@ -237,44 +228,21 @@ paths:
           schema:
             $ref: "#/definitions/inline_response_400"
       x-swagger-router-controller: "AppIO"
-  /chain/account:
-    post:
-      tags:
-      - "ChainIO"
-      summary: "Create new account on local node."
-      description: "Create new account on local node.\n"
-      operationId: "createAccount"
-      parameters:
-      - in: "body"
-        name: "request"
-        description: "New Account data and Connection info"
-        required: false
-        schema:
-          $ref: "#/definitions/NewAccount"
-      responses:
-        200:
-          description: "new account created, return account details"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Account"
-        400:
-          description: "bad input parameter"
-      x-swagger-router-controller: "ChainIO"
   /chain/accounts:
     post:
       tags:
       - "ChainIO"
-      summary: "Gets list of local accounts."
-      description: "Gets list of local accounts.\n"
+      description: "Gets list of local accounts. If Account properties provided, will\
+        \ attempt search"
       operationId: "getAccounts"
       parameters:
       - in: "body"
-        name: "connection"
-        description: "Connection data for Chain Node"
+        name: "request"
+        description: "ChainRequest object with Connection and optional Account properties\
+          \ specified."
         required: false
         schema:
-          $ref: "#/definitions/NodeConnection"
+          $ref: "#/definitions/ChainRequest"
       responses:
         200:
           description: "search results matching criteria"
@@ -285,28 +253,21 @@ paths:
         400:
           description: "bad input parameter"
       x-swagger-router-controller: "ChainIO"
-  /chain/accounts/{alias}:
-    post:
+    put:
       tags:
       - "ChainIO"
-      summary: "Gets list of local accounts."
-      description: "Gets list of local accounts.\n"
-      operationId: "getAccount"
+      description: "Create new account on local node."
+      operationId: "createAccount"
       parameters:
-      - name: "alias"
-        in: "path"
-        description: "Alias of account to find"
-        required: true
-        type: "string"
       - in: "body"
-        name: "connection"
-        description: "Connection data for Chain Node"
+        name: "request"
+        description: "ChainRequest object with Connection and Account properties specified."
         required: false
         schema:
-          $ref: "#/definitions/NodeConnection"
+          $ref: "#/definitions/ChainRequest"
       responses:
         200:
-          description: "search results matching criteria"
+          description: "new account created, return account details"
           schema:
             type: "array"
             items:
@@ -318,16 +279,17 @@ paths:
     post:
       tags:
       - "ChainIO"
-      summary: "Gets list of local assets."
-      description: "Gets list of local assets.\n"
+      description: "Gets list of local assets. If Asset properties provided, will\
+        \ attempt search"
       operationId: "getAssets"
       parameters:
       - in: "body"
-        name: "connection"
-        description: "Connection data for Chain Node"
+        name: "request"
+        description: "ChainRequest object with Connection and optional Asset properties\
+          \ specified."
         required: false
         schema:
-          $ref: "#/definitions/NodeConnection"
+          $ref: "#/definitions/ChainRequest"
       responses:
         200:
           description: "search results matching criteria"
@@ -338,78 +300,20 @@ paths:
         400:
           description: "bad input parameter"
       x-swagger-router-controller: "ChainIO"
-  /chain/assets/{alias}:
-    post:
-      tags:
-      - "ChainIO"
-      summary: "Gets local asset."
-      description: "Gets local account details.\n"
-      operationId: "getAsset"
-      parameters:
-      - name: "alias"
-        in: "path"
-        description: "Alias of account to find"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "connection"
-        description: "Connection data for Chain Node"
-        required: false
-        schema:
-          $ref: "#/definitions/NodeConnection"
-      responses:
-        200:
-          description: "search results matching criteria"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Account"
-        400:
-          description: "bad input parameter"
-      x-swagger-router-controller: "ChainIO"
   /chain/keys:
     post:
       tags:
       - "ChainIO"
-      summary: "Gets list of local keys."
-      description: "Gets list of local HSM keys.\n"
+      description: "Gets list of local HSM keys."
       operationId: "getKeys"
       parameters:
       - in: "body"
         name: "request"
-        description: "Connection data for Chain Node"
+        description: "ChainRequest object with Connection and optional HSMKey properties\
+          \ specified."
         required: false
         schema:
-          $ref: "#/definitions/NodeConnection"
-      responses:
-        200:
-          description: "search results matching criteria"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/HSMKey"
-        400:
-          description: "bad input parameter"
-      x-swagger-router-controller: "ChainIO"
-  /chain/keys/{alias}:
-    post:
-      tags:
-      - "ChainIO"
-      summary: "Gets local key data."
-      description: "Gets local HSM key data.\n"
-      operationId: "getKey"
-      parameters:
-      - name: "alias"
-        in: "path"
-        description: "Alias of key to find"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "connection"
-        description: "Connection data for Chain Node"
-        required: false
-        schema:
-          $ref: "#/definitions/NodeConnection"
+          $ref: "#/definitions/ChainRequest"
       responses:
         200:
           description: "search results matching criteria"
@@ -424,8 +328,7 @@ paths:
     post:
       tags:
       - "ChainIO"
-      summary: "Gets list of recent transactions."
-      description: "Gets list of recent transactions.\n"
+      description: "Gets list of recent transactions."
       operationId: "getTransactions"
       parameters:
       - in: "body"
@@ -448,7 +351,6 @@ paths:
     post:
       tags:
       - "ChainIO"
-      summary: "sign this transaction partial"
       description: "sign this transaction partial"
       operationId: "signTransaction"
       parameters:
@@ -457,7 +359,7 @@ paths:
         description: "Request includes Node connection details and transaction information\n"
         required: false
         schema:
-          $ref: "#/definitions/SignRequest"
+          $ref: "#/definitions/ChainRequest"
       responses:
         200:
           description: "search results matching criteria"
@@ -541,62 +443,90 @@ definitions:
       nodeURL:
         type: "string"
         format: "URL"
-        example: "http://22.22.22.22:1999"
+        example: "http://172.16.101.93:1999"
       clientToken:
         type: "string"
-        example: "client:908324750983745902837509"
+        example: "UbuntuDev:e72629518809db4f5176d084f80f2261a3f4c70e044c6339251977c79f73c4bb"
+    description: "Defines the remote node connection details"
   Asset:
-    required:
-    - "assetAlias"
     properties:
-      assetId:
+      id:
         type: "string"
         example: "227f376b170560cc3c3243e09de3560b2ba732a9522217b3d87d0992a19e5341"
-      assetAlias:
+        description: "Used when referencing this asset from a remote node"
+      alias:
         type: "string"
-        example: "Dollars"
+        example: "BlockCoin"
+        description: "Friendly unique name for the Asset. Only visible on local node"
+      quorum:
+        type: "string"
+        format: "number"
+        description: "When used, number of keys required to sign. Must be <= keys.length"
+      tags:
+        type: "object"
+        description: "The tag is an optional key-value field used for arbitrary storage\
+          \ or queries. This data is local to the Chain Core and not visible in the\
+          \ blockchain."
+        properties: {}
+      definition:
+        type: "object"
+        description: "The definition is global data about the asset that is visible\
+          \ in the blockchain."
+        properties: {}
+      keys:
+        type: "array"
+        items:
+          $ref: "#/definitions/HSMKey"
+    description: "Model defining the core information of a Chain Asset"
   Account:
-    required:
-    - "accountAlias"
     properties:
-      accountId:
+      id:
         type: "string"
         example: "acc0RSDADNVG0804"
-      accountAlias:
+      alias:
         type: "string"
         example: "BobAccount1"
+        description: "Friendly unique name for the Account. Only visible on local\
+          \ node"
+      quorum:
+        type: "string"
+        format: "number"
+        description: "When used, number of keys required to sign. Must be <= keys.length"
+      tags:
+        type: "object"
+        description: "The tag is an optional key-value field used for arbitrary storage\
+          \ or queries. This data is local to the Chain Core and not visible in the\
+          \ blockchain."
+        properties: {}
+      keys:
+        type: "array"
+        description: "When used, array length must >= 1"
+        items:
+          $ref: "#/definitions/HSMKey"
       controlProgram:
         type: "string"
         example: "766baa20f19b55122a0404313b57fbdab7b59548a311dcf2fcf538f1d7cc025ca625e52b5151ad696c00c0"
+        description: "Used when paying to this account from a remote node."
+    description: "Model defining the core information of a Chain Account"
   HSMKey:
-    required:
-    - "alias"
     properties:
       alias:
         type: "string"
-      xpub:
+        description: "Freindly name for the key. Usually '{AccountAlias}Key'"
+      rootXpub:
         type: "string"
-  NewAccount:
+        example: "4abb21e69072a7b17357cc514847f556afd6e007a7c92ef4f898208c1103212aef4d36e42441888cd25d5e7d61a13a2811777c0b2f25ce66abb898141abe8f4a"
+      accountXpub:
+        type: "string"
+        example: "48764b4efe18bbf1c3ad9f60ab60a5eb6f6a8d72d560bdf07e261d4a707cd50244db49b4e64547a2686bc3eb282815bf1337cab4a3343ea1c95948b81e6f3df0"
+      accountDerivationPath:
+        type: "array"
+        items:
+          type: "string"
+          example: "AQYAAAAAAAAA"
+    description: "Model defining the properties of Chain HSM Key"
+  Transaction:
     properties:
-      connection:
-        $ref: "#/definitions/NodeConnection"
-      account:
-        $ref: "#/definitions/Account"
-      keycount:
-        type: "number"
-        example: 1
-        description: "These number of new keys will be auto-generated"
-      quorum:
-        type: "number"
-        example: 1
-        description: "Number of keys required for transfer. Must be <= keycount"
-      tags:
-        type: "object"
-        properties: {}
-  SignRequest:
-    properties:
-      connection:
-        $ref: "#/definitions/NodeConnection"
       spend:
         $ref: "#/definitions/TradeItem"
       control:
@@ -609,6 +539,24 @@ definitions:
       referenceData:
         type: "object"
         properties: {}
+    description: "Model defining the parameters of a Spend transaction."
+  ChainRequest:
+    required:
+    - "connection"
+    properties:
+      connection:
+        $ref: "#/definitions/NodeConnection"
+      account:
+        $ref: "#/definitions/Account"
+      asset:
+        $ref: "#/definitions/Asset"
+      transaction:
+        $ref: "#/definitions/Transaction"
+      hsmkey:
+        type: "array"
+        items:
+          $ref: "#/definitions/HSMKey"
+    description: "Model used to search or create new objects on a Chain node"
   TransactionResponse:
     properties:
       id:
