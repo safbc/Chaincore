@@ -641,9 +641,8 @@ definitions:
         type: string
         example:  BlockCoin
       quorum:
-        description: When used, number of keys required to sign. Must be <= keys.length
-        type: string
-        format: number
+        description:  On Asset creation > 0, number of keys required to sign. Must be <= keys.length
+        type: number
       tags:
         description: The tag is an optional key-value field used for arbitrary storage or queries. This data is local to the Chain Core and not visible in the blockchain.
         type: object
@@ -666,9 +665,8 @@ definitions:
         type: string
         example:  BobAccount1
       quorum:
-        description: When used, number of keys required to sign. Must be <= keys.length
-        type: string
-        format: number
+        description: On Account creation > 0, number of keys required to sign. Must be <= keys.length
+        type: number
       tags:
         description: The tag is an optional key-value field used for arbitrary storage or queries. This data is local to the Chain Core and not visible in the blockchain.
         type: object

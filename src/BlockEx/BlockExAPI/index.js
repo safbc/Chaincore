@@ -6,6 +6,8 @@ var swaggerTools = require('swagger-tools');
 var jsyaml = require('js-yaml');
 var fs = require('fs');
 var serverPort = 8080;
+var appName = 'BlockEx';
+var version = '0.0.1';
 
 // swaggerRouter configuration
 var options = {
@@ -34,7 +36,7 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
 
   // Start the server
   http.createServer(app).listen(serverPort, function () {
-    console.log('Your server is listening on port %d (http://localhost:%d/BlockEx/0.0.1/)', serverPort, serverPort);
+    console.log('Your server is listening on http://localhost:%d/%s/%s/)', serverPort, appName, version);
     console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
   });
 });

@@ -459,9 +459,9 @@ definitions:
         example: "BlockCoin"
         description: "Friendly unique name for the Asset. Only visible on local node"
       quorum:
-        type: "string"
-        format: "number"
-        description: "When used, number of keys required to sign. Must be <= keys.length"
+        type: "number"
+        description: "On Asset creation > 0, number of keys required to sign. Must\
+          \ be <= keys.length"
       tags:
         type: "object"
         description: "The tag is an optional key-value field used for arbitrary storage\
@@ -489,9 +489,9 @@ definitions:
         description: "Friendly unique name for the Account. Only visible on local\
           \ node"
       quorum:
-        type: "string"
-        format: "number"
-        description: "When used, number of keys required to sign. Must be <= keys.length"
+        type: "number"
+        description: "On Account creation > 0, number of keys required to sign. Must\
+          \ be <= keys.length"
       tags:
         type: "object"
         description: "The tag is an optional key-value field used for arbitrary storage\
