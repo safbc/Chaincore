@@ -15,6 +15,7 @@
   "dependencies": {
     "chain-sdk": "^1.0.2",
     "connect": "^3.2.0",
+    "global-tunnel": "^1.2.0",
     "js-yaml": "^3.3.0",
     "sqlite3": "^3.1.8",
     "swagger-tools": "0.10.1"

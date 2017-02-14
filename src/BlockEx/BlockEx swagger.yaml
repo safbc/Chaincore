@@ -11,7 +11,14 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 
-# tags are used for organizing operations
+
+
+# Added by API Auto Mocking Plugin
+# host: virtserver.swaggerhub.com
+host: localhost:8080
+# Added by API Auto Mocking Plugin
+basePath: /BlockEx/0.0.1
+
 
 schemes:
 - https
@@ -19,7 +26,8 @@ produces:
   - application/json
 consumes:
   - application/json
-
+  
+# tags are used for organizing operations
 tags:
   - name: AppIO
     description: |
@@ -37,7 +45,6 @@ tags:
       * **accounts**    : list accounts
       * **account**     : create account
       * **assets**      : list assets
-      * **asset**       : create asset
       * **keys**        : list keys
       * **key**         : create key
       * **transactions**: list transactions
@@ -434,8 +441,7 @@ paths:
               $ref: '#/definitions/Account'
         400:
           description: bad input parameter
-          
-          
+
   /chain/accounts/{alias}:
     parameters:
       - name: alias
@@ -465,31 +471,30 @@ paths:
         400:
           description: bad input parameter
 
-
           
-  /chain/asset:
-    post:
-      summary: Creates new Asset on local node.
-      operationId: createAsset
-      description: |
-        Creates new Asset on local node.
-      tags: 
-      - ChainIO
-      parameters:
-      - in: body
-        name: connection
-        description: New Asset and connection data for Chain Node
-        schema:
-          $ref: '#/definitions/NewAsset'
-      responses:
-        200:
-          description: new sset created, return asset details
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Asset'
-        400:
-          description: bad input parameter
+#  /chain/asset:
+#    post:
+#      summary: Creates new Asset on local node.
+#      operationId: createAsset
+#      description: |
+#        Creates new Asset on local node.
+#      tags: 
+#      - ChainIO
+#      parameters:
+#      - in: body
+#        name: connection
+#        description: New Asset and connection data for Chain Node
+#        schema:
+#          $ref: '#/definitions/NewAsset'
+#      responses:
+#        200:
+#          description: new sset created, return asset details
+#          schema:
+#            type: array
+#            items:
+#              $ref: '#/definitions/Asset'
+#        400:
+#          description: bad input parameter
           
   /chain/assets:
     post:
@@ -543,6 +548,7 @@ paths:
               $ref: '#/definitions/Account'
         400:
           description: bad input parameter    
+  
   
   /chain/keys:
     post:
@@ -718,6 +724,9 @@ definitions:
       avatar:
         type: string
         format: base64 image
+      password:
+        type: string
+        format: hashed password
         
 # Models of the Chain Core message objects
 
@@ -769,26 +778,26 @@ definitions:
         type: string
         
   
-  NewAsset:
-    properties:
-      connection:
-        $ref: '#/definitions/NodeConnection'
-      asset:
-        $ref: '#/definitions/Asset'
-      keycount:
-        type: number
-      quorum:
-        type: number
-        description: number of sign keys required to issue. Must be <= keycount
-      keylist:
-        type: array
-        description: Array length must == keycount
-        items:
-          $ref: '#/definitions/HSMKey'
-      definition:
-        type: object
-      tags:
-        type: object
+#  NewAsset:
+#    properties:
+#      connection:
+#        $ref: '#/definitions/NodeConnection'
+#      asset:
+#        $ref: '#/definitions/Asset'
+#      keycount:
+#        type: number
+#      quorum:
+#        type: number
+#        description: number of sign keys required to issue. Must be <= keycount
+#      keylist:
+#        type: array
+#        description: Array length must == keycount
+#        items:
+#          $ref: '#/definitions/HSMKey'
+#      definition:
+#        type: object
+#      tags:
+#        type: object
         
         
   
@@ -800,14 +809,12 @@ definitions:
         $ref: '#/definitions/Account'
       keycount:
         type: number
+        description: These number of new keys will be auto-generated
+        example: 1
       quorum:
         type: number
         description: Number of keys required for transfer. Must be <= keycount
-      keylist:
-        type: array
-        description: Array length must == keycount
-        items:
-          $ref: '#/definitions/HSMKey'
+        example: 1
       tags:
         type: object        
 
@@ -947,11 +954,3 @@ definitions:
         type: string
         example: no
       
-
-
-
-# Added by API Auto Mocking Plugin
-host: virtserver.swaggerhub.com
-# basePath: /DibbsZA/Offer2Trade/API/0.0.1
-# Added by API Auto Mocking Plugin
-basePath: /DibbsZA/Offer2Trade/0.0.1

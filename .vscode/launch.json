@@ -8,11 +8,9 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceRoot}\\SDKExamples\\NodeJS\\basicExamples\\accountList.js",
-            "cwd": "${workspaceRoot}\\SDKExamples\\NodeJS\\basicExamples",
-            "args": [
-                "alice-"
-            ]
+            "program": "${workspaceRoot}\\src\\BlockEx\\BlockExAPI\\index.js",
+            "cwd": "${workspaceRoot}\\src\\BlockEx\\BlockExAPI",
+            "args": []
         },
         {
             "type": "node",

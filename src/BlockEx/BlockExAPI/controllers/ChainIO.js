@@ -8,10 +8,6 @@ module.exports.createAccount = function createAccount (req, res, next) {
   ChainIO.createAccount(req.swagger.params, res, next);
 };
 
-module.exports.createAsset = function createAsset (req, res, next) {
-  ChainIO.createAsset(req.swagger.params, res, next);
-};
-
 module.exports.getAccount = function getAccount (req, res, next) {
   ChainIO.getAccount(req.swagger.params, res, next);
 };

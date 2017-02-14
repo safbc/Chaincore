@@ -186,6 +186,7 @@ exports.getUser = function(args, res, next) {
   var examples = {};
   examples['application/json'] = {
   "data" : [ {
+    "password" : "aeiou",
     "fullName" : "aeiou",
     "telephone" : "aeiou",
     "avatar" : "aeiou",
@@ -213,6 +214,7 @@ exports.getUsers = function(args, res, next) {
    **/
   var examples = {};
   examples['application/json'] = [ {
+  "password" : "aeiou",
   "fullName" : "aeiou",
   "telephone" : "aeiou",
   "avatar" : "aeiou",

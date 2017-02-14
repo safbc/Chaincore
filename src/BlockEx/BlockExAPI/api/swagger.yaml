@@ -11,8 +11,8 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "virtserver.swaggerhub.com"
-basePath: "/BlockExAPI/0.0.1"
+host: "localhost:8080"
+basePath: "/BlockEx/0.0.1"
 tags:
 - name: "AppIO"
   description: "The AppIO controller defines paths that deal with the logic of the\
@@ -22,9 +22,9 @@ tags:
   description: "The ChainIO controller handles operations to the Chain Core nodes\
     \ using the Chain-SDK\n\nThe users local app stores and provides the connection\
     \ information as required.\n\n* **accounts**    : list accounts\n* **account**\
-    \     : create account\n* **assets**      : list assets\n* **asset**       : create\
-    \ asset\n* **keys**        : list keys\n* **key**         : create key\n* **transactions**:\
-    \ list transactions\n* **sign**        : submit transactions\n"
+    \     : create account\n* **assets**      : list assets\n* **keys**        : list\
+    \ keys\n* **key**         : create key\n* **transactions**: list transactions\n\
+    * **sign**        : submit transactions\n"
 schemes:
 - "https"
 consumes:
@@ -314,30 +314,6 @@ paths:
         400:
           description: "bad input parameter"
       x-swagger-router-controller: "ChainIO"
-  /chain/asset:
-    post:
-      tags:
-      - "ChainIO"
-      summary: "Creates new Asset on local node."
-      description: "Creates new Asset on local node.\n"
-      operationId: "createAsset"
-      parameters:
-      - in: "body"
-        name: "connection"
-        description: "New Asset and connection data for Chain Node"
-        required: false
-        schema:
-          $ref: "#/definitions/NewAsset"
-      responses:
-        200:
-          description: "new sset created, return asset details"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Asset"
-        400:
-          description: "bad input parameter"
-      x-swagger-router-controller: "ChainIO"
   /chain/assets:
     post:
       tags:
@@ -554,6 +530,9 @@ definitions:
       avatar:
         type: "string"
         format: "base64 image"
+      password:
+        type: "string"
+        format: "hashed password"
   NodeConnection:
     required:
     - "clientToken"
@@ -597,28 +576,6 @@ definitions:
         type: "string"
       xpub:
         type: "string"
-  NewAsset:
-    properties:
-      connection:
-        $ref: "#/definitions/NodeConnection"
-      asset:
-        $ref: "#/definitions/Asset"
-      keycount:
-        type: "number"
-      quorum:
-        type: "number"
-        description: "number of sign keys required to issue. Must be <= keycount"
-      keylist:
-        type: "array"
-        description: "Array length must == keycount"
-        items:
-          $ref: "#/definitions/HSMKey"
-      definition:
-        type: "object"
-        properties: {}
-      tags:
-        type: "object"
-        properties: {}
   NewAccount:
     properties:
       connection:
@@ -627,14 +584,12 @@ definitions:
         $ref: "#/definitions/Account"
       keycount:
         type: "number"
+        example: 1
+        description: "These number of new keys will be auto-generated"
       quorum:
         type: "number"
+        example: 1
         description: "Number of keys required for transfer. Must be <= keycount"
-      keylist:
-        type: "array"
-        description: "Array length must == keycount"
-        items:
-          $ref: "#/definitions/HSMKey"
       tags:
         type: "object"
         properties: {}
