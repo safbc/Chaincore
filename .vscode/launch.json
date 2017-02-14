@@ -9,7 +9,9 @@
             "request": "launch",
             "name": "Launch Program",
             "program": "${workspaceRoot}\\src\\BlockEx\\BlockExAPI\\index.js",
+            // "program": "${workspaceRoot}/src/BlockEx/BlockExAPI/index.js",
             "cwd": "${workspaceRoot}\\src\\BlockEx\\BlockExAPI",
+            // "cwd": "${workspaceRoot}/src/BlockEx/BlockExAPI",
             "args": []
         },
         {
