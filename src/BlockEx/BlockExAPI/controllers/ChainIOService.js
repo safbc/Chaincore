@@ -143,6 +143,7 @@ exports.getAssets = function (args, res, next) {
    * request ChainRequest ChainRequest object with Connection and optional Asset properties specified. (optional)
    * returns List
    **/
+  // TODO: Search on either Alias or Id
 
   const chain = require('chain-sdk');
 
@@ -157,8 +158,8 @@ exports.getAssets = function (args, res, next) {
 
   var assets = [];
   var filter = '';
-  // Is this going to be filtered search or not?
 
+  // Is this going to be filtered search or not?
   if (request.asset.alias == undefined) {
     client.assets.queryAll({}, (asset, next, done) => {
       console.log('Asset: ' + asset.id + ' (' + asset.alias + ')')
