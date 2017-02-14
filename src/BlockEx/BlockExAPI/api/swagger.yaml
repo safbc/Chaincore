@@ -1,0 +1,807 @@
+---
+swagger: "2.0"
+info:
+  description: "This is a simple API to manage the exchange of information required\
+    \ to set up multi-party asset swap transactions between nodes of a Chain Core\
+    \ network."
+  version: "0.0.1"
+  title: "BlockEx API"
+  contact:
+    email: "garyd@bankservafrica.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/BlockExAPI/0.0.1"
+tags:
+- name: "AppIO"
+  description: "The AppIO controller defines paths that deal with the logic of the\
+    \ app\n\n* **trades**: management of view, placing and accepting trades in the\
+    \ system.\n* **users**: manage app user info.\n"
+- name: "ChainIO"
+  description: "The ChainIO controller handles operations to the Chain Core nodes\
+    \ using the Chain-SDK\n\nThe users local app stores and provides the connection\
+    \ information as required.\n\n* **accounts**    : list accounts\n* **account**\
+    \     : create account\n* **assets**      : list assets\n* **asset**       : create\
+    \ asset\n* **keys**        : list keys\n* **key**         : create key\n* **transactions**:\
+    \ list transactions\n* **sign**        : submit transactions\n"
+schemes:
+- "https"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /app/trades:
+    get:
+      tags:
+      - "AppIO"
+      summary: "Gets list of trade offers"
+      description: "List Trades posted in the system\n"
+      operationId: "getTrades"
+      parameters: []
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        400:
+          description: "bad input parameter"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "AppIO"
+    post:
+      tags:
+      - "AppIO"
+      summary: "Adds a new offer item"
+      description: "Adds a new Offer Item to the system\n"
+      operationId: "postTrade"
+      parameters:
+      - in: "body"
+        name: "offerItem"
+        description: "Offer item to add to the system"
+        required: false
+        schema:
+          $ref: "#/definitions/TradeItem"
+      responses:
+        201:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        400:
+          description: "invalid input, object invalid"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        409:
+          description: "an existing item already exists"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "AppIO"
+    put:
+      tags:
+      - "AppIO"
+      summary: "Updates an Offer Item"
+      description: "update an item in the system"
+      operationId: "updateTrade"
+      parameters:
+      - in: "body"
+        name: "offerItem"
+        description: "Offer to be updated"
+        required: false
+        schema:
+          $ref: "#/definitions/TradeItem"
+      responses:
+        201:
+          description: "item updated"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        400:
+          description: "invalid input, object invalid"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        409:
+          description: "an existing item already exists"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "AppIO"
+  /app/trades/{tradeId}:
+    get:
+      tags:
+      - "AppIO"
+      summary: "Gets specified trade details"
+      description: "Gets specified trade details\n"
+      operationId: "getTrade"
+      parameters:
+      - name: "tradeId"
+        in: "path"
+        description: "Id of trade to work with"
+        required: true
+        type: "integer"
+        format: "integer"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        400:
+          description: "bad input parameter"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "AppIO"
+    delete:
+      tags:
+      - "AppIO"
+      summary: "deletes posted trade offer"
+      description: "Delete the specified trade from the system unless it has been\
+        \ completed"
+      operationId: "deleteTrade"
+      parameters:
+      - name: "tradeId"
+        in: "path"
+        description: "Id of trade to work with"
+        required: true
+        type: "integer"
+        format: "integer"
+      responses:
+        200:
+          description: "item deleted confirmation"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        400:
+          description: "invalid input, object invalid"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "AppIO"
+  /app/users:
+    get:
+      tags:
+      - "AppIO"
+      summary: "Gets registered app users."
+      description: "List users registered to use the app.\n"
+      operationId: "getUsers"
+      parameters: []
+      responses:
+        200:
+          description: "search results matching criteria"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/User"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "AppIO"
+    post:
+      tags:
+      - "AppIO"
+      summary: "Register a new User to the system"
+      description: "Register a new User to the system\n"
+      operationId: "postUser"
+      parameters:
+      - in: "body"
+        name: "user"
+        description: "Offer item to add to the system"
+        required: false
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        201:
+          description: "item created"
+        400:
+          description: "invalid input, object invalid"
+        409:
+          description: "an existing item already exists"
+      x-swagger-router-controller: "AppIO"
+  /app/users/{userName}:
+    get:
+      tags:
+      - "AppIO"
+      summary: "Get user detail"
+      description: "Gets the specified user details"
+      operationId: "getUser"
+      parameters:
+      - name: "userName"
+        in: "path"
+        description: "Id of user to work with"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/inline_response_200_1"
+        400:
+          description: "invalid input, object invalid"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "AppIO"
+    delete:
+      tags:
+      - "AppIO"
+      summary: "deletes posted trade offer"
+      description: "Delete the specified user from the system unless they have completed/pending\
+        \ transactions"
+      operationId: "deleteUser"
+      parameters:
+      - name: "userName"
+        in: "path"
+        description: "Id of user to work with"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "item deleted confirmation"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        400:
+          description: "invalid input, object invalid"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "AppIO"
+  /chain/account:
+    post:
+      tags:
+      - "ChainIO"
+      summary: "Create new account on local node."
+      description: "Create new account on local node.\n"
+      operationId: "createAccount"
+      parameters:
+      - in: "body"
+        name: "request"
+        description: "New Account data and Connection info"
+        required: false
+        schema:
+          $ref: "#/definitions/NewAccount"
+      responses:
+        200:
+          description: "new account created, return account details"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Account"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "ChainIO"
+  /chain/accounts:
+    post:
+      tags:
+      - "ChainIO"
+      summary: "Gets list of local accounts."
+      description: "Gets list of local accounts.\n"
+      operationId: "getAccounts"
+      parameters:
+      - in: "body"
+        name: "connection"
+        description: "Connection data for Chain Node"
+        required: false
+        schema:
+          $ref: "#/definitions/NodeConnection"
+      responses:
+        200:
+          description: "search results matching criteria"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Account"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "ChainIO"
+  /chain/accounts/{alias}:
+    post:
+      tags:
+      - "ChainIO"
+      summary: "Gets list of local accounts."
+      description: "Gets list of local accounts.\n"
+      operationId: "getAccount"
+      parameters:
+      - name: "alias"
+        in: "path"
+        description: "Alias of account to find"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "connection"
+        description: "Connection data for Chain Node"
+        required: false
+        schema:
+          $ref: "#/definitions/NodeConnection"
+      responses:
+        200:
+          description: "search results matching criteria"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Account"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "ChainIO"
+  /chain/asset:
+    post:
+      tags:
+      - "ChainIO"
+      summary: "Creates new Asset on local node."
+      description: "Creates new Asset on local node.\n"
+      operationId: "createAsset"
+      parameters:
+      - in: "body"
+        name: "connection"
+        description: "New Asset and connection data for Chain Node"
+        required: false
+        schema:
+          $ref: "#/definitions/NewAsset"
+      responses:
+        200:
+          description: "new sset created, return asset details"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Asset"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "ChainIO"
+  /chain/assets:
+    post:
+      tags:
+      - "ChainIO"
+      summary: "Gets list of local assets."
+      description: "Gets list of local assets.\n"
+      operationId: "getAssets"
+      parameters:
+      - in: "body"
+        name: "connection"
+        description: "Connection data for Chain Node"
+        required: false
+        schema:
+          $ref: "#/definitions/NodeConnection"
+      responses:
+        200:
+          description: "search results matching criteria"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Asset"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "ChainIO"
+  /chain/assets/{alias}:
+    post:
+      tags:
+      - "ChainIO"
+      summary: "Gets local asset."
+      description: "Gets local account details.\n"
+      operationId: "getAsset"
+      parameters:
+      - name: "alias"
+        in: "path"
+        description: "Alias of account to find"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "connection"
+        description: "Connection data for Chain Node"
+        required: false
+        schema:
+          $ref: "#/definitions/NodeConnection"
+      responses:
+        200:
+          description: "search results matching criteria"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Account"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "ChainIO"
+  /chain/keys:
+    post:
+      tags:
+      - "ChainIO"
+      summary: "Gets list of local keys."
+      description: "Gets list of local HSM keys.\n"
+      operationId: "getKeys"
+      parameters:
+      - in: "body"
+        name: "request"
+        description: "Connection data for Chain Node"
+        required: false
+        schema:
+          $ref: "#/definitions/NodeConnection"
+      responses:
+        200:
+          description: "search results matching criteria"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/HSMKey"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "ChainIO"
+  /chain/keys/{alias}:
+    post:
+      tags:
+      - "ChainIO"
+      summary: "Gets local key data."
+      description: "Gets local HSM key data.\n"
+      operationId: "getKey"
+      parameters:
+      - name: "alias"
+        in: "path"
+        description: "Alias of key to find"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "connection"
+        description: "Connection data for Chain Node"
+        required: false
+        schema:
+          $ref: "#/definitions/NodeConnection"
+      responses:
+        200:
+          description: "search results matching criteria"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/HSMKey"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "ChainIO"
+  /chain/transactions:
+    post:
+      tags:
+      - "ChainIO"
+      summary: "Gets list of recent transactions."
+      description: "Gets list of recent transactions.\n"
+      operationId: "getTransactions"
+      parameters:
+      - in: "body"
+        name: "connection"
+        description: "Connection data for Chain Node"
+        required: false
+        schema:
+          $ref: "#/definitions/NodeConnection"
+      responses:
+        200:
+          description: "search results matching criteria"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/TransactionResponse"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "ChainIO"
+  /chain/sign:
+    post:
+      tags:
+      - "ChainIO"
+      summary: "sign this transaction partial"
+      description: "sign this transaction partial"
+      operationId: "signTransaction"
+      parameters:
+      - in: "body"
+        name: "request"
+        description: "Request includes Node connection details and transaction information\n"
+        required: false
+        schema:
+          $ref: "#/definitions/SignRequest"
+      responses:
+        200:
+          description: "search results matching criteria"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/TransactionResponse"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "ChainIO"
+definitions:
+  Trade:
+    type: "object"
+    properties:
+      tradeId:
+        type: "string"
+        format: "int32"
+        example: "d290f1ee"
+      parentId:
+        type: "string"
+        format: "int32"
+        example: "d290f1ee"
+      tradeDescription:
+        type: "string"
+        example: "User A sold X asset to User B for Y Asset"
+      seller:
+        $ref: "#/definitions/TradeItem"
+      buyer:
+        $ref: "#/definitions/TradeItem"
+      expiryDateTime:
+        type: "string"
+        format: "date"
+        example: "2017-01-31T09:00:00.002Z"
+      transactionHex:
+        type: "string"
+      status:
+        type: "string"
+        example: "Processed or Cancelled"
+      lastActionDate:
+        type: "string"
+        format: "date"
+        example: "2017-01-31T09:00:00.002Z"
+  TradeItem:
+    type: "object"
+    properties:
+      asset:
+        $ref: "#/definitions/Asset"
+      account:
+        $ref: "#/definitions/Account"
+      amount:
+        type: "number"
+        format: "integer"
+        example: 100
+  User:
+    required:
+    - "email"
+    - "fullName"
+    - "userName"
+    properties:
+      userName:
+        type: "string"
+      fullName:
+        type: "string"
+      email:
+        type: "string"
+        format: "email"
+      telephone:
+        type: "string"
+        format: "phone"
+      avatar:
+        type: "string"
+        format: "base64 image"
+  NodeConnection:
+    required:
+    - "clientToken"
+    - "nodeURL"
+    properties:
+      nodeURL:
+        type: "string"
+        format: "URL"
+        example: "http://22.22.22.22:1999"
+      clientToken:
+        type: "string"
+        example: "client:908324750983745902837509"
+  Asset:
+    required:
+    - "assetAlias"
+    properties:
+      assetId:
+        type: "string"
+        example: "227f376b170560cc3c3243e09de3560b2ba732a9522217b3d87d0992a19e5341"
+      assetAlias:
+        type: "string"
+        example: "Dollars"
+  Account:
+    required:
+    - "accountAlias"
+    properties:
+      accountId:
+        type: "string"
+        example: "acc0RSDADNVG0804"
+      accountAlias:
+        type: "string"
+        example: "BobAccount1"
+      controlProgram:
+        type: "string"
+        example: "766baa20f19b55122a0404313b57fbdab7b59548a311dcf2fcf538f1d7cc025ca625e52b5151ad696c00c0"
+  HSMKey:
+    required:
+    - "alias"
+    properties:
+      alias:
+        type: "string"
+      xpub:
+        type: "string"
+  NewAsset:
+    properties:
+      connection:
+        $ref: "#/definitions/NodeConnection"
+      asset:
+        $ref: "#/definitions/Asset"
+      keycount:
+        type: "number"
+      quorum:
+        type: "number"
+        description: "number of sign keys required to issue. Must be <= keycount"
+      keylist:
+        type: "array"
+        description: "Array length must == keycount"
+        items:
+          $ref: "#/definitions/HSMKey"
+      definition:
+        type: "object"
+        properties: {}
+      tags:
+        type: "object"
+        properties: {}
+  NewAccount:
+    properties:
+      connection:
+        $ref: "#/definitions/NodeConnection"
+      account:
+        $ref: "#/definitions/Account"
+      keycount:
+        type: "number"
+      quorum:
+        type: "number"
+        description: "Number of keys required for transfer. Must be <= keycount"
+      keylist:
+        type: "array"
+        description: "Array length must == keycount"
+        items:
+          $ref: "#/definitions/HSMKey"
+      tags:
+        type: "object"
+        properties: {}
+  SignRequest:
+    properties:
+      connection:
+        $ref: "#/definitions/NodeConnection"
+      spend:
+        $ref: "#/definitions/TradeItem"
+      control:
+        $ref: "#/definitions/TradeItem"
+      allowAdditionalActions:
+        type: "string"
+        example: "yes or no"
+      baseTransaction:
+        type: "string"
+      referenceData:
+        type: "object"
+        properties: {}
+  TransactionResponse:
+    properties:
+      id:
+        type: "string"
+        example: "af3c8f3e42f35072ab1286225e2b3cd73552b9ce3a3cf3cd936f6e3a9d3f40df"
+      timestamp:
+        type: "string"
+        format: "date"
+        example: "2017-02-09T14:20:24.000Z"
+      block_id:
+        type: "string"
+      block_height:
+        type: "integer"
+      position:
+        type: "integer"
+      reference_data:
+        type: "object"
+        properties: {}
+      is_local:
+        type: "string"
+        example: "no"
+      inputs:
+        type: "array"
+        items:
+          $ref: "#/definitions/TransactionInputSpend"
+      outputs:
+        type: "array"
+        items:
+          $ref: "#/definitions/TransactionOutputControl"
+  TransactionInputIssue:
+    properties:
+      type:
+        type: "string"
+      asset_id:
+        type: "string"
+      asset_definition:
+        type: "string"
+      asset_tags:
+        type: "string"
+      asset_is_local:
+        type: "string"
+      amount:
+        type: "integer"
+      issuance_program:
+        type: "string"
+      reference_data:
+        type: "object"
+        properties: {}
+      is_local:
+        type: "string"
+  TransactionInputSpend:
+    properties:
+      type:
+        type: "string"
+      asset_id:
+        type: "string"
+      asset_alias:
+        type: "string"
+      asset_definition:
+        type: "object"
+        properties: {}
+      asset_tags:
+        type: "object"
+        properties: {}
+      asset_is_local:
+        type: "string"
+        example: "yes"
+      amount:
+        type: "integer"
+      spent_output:
+        type: "object"
+        properties: {}
+      account_id:
+        type: "string"
+      account_alias:
+        type: "string"
+      account_tags:
+        type: "object"
+        properties: {}
+      reference_data:
+        type: "object"
+        properties: {}
+      is_local:
+        type: "string"
+        example: "yes"
+  TransactionOutputControl:
+    properties:
+      type:
+        type: "string"
+      purpose:
+        type: "string"
+        example: "receive or change"
+      position:
+        type: "integer"
+      asset_id:
+        type: "string"
+      asset_definition:
+        type: "object"
+        properties: {}
+      asset_tags:
+        type: "object"
+        properties: {}
+      asset_is_local:
+        type: "string"
+      amount:
+        type: "integer"
+      account_id:
+        type: "string"
+      account_alias:
+        type: "string"
+      account_tags:
+        type: "object"
+        properties: {}
+      control_program:
+        type: "string"
+      reference_data:
+        type: "object"
+        properties: {}
+      is_local:
+        type: "string"
+        example: "no"
+  inline_response_200_meta:
+    properties:
+      code:
+        type: "integer"
+  inline_response_200:
+    properties:
+      meta:
+        $ref: "#/definitions/inline_response_200_meta"
+      data:
+        type: "array"
+        items:
+          $ref: "#/definitions/Trade"
+  inline_response_400_error:
+    properties:
+      message:
+        type: "string"
+  inline_response_400:
+    properties:
+      meta:
+        $ref: "#/definitions/inline_response_200_meta"
+      error:
+        $ref: "#/definitions/inline_response_400_error"
+  inline_response_200_1:
+    properties:
+      meta:
+        $ref: "#/definitions/inline_response_200_meta"
+      data:
+        type: "array"
+        items:
+          $ref: "#/definitions/User"

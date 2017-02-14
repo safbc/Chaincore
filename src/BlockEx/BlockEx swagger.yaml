@@ -1,0 +1,957 @@
+swagger: '2.0'
+info:
+  description: This is a simple API to manage the exchange of information required to set up multi-party asset swap transactions between nodes of a Chain Core network.
+  version: 0.0.1
+  title: BlockEx API
+  # put the contact info for your development or API team
+  contact:
+    email: garyd@bankservafrica.com
+
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+# tags are used for organizing operations
+
+schemes:
+- https
+produces:
+  - application/json
+consumes:
+  - application/json
+
+tags:
+  - name: AppIO
+    description: |
+      The AppIO controller defines paths that deal with the logic of the app
+      
+      * **trades**: management of view, placing and accepting trades in the system.
+      * **users**: manage app user info.
+      
+  - name: ChainIO
+    description: |
+      The ChainIO controller handles operations to the Chain Core nodes using the Chain-SDK
+      
+      The users local app stores and provides the connection information as required.
+    
+      * **accounts**    : list accounts
+      * **account**     : create account
+      * **assets**      : list assets
+      * **asset**       : create asset
+      * **keys**        : list keys
+      * **key**         : create key
+      * **transactions**: list transactions
+      * **sign**        : submit transactions
+      
+paths:
+# AppIO Paths
+  /app/trades:
+    get:
+      summary: Gets list of trade offers
+      operationId: getTrades
+      description: |
+        List Trades posted in the system
+      tags: 
+      - AppIO
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Trade'
+                
+        400:
+          description: bad input parameter
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              error:
+                properties:
+                  message:
+                    type: string
+          
+    post:
+      summary: Adds a new offer item
+      operationId: postTrade
+      description: |
+        Adds a new Offer Item to the system
+      tags: 
+      - AppIO
+      parameters:
+      - in: body
+        name: offerItem
+        description: Offer item to add to the system
+        schema:
+          $ref: '#/definitions/TradeItem'
+      responses:
+        201:
+          description: OK
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Trade'
+        400:
+          description: invalid input, object invalid
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              error:
+                properties:
+                  message:
+                    type: string
+        409:
+          description: an existing item already exists
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              error:
+                properties:
+                  message:
+                    type: string
+          
+    put:
+      summary: Updates an Offer Item
+      operationId: updateTrade
+      description: update an item in the system
+      tags: 
+      - AppIO
+      parameters:
+      - in: body
+        name: offerItem
+        description: Offer to be updated
+        schema:
+          $ref: '#/definitions/TradeItem'
+      responses:
+        201:
+          description: item updated
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Trade'
+        400:
+          description: invalid input, object invalid
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              error:
+                properties:
+                  message:
+                    type: string
+        409:
+          description: an existing item already exists
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              error:
+                properties:
+                  message:
+                    type: string         
+
+  
+  /app/trades/{tradeId}:
+    parameters:
+      - name: tradeId
+        description: Id of trade to work with
+        in: path
+        type: integer
+        format: integer
+        required: true
+        
+    get:
+      summary: Gets specified trade details
+      operationId: getTrade
+      description: |
+        Gets specified trade details
+      tags: 
+      - AppIO
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Trade'
+        400:
+          description: bad input parameter
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              error:
+                properties:
+                  message:
+                    type: string
+                 
+    delete:
+      summary: deletes posted trade offer
+      operationId: deleteTrade
+      description: Delete the specified trade from the system unless it has been completed
+      tags: 
+      - AppIO
+      responses:
+        200:
+          description: item deleted confirmation
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Trade'
+        400:
+          description: invalid input, object invalid
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              error:
+                properties:
+                  message:
+                    type: string   
+
+
+  /app/users:
+    get:
+      summary: Gets registered app users.
+      operationId: getUsers
+      description: |
+        List users registered to use the app.
+      tags: 
+      - AppIO
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        400:
+          description: bad input parameter
+
+          
+    post:
+      summary: Register a new User to the system
+      operationId: postUser
+      description: |
+        Register a new User to the system
+      tags: 
+      - AppIO
+      parameters:
+      - in: body
+        name: user
+        description: Offer item to add to the system
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        201:
+          description: item created
+        400:
+          description: invalid input, object invalid
+        409:
+          description: an existing item already exists      
+          
+  /app/users/{userName}:
+    parameters:
+      - name: userName
+        description: Id of user to work with
+        in: path
+        type: string
+        required: true
+    get:
+      summary: Get user detail
+      operationId: getUser
+      description: Gets the specified user details
+      tags: 
+      - AppIO
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/User'
+        400:
+          description: invalid input, object invalid
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              error:
+                properties:
+                  message:
+                    type: string       
+                 
+    delete:
+      summary: deletes posted trade offer
+      operationId: deleteUser
+      description: Delete the specified user from the system unless they have completed/pending transactions
+      tags: 
+      - AppIO
+      responses:
+        200:
+          description: item deleted confirmation
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Trade'
+        400:
+          description: invalid input, object invalid
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              error:
+                properties:
+                  message:
+                    type: string   
+
+# ChainIO Paths
+
+
+  /chain/account:
+    post:
+      summary: Create new account on local node.
+      operationId: createAccount
+      description: |
+        Create new account on local node.
+      tags: 
+      - ChainIO
+      parameters:
+      - in: body
+        name: request
+        description: New Account data and Connection info
+        schema:
+          $ref: '#/definitions/NewAccount'
+      responses:
+        200:
+          description: new account created, return account details
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Account'
+        400:
+          description: bad input parameter
+
+  /chain/accounts:
+    post:
+      summary: Gets list of local accounts.
+      operationId: getAccounts
+      description: |
+        Gets list of local accounts.
+      tags: 
+      - ChainIO
+      parameters:
+      - in: body
+        name: connection
+        description: Connection data for Chain Node
+        schema:
+          $ref: '#/definitions/NodeConnection'
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Account'
+        400:
+          description: bad input parameter
+          
+          
+  /chain/accounts/{alias}:
+    parameters:
+      - name: alias
+        description: Alias of account to find
+        in: path
+        type: string
+        required: true
+      - in: body
+        name: connection
+        description: Connection data for Chain Node
+        schema:
+          $ref: '#/definitions/NodeConnection'
+    post:
+      summary: Gets list of local accounts.
+      operationId: getAccount
+      description: |
+        Gets list of local accounts.
+      tags: 
+      - ChainIO
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Account'
+        400:
+          description: bad input parameter
+
+
+          
+  /chain/asset:
+    post:
+      summary: Creates new Asset on local node.
+      operationId: createAsset
+      description: |
+        Creates new Asset on local node.
+      tags: 
+      - ChainIO
+      parameters:
+      - in: body
+        name: connection
+        description: New Asset and connection data for Chain Node
+        schema:
+          $ref: '#/definitions/NewAsset'
+      responses:
+        200:
+          description: new sset created, return asset details
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Asset'
+        400:
+          description: bad input parameter
+          
+  /chain/assets:
+    post:
+      summary: Gets list of local assets.
+      operationId: getAssets
+      description: |
+        Gets list of local assets.
+      tags: 
+      - ChainIO
+      parameters:
+      - in: body
+        name: connection
+        description: Connection data for Chain Node
+        schema:
+          $ref: '#/definitions/NodeConnection'
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Asset'
+        400:
+          description: bad input parameter
+          
+  /chain/assets/{alias}:
+    parameters:
+      - name: alias
+        description: Alias of account to find
+        in: path
+        type: string
+        required: true
+      - in: body
+        name: connection
+        description: Connection data for Chain Node
+        schema:
+          $ref: '#/definitions/NodeConnection'
+    post:
+      summary: Gets local asset.
+      operationId: getAsset
+      description: |
+        Gets local account details.
+      tags: 
+      - ChainIO
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Account'
+        400:
+          description: bad input parameter    
+  
+  /chain/keys:
+    post:
+      summary: Gets list of local keys.
+      operationId: getKeys
+      description: |
+        Gets list of local HSM keys.
+      tags: 
+      - ChainIO
+      parameters:
+      - in: body
+        name: request
+        description: Connection data for Chain Node
+        schema:
+          $ref: '#/definitions/NodeConnection'
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/HSMKey'
+        400:
+          description: bad input parameter
+
+  /chain/keys/{alias}:
+    parameters:
+      - name: alias
+        description: Alias of key to find
+        in: path
+        type: string
+        required: true
+      - in: body
+        name: connection
+        description: Connection data for Chain Node
+        schema:
+          $ref: '#/definitions/NodeConnection'
+    post:
+      summary: Gets local key data.
+      operationId: getKey
+      description: |
+        Gets local HSM key data.
+      tags: 
+      - ChainIO
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/HSMKey'
+        400:
+          description: bad input parameter
+          
+          
+  /chain/transactions:
+    post:
+      summary: Gets list of recent transactions.
+      operationId: getTransactions
+      description: |
+        Gets list of recent transactions.
+      tags: 
+      - ChainIO
+      parameters:
+      - in: body
+        name: connection
+        description: Connection data for Chain Node
+        schema:
+          $ref: '#/definitions/NodeConnection'
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TransactionResponse'
+        400:
+          description: bad input parameter
+
+
+  /chain/sign:
+    post:
+      summary: sign this transaction partial
+      operationId: signTransaction
+      description: sign this transaction partial
+      tags:
+      - ChainIO
+      parameters:
+      - in: body
+        name: request
+        description: |
+          Request includes Node connection details and transaction information
+        schema:
+          $ref: '#/definitions/SignRequest'
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TransactionResponse'
+        400:
+          description: bad input parameter
+
+
+#
+# Object Model Definitions
+#
+          
+definitions:
+
+# Models of the Application data objects
+  Trade:
+    type: object
+    properties:
+      tradeId:
+        type: string
+        format: int32
+        example: d290f1ee
+      parentId:
+        type: string
+        format: int32
+        example: d290f1ee
+      tradeDescription:
+        type: string
+        example: 'User A sold X asset to User B for Y Asset'
+      seller:
+        $ref: '#/definitions/TradeItem'
+      buyer:
+        $ref: '#/definitions/TradeItem'
+      expiryDateTime:
+        type: string
+        format: date
+        example: 2017-01-31T09:00:00.002Z
+      transactionHex:
+        type: string
+      status:
+        type: string
+        example: Processed or Cancelled
+      lastActionDate:
+        type: string
+        format: date
+        example: 2017-01-31T09:00:00.002Z
+  
+  TradeItem:
+    type: object
+    properties:
+      asset:
+        $ref: '#/definitions/Asset'
+      account:
+        $ref: '#/definitions/Account'
+      amount:
+        type: number
+        format: integer
+        example: 100
+  
+  User:
+    required:
+    - userName
+    - fullName
+    - email
+    properties:
+      userName:
+        type: string
+      fullName:
+        type: string
+      email:
+        type: string
+        format: email
+      telephone:
+        type: string
+        format: phone
+      avatar:
+        type: string
+        format: base64 image
+        
+# Models of the Chain Core message objects
+
+  NodeConnection:
+    required:
+    - nodeURL
+    - clientToken
+    properties:
+      nodeURL:
+        type: string
+        format: URL
+        example: http://22.22.22.22:1999
+      clientToken:
+        type: string
+        example: client:908324750983745902837509
+
+  Asset:
+    required:
+    - assetAlias
+    properties:
+      assetId:
+        type: string
+        example: 227f376b170560cc3c3243e09de3560b2ba732a9522217b3d87d0992a19e5341
+      assetAlias:
+        type: string
+        example:  Dollars
+
+  Account:
+    required:
+    - accountAlias
+    properties:
+      accountId:
+        type: string
+        example: acc0RSDADNVG0804
+      accountAlias:
+        type: string
+        example:  BobAccount1
+      controlProgram:
+        type: string
+        example: 766baa20f19b55122a0404313b57fbdab7b59548a311dcf2fcf538f1d7cc025ca625e52b5151ad696c00c0
+        
+  HSMKey:
+    required:
+    - alias
+    properties:
+      alias:
+        type: string
+      xpub:
+        type: string
+        
+  
+  NewAsset:
+    properties:
+      connection:
+        $ref: '#/definitions/NodeConnection'
+      asset:
+        $ref: '#/definitions/Asset'
+      keycount:
+        type: number
+      quorum:
+        type: number
+        description: number of sign keys required to issue. Must be <= keycount
+      keylist:
+        type: array
+        description: Array length must == keycount
+        items:
+          $ref: '#/definitions/HSMKey'
+      definition:
+        type: object
+      tags:
+        type: object
+        
+        
+  
+  NewAccount:
+    properties:
+      connection:
+        $ref: '#/definitions/NodeConnection'
+      account:
+        $ref: '#/definitions/Account'
+      keycount:
+        type: number
+      quorum:
+        type: number
+        description: Number of keys required for transfer. Must be <= keycount
+      keylist:
+        type: array
+        description: Array length must == keycount
+        items:
+          $ref: '#/definitions/HSMKey'
+      tags:
+        type: object        
+
+  SignRequest:
+    properties:
+      connection:
+        $ref: '#/definitions/NodeConnection'
+      spend:
+        $ref: '#/definitions/TradeItem'
+      control:
+        $ref: '#/definitions/TradeItem'
+      allowAdditionalActions:
+        type: string
+        example: yes or no
+      baseTransaction:
+        type: string
+      referenceData:
+        type: object
+        
+    
+
+
+# Models of Chain Core response objects
+
+  TransactionResponse:
+    properties:
+      id: 
+        type: string
+        example: af3c8f3e42f35072ab1286225e2b3cd73552b9ce3a3cf3cd936f6e3a9d3f40df
+      timestamp:
+        type: string
+        format: date
+        example: 2017-02-09T14:20:24Z
+      block_id:
+        type: string
+      block_height:
+        type: integer
+      position:
+        type: integer
+      reference_data:
+        type: object
+        format: json
+      is_local:
+        type: string
+        example: no
+      inputs:
+        type: array
+        items:
+          $ref: '#/definitions/TransactionInputSpend'
+      outputs:
+        type: array
+        items:
+          $ref: '#/definitions/TransactionOutputControl'
+
+  TransactionInputIssue:
+    properties:
+      type:
+        type: string
+      asset_id:
+        type: string
+      asset_definition:
+        type: string
+      asset_tags:
+        type: string
+      asset_is_local:
+        type: string
+      amount:
+        type: integer
+      issuance_program:
+        type: string
+      reference_data:
+        type: object
+      is_local:
+        type: string
+      
+  TransactionInputSpend:
+    properties:
+      type:
+        type: string
+      asset_id:
+        type: string
+      asset_alias:
+        type: string
+      asset_definition:
+        type: object
+      asset_tags:
+        type: object
+      asset_is_local:
+        type: string
+        example: yes
+      amount:
+        type: integer
+      spent_output:
+        type: object
+      account_id:
+        type: string
+      account_alias:
+        type: string
+      account_tags:
+        type: object
+      reference_data:
+        type: object
+      is_local:
+        type: string
+        example: yes
+
+  TransactionOutputControl:
+    properties:
+      type:
+        type: string
+      purpose:
+        type: string
+        example: receive or change
+      position:
+        type: integer
+      asset_id:
+        type: string
+      asset_definition:
+        type: object
+      asset_tags:
+        type: object
+      asset_is_local:
+        type: string
+      amount:
+        type: integer
+      account_id:
+        type: string
+      account_alias:
+        type: string
+      account_tags:
+        type: object
+      control_program:
+        type: string
+      reference_data:
+        type: object
+      is_local:
+        type: string
+        example: no
+      
+
+
+
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+# basePath: /DibbsZA/Offer2Trade/API/0.0.1
+# Added by API Auto Mocking Plugin
+basePath: /DibbsZA/Offer2Trade/0.0.1
