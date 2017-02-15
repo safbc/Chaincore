@@ -8,7 +8,7 @@ exports.deleteTrade = function (args, res, next) {
    * returns inline_response_200
    **/
 
-  // Add sqlite 
+  // Connect to local sqlite db 
   var sqlite3 = require('sqlite3').verbose();
   var db = new sqlite3.Database('data/blockex.db');
   var check;
