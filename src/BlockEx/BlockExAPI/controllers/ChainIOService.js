@@ -56,7 +56,7 @@ exports.createAccount = function (args, res, next) {
         }
       })
 
-    );
+    ).catch(console.log.bind(console));
 }
 
 
@@ -111,7 +111,7 @@ exports.getAccounts = function (args, res, next) {
         } else {
           res.end();
         }
-      });
+      }).catch(console.log.bind(console));
   }
 
   // var examples = {};
@@ -173,7 +173,7 @@ exports.getAssets = function (args, res, next) {
         } else {
           res.end();
         }
-      });
+      }).catch(console.log.bind(console));
   } else {
     client.assets.queryAll({ filter: 'alias=$1', filterParams: [request.asset.alias] }, (asset, next, done) => {
       console.log('Asset: ' + asset.id + ' (' + asset.alias + ')')
@@ -187,7 +187,7 @@ exports.getAssets = function (args, res, next) {
         } else {
           res.end();
         }
-      });
+      }).catch(console.log.bind(console));
   }
 
 
@@ -252,7 +252,7 @@ exports.getKeys = function (args, res, next) {
         } else {
           res.end();
         }
-      });
+      }).catch(console.log.bind(console));
   } else {
     request.hsmkey.forEach(function (key) {
       keyAliases.push(key.alias);
@@ -269,7 +269,7 @@ exports.getKeys = function (args, res, next) {
         } else {
           res.end();
         }
-      });
+      }).catch(console.log.bind(console));
   }
 
   // var examples = {};
@@ -323,7 +323,7 @@ exports.getTransactions = function (args, res, next) {
       } else {
         res.end();
       }
-    });
+    }).catch(console.log.bind(console));
 
 
   // var examples = {};
@@ -464,8 +464,15 @@ exports.signTransaction = function (args, res, next) {
             return signer.sign(transaction)
           }
         })
-        .then(result => console.log(result))
-    ).catch(err => process.nextTick(() => { throw err }))
+        .then(result => {
+          if (result != undefined) {
+            console.log(result)
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify(result || {}, null, 2));
+          } else {
+            res.end();
+          }
+        })).catch(err => process.nextTick(() => { throw err }))
 
 
 }
