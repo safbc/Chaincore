@@ -59,8 +59,6 @@ exports.createAccount = function (args, res, next) {
     ).catch(console.log.bind(console));
 }
 
-
-
 exports.getAccounts = function (args, res, next) {
   /**
    * Gets list of local accounts. If Account properties provided, will attempt search
@@ -300,9 +298,10 @@ exports.getKeys = function (args, res, next) {
 
 exports.getTransactions = function (args, res, next) {
   /**
-   * Gets list of recent transactions. If Transaction properties provided, will attempt to search.
+   * Gets list of recent transactions. If Query properties provided, will attempt to search.
    *
-   * request ChainRequest ChainRequest object with Connection and optional Transaction properties specified. (optional)
+   * request ChainRequest ChainRequest object with Connection and Query [queryType=tx???] properties specified. (optional)
+   *         TxAsset requires assetId be specified (not assetAlias) as some assets may have come from other nodes.
    * returns List
    **/
 
@@ -317,9 +316,47 @@ exports.getTransactions = function (args, res, next) {
   // define chain client connection
   const client = new chain.Client(baseurl, clienttoken)
 
+  var myFilter = {};
   var transactions = [];
 
-  client.transactions.queryAll({}, (transaction, next, done) => {
+  // Decide which action to perform based on value of queryType
+  switch (request.query.queryType) {
+    case 'TxSpender':
+      myFilter.filter = '\'inputs(account_alias=\'' + request.query.accountAlias + '\')\'';
+      // myFilter.filterParams = [request.query.accountAlias];
+
+      // if (request.query.dateRange != undefined) {
+      //   myFilter.setStartTime = request.query.dateRange[0];
+      //   myFilter.setEndTime = request.query.dateRange[1];
+      // }
+      break;
+    case 'TxController':
+      myFilter.filter = '\'outputs(account_alias =\'' + request.query.accountAlias + '\')\'';
+
+      if (request.query.dateRange != undefined) {
+        myFilter.setStartTime = request.query.dateRange[0]
+        myFilter.setEndTime = request.query.dateRange[1]
+      }
+      break;
+    case 'TxAsset':
+      myFilter.filter = '\'inputs(asset_id=\$1) OR outputs(asset_id =\$1\'';
+      myFilter.filterParams = [request.query.assetId]
+      // if (request.query.dateRange != undefined) {
+      //   myFilter.setStartTime = request.query.dateRange[0]
+      //   myFilter.setEndTime = request.query.dateRange[1]
+      // }
+      break;
+    case 'TxDateRange':
+      // must add checks for invalid params
+      myFilter = {
+        setStartTime: request.query.dateRange[0],
+        setEndTime: request.query.dateRange[1]
+      }
+      break;
+    default:
+      myFilter = {}
+  }
+  client.transactions.queryAll({ myFilter }, (transaction, next, done) => {
     console.log('Transaction: ' + transaction.id + ')')
     transactions.push(transaction)
     next()
@@ -333,39 +370,6 @@ exports.getTransactions = function (args, res, next) {
       }
     }).catch(console.log.bind(console));
 
-  // Is this going to be filtered search or not?
-  if (request.transaction == undefined) {
-    client.transactions.queryAll({ filter: 'inputs(account_alias=$1 AND asset_alias=$2)', filterParams: [request.transaction.alias] }, (transaction, next, done) => {
-      console.log('Transaction: ' + transaction.id + ')')
-      transactions.push(transaction)
-      next()
-    })
-      .then(() => {
-        if (keys.length > 0) {
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(keys || {}, null, 2));
-        } else {
-          res.end();
-        }
-      }).catch(console.log.bind(console));
-  } else {
-    request.hsmkey.forEach(function (key) {
-      keyAliases.push(key.alias);
-    }, this);
-    client.transactions.queryAll({}, (transaction, next, done) => {
-      console.log('Transaction: ' + transaction.id + ')')
-      transactions.push(transaction)
-      next()
-    })
-      .then(() => {
-        if (keys.length > 0) {
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(keys || {}, null, 2));
-        } else {
-          res.end();
-        }
-      }).catch(console.log.bind(console));
-  }
 }
 
 exports.signTransaction = function (args, res, next) {
@@ -427,8 +431,8 @@ exports.signTransaction = function (args, res, next) {
       // Step 2:Build Transaction template
       //        If this is muti-party phase 2 then add baseTransaction data
       client.transactions.build(builder => {
-        // Check if basetransaction was supplied
-        if (allowAdditionalActions == 'no' && request.transaction.baseTransaction != undefined) {
+        // Check if valid basetransaction was supplied
+        if (allowAdditionalActions == 'no' && (request.transaction.baseTransaction != undefined && request.transaction.baseTransaction != '')) {
           builder.baseTransaction(request.transaction.baseTransaction)
         }
         builder.spendFromAccount({
@@ -443,18 +447,16 @@ exports.signTransaction = function (args, res, next) {
         })
       })
         .then((transaction) => {
-          // Step 3:If this is not multi-party transaction
-          //        Sign and submit transaction to blockchain
+          if (allowAdditionalActions == 'yes') {
+            transaction.allowAdditionalActions = true;
+          }
+          return signer.sign(transaction)
+        })
+        .then((signed) => {
           if (allowAdditionalActions == 'no') {
-            signer.sign(transaction, (signed, next) => {
-              return client.transactions.submit(signed)
-            })
+            return client.transactions.submit(signed)
           } else {
-            // Step 3:This is multi-party transaction
-            //        Set allowAdditionalActions = true
-            //        Sign and return HexData instead.
-            transaction.allowAdditionalActions = true
-            return signer.sign(transaction)
+            return signed
           }
         })
         .then(result => {
