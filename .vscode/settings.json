@@ -1,8 +1,9 @@
 {
-  "terminal.integrated.cwd": "src/BlockEx",
-  "editor.detectIndentation": false,
-  "editor.mouseWheelZoom": true,
-  "editor.renderIndentGuides": true,
-  "editor.formatOnSave": true,
-  "workbench.welcome.enabled": true
+    "terminal.integrated.cwd": "src/BlockEx",
+    "editor.detectIndentation": false,
+    "editor.mouseWheelZoom": true,
+    "editor.renderIndentGuides": true,
+    "editor.formatOnSave": true,
+    "workbench.welcome.enabled": true,
+    "editor.tabSize": 2
 }

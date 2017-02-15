@@ -328,15 +328,17 @@ paths:
     post:
       tags:
       - "ChainIO"
-      description: "Gets list of recent transactions."
+      description: "Gets list of recent transactions. If Query properties provided,\
+        \ will attempt to search."
       operationId: "getTransactions"
       parameters:
       - in: "body"
-        name: "connection"
-        description: "Connection data for Chain Node"
+        name: "request"
+        description: "ChainRequest object with Connection and Query [queryType=tx???]\
+          \ properties specified."
         required: false
         schema:
-          $ref: "#/definitions/NodeConnection"
+          $ref: "#/definitions/ChainRequest"
       responses:
         200:
           description: "search results matching criteria"
@@ -344,6 +346,30 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/TransactionResponse"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "ChainIO"
+  /chain/balances:
+    post:
+      tags:
+      - "ChainIO"
+      description: "Gets all asset balances on Node or of specified account."
+      operationId: "getBalances"
+      parameters:
+      - in: "body"
+        name: "request"
+        description: "ChainRequest object with Connection and Query [queryType=balance]\
+          \ properties specified."
+        required: false
+        schema:
+          $ref: "#/definitions/ChainRequest"
+      responses:
+        200:
+          description: "Array of asset balance values"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/AssetBalance"
         400:
           description: "bad input parameter"
       x-swagger-router-controller: "ChainIO"
@@ -375,13 +401,11 @@ definitions:
     type: "object"
     properties:
       tradeId:
-        type: "string"
-        format: "int32"
-        example: "d290f1ee"
+        type: "number"
+        example: 1
       parentId:
-        type: "string"
-        format: "int32"
-        example: "d290f1ee"
+        type: "number"
+        example: 1
       tradeDescription:
         type: "string"
         example: "User A sold X asset to User B for Y Asset"
@@ -390,18 +414,14 @@ definitions:
       buyer:
         $ref: "#/definitions/TradeItem"
       expiryDateTime:
-        type: "string"
-        format: "date"
-        example: "2017-01-31T09:00:00.002Z"
+        $ref: "#/definitions/Timestamp"
       transactionHex:
         type: "string"
       status:
         type: "string"
         example: "Processed or Cancelled"
       lastActionDate:
-        type: "string"
-        format: "date"
-        example: "2017-01-31T09:00:00.002Z"
+        $ref: "#/definitions/Timestamp"
   TradeItem:
     type: "object"
     properties:
@@ -540,6 +560,30 @@ definitions:
         type: "object"
         properties: {}
     description: "Model defining the parameters of a Spend transaction."
+  AssetBalance:
+    type: "object"
+    description: "Model defining the result of a Balance Enquiry."
+  Query:
+    properties:
+      queryType:
+        type: "string"
+        example: "Balance"
+        description: "Balance | TxSpender | TxController | TxAsset | TxDateRange"
+      accountAlias:
+        type: "string"
+      accountId:
+        type: "string"
+      assetAlias:
+        type: "string"
+      assetId:
+        type: "string"
+      dateRange:
+        type: "array"
+        description: "Start and End dates for a timespan search"
+        items:
+          $ref: "#/definitions/Timestamp"
+    description: "Model to be used for various type of Chain Node queries. Balance\
+      \ Equiry, Transaction Enquiry (Spender, Asset alias etc)"
   ChainRequest:
     required:
     - "connection"
@@ -556,16 +600,20 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/HSMKey"
+      query:
+        $ref: "#/definitions/Query"
     description: "Model used to search or create new objects on a Chain node"
+  Timestamp:
+    type: "string"
+    description: "Timestamp format used by Chain"
+    example: "2017-02-02T14:41:13Z"
   TransactionResponse:
     properties:
       id:
         type: "string"
         example: "af3c8f3e42f35072ab1286225e2b3cd73552b9ce3a3cf3cd936f6e3a9d3f40df"
       timestamp:
-        type: "string"
-        format: "date"
-        example: "2017-02-09T14:20:24.000Z"
+        $ref: "#/definitions/Timestamp"
       block_id:
         type: "string"
       block_height:
