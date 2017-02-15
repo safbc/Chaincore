@@ -9,6 +9,8 @@ var serverPort = 8080;
 var appName = 'BlockEx';
 var version = '0.0.1';
 
+var models = require("./models");
+
 // swaggerRouter configuration
 var options = {
   swaggerUi: '/swagger.json',
@@ -34,9 +36,13 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
   // Serve the Swagger documents and Swagger UI
   app.use(middleware.swaggerUi());
 
-  // Start the server
-  http.createServer(app).listen(serverPort, function () {
-    console.log('Your server is listening on http://localhost:%d/%s/%s/)', serverPort, appName, version);
-    console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
+  // sync() will create all table if they doesn't exist in database
+  models.sequelize.sync().then(function () {
+    // Start the server
+    http.createServer(app).listen(serverPort, function () {
+      console.log('Your server is listening on http://localhost:%d/%s/%s/)', serverPort, appName, version);
+      console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
+    });
   });
+
 });

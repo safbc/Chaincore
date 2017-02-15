@@ -17,6 +17,8 @@
     "connect": "^3.2.0",
     "global-tunnel": "^1.2.0",
     "js-yaml": "^3.3.0",
+    "sequelize": "^3.30.2",
+    "sequelize-cli": "^2.5.1",
     "sqlite3": "^3.1.8",
     "swagger-tools": "0.10.1"
   }
