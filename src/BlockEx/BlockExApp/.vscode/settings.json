@@ -1,0 +1,9 @@
+{
+    "vsicons.presets.angular": false,
+    "editor.detectIndentation": false,
+    "editor.mouseWheelZoom": true,
+    "editor.renderIndentGuides": true,
+    "editor.formatOnSave": true,
+    "workbench.welcome.enabled": true,
+    "editor.tabSize": 2
+}

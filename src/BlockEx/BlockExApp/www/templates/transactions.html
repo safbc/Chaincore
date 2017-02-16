@@ -1,0 +1,29 @@
+<ion-view title="Transactions" id="page4">
+    <ion-content padding="true" class="has-header">
+        <form id="transactions-form2" class="list">
+            <ion-toggle toggle-class="toggle-positive" ng-checked="true" id="transactions-toggle2" name="chkMine">My transactions</ion-toggle>
+            <label class="item item-select" id="transactions-select1" name="ddlAssetList">
+        <span class="input-label">Filter by asset</span>
+        <select>
+          <option>All</option>
+          <option>Gold</option>
+          <option>Silver</option>
+        </select>
+      </label>
+        </form>
+        <ion-list id="transactions-list2">
+            <ion-item class="item-avatar" id="transactions-list-item20" ui-sref="menu.transactionDetail">
+                <h2>ID: 80734098680974305687</h2>
+                <p>2017-02-14 18:56</p>
+            </ion-item>
+            <ion-item class="item-avatar" id="transactions-list-item50" ui-sref="menu.transactionDetail">
+                <h2>ID: 2134124678523465658765</h2>
+                <p>2017-02-14 18:56</p>
+            </ion-item>
+            <ion-item class="item-avatar" id="transactions-list-item51" ui-sref="menu.transactionDetail">
+                <h2>ID: 679347569374563295476</h2>
+                <p>2017-02-14 18:56</p>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

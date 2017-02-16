@@ -1,0 +1,35 @@
+<ion-view title="Bid on Trade {ID}" id="page7">
+    <ion-content padding="true" class="has-header">
+        <div class="list card" id="bidOnTradeID-card212">
+            <ion-item class="item-avatar" id="bidOnTradeID-list-item68">
+                <h2>Midas</h2>
+                <p>2017-02-14 08:36</p>
+            </ion-item>
+            <ion-item id="bidOnTradeID-list-item76">Gold
+                <span class="item-note">10</span>
+            </ion-item>
+        </div>
+        <div class="list card" id="bidOnTradeID-card211">
+            <form id="bidOnTradeID-form5" class="list">
+                <ion-item class="item-divider" id="bidOnTradeID-list-item-divider7"> Offer what in exchange?</ion-item>
+                <label class="item item-select" id="bidOnTradeID-select3" name="ddlAsset">
+          <span class="input-label">Asset</span>
+          <select>
+            <option>Gold</option>
+            <option>Silver</option>
+          </select>
+        </label>
+                <ion-item class="item-divider" id="bidOnTradeID-list-item-divider8"> How much?</ion-item>
+                <label class="item item-input" id="bidOnTradeID-input7" name="tbAmount">
+          <span class="input-label">Amount</span>
+          <input type="text" placeholder="100">
+        </label>
+                <ion-item class="item-divider" id="bidOnTradeID-list-item-divider9"> Bid valid for?</ion-item>
+                <ion-item class="range range-positive" id="bidOnTradeID-range2">1 Day
+                    <input type="range" value="1" min="1" max="10" step="1" name="rngDays">
+                </ion-item>
+                <a ui-sref="menu.availableTradeOffers" id="bidOnTradeID-button4" class="button button-positive  button-block">Post Bid</a>
+            </form>
+        </div>
+    </ion-content>
+</ion-view>
