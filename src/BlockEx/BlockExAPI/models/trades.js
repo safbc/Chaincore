@@ -5,12 +5,10 @@ module.exports = function (sequelize, DataTypes) {
     parentId: DataTypes.INTEGER,
     saleData: DataTypes.TEXT,
     bidData: DataTypes.TEXT,
-    expiryDateTime: DataTypes.DATE,
-    lastActionDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-    trasactionHex: DataTypes.TEXT,
+    expiryTimestamp: DataTypes.DATE,
+    txHex: DataTypes.TEXT,
     status: DataTypes.STRING,
-    postedBy: DataTypes.STRING,
-
+    postedBy: DataTypes.STRING
   }, {
       classMethods: {
         associate: function (models) {

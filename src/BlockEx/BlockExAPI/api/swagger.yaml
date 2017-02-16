@@ -52,15 +52,15 @@ paths:
     post:
       tags:
       - "AppIO"
-      description: "Adds a new Trade Offer Item to the system"
+      description: "Adds a new Trade to the system"
       operationId: "postTrade"
       parameters:
       - in: "body"
         name: "offerItem"
-        description: "Offer item to add to the system"
+        description: "Trade item to add to the system"
         required: false
         schema:
-          $ref: "#/definitions/TradeItem"
+          $ref: "#/definitions/Trade"
       responses:
         201:
           description: "OK"
@@ -86,7 +86,7 @@ paths:
         description: "Offer to be updated"
         required: false
         schema:
-          $ref: "#/definitions/TradeItem"
+          $ref: "#/definitions/Trade"
       responses:
         201:
           description: "item updated"
@@ -406,21 +406,23 @@ definitions:
       parentId:
         type: "number"
         example: 1
-      tradeDescription:
-        type: "string"
-        example: "User A sold X asset to User B for Y Asset"
-      seller:
+      saleData:
         $ref: "#/definitions/TradeItem"
-      buyer:
+      bidData:
         $ref: "#/definitions/TradeItem"
-      expiryDateTime:
+      expiryTimestamp:
         $ref: "#/definitions/Timestamp"
-      transactionHex:
+      txHex:
         type: "string"
       status:
         type: "string"
-        example: "Processed or Cancelled"
-      lastActionDate:
+        example: "New or Processed or Cancelled"
+      postedBy:
+        type: "string"
+        example: "GaryD"
+      createdAt:
+        $ref: "#/definitions/Timestamp"
+      updatedAt:
         $ref: "#/definitions/Timestamp"
   TradeItem:
     type: "object"
@@ -436,17 +438,17 @@ definitions:
   User:
     required:
     - "email"
-    - "fullName"
-    - "userName"
+    - "fullname"
+    - "username"
     properties:
-      userName:
+      username:
         type: "string"
-      fullName:
+      fullname:
         type: "string"
       email:
         type: "string"
         format: "email"
-      telephone:
+      phone:
         type: "string"
         format: "phone"
       avatar:

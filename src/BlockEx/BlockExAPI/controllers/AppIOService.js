@@ -1,4 +1,5 @@
 'use strict';
+var db = require("./../models");
 
 exports.deleteTrade = function (args, res, next) {
   /**
@@ -8,25 +9,18 @@ exports.deleteTrade = function (args, res, next) {
    * returns inline_response_200
    **/
 
-  // // Connect to local sqlite db
-  // var sqlite3 = require('sqlite3').verbose();
-  // var db = new sqlite3.Database('data/blockex.db');
-  // var check;
-  // db.serialize(function () {
-
-  //   // db.run("CREATE TABLE if not exists user_info (info TEXT)");
-  //   // var stmt = db.prepare("INSERT INTO user_info VALUES (?)");
-  //   // for (var i = 0; i < 10; i++) {
-  //   //   stmt.run("Ipsum " + i);
-  //   // }
-  //   // stmt.finalize();
-
-  //   db.each("SELECT rowid AS id, * FROM users", function (err, row) {
-  //     console.log(row);
-  //   });
-  // });
-
-  // db.close();
+  db.Trade.destroy({
+    where: { tradeId: args.tradeId.value, status: 'Cancelled' }
+  })
+    .then(trades => {
+      if (trades != undefined) {
+        console.log(trades)
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(trades || {}, null, 2));
+      } else {
+        res.end();
+      }
+    })
 
 }
 
@@ -50,7 +44,18 @@ exports.getTrade = function (args, res, next) {
    * returns inline_response_200
    **/
 
-  // Connect to local sqlite db
+  db.Trade.findAll({
+    where: { tradeId: args.tradeId.value }
+  })
+    .then(trades => {
+      if (trades != undefined) {
+        console.log(trades)
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(trades || {}, null, 2));
+      } else {
+        res.end();
+      }
+    })
 
 }
 
@@ -60,8 +65,19 @@ exports.getTrades = function (args, res, next) {
    *
    * returns inline_response_200
    **/
-
-  // Connect to local sqlite db
+  db.Trade.findAll({
+    attributes: ['tradeId', 'parentId', 'saleData', 'bidData', 'expiryTimestamp', 'transactionHex', 'status', 'postedBy', 'createdAt', 'updatedAt'],
+    order: 'createdAt DESC'
+  })
+    .then(trades => {
+      if (trades != undefined) {
+        console.log(trades)
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(trades || {}, null, 2));
+      } else {
+        res.end();
+      }
+    })
 
 }
 
@@ -69,14 +85,24 @@ exports.getUser = function (args, res, next) {
   /**
    * Gets the specified user details
    *
-   * userName String Id of user to work with
+   * userName String Id of user to retrieve
    * returns inline_response_200_1
    **/
 
-  // Connect to local sqlite db
+  var _username = args.userName.value;
 
-  var users = [];
-
+  db.User.findAll({
+    where: { username: _username }
+  })
+    .then(users => {
+      if (users != undefined) {
+        console.log(users)
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(users || {}, null, 2));
+      } else {
+        res.end();
+      }
+    })
 
 }
 
@@ -86,20 +112,51 @@ exports.getUsers = function (args, res, next) {
    *
    * returns List
    **/
-  // Connect to local sqlite db
 
 
+  db.User.findAll({})
+    .then(users => {
+      if (users != undefined) {
+        console.log(users)
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(users || {}, null, 2));
+      } else {
+        res.end();
+      }
+    })
 }
 
 exports.postTrade = function (args, res, next) {
   /**
-   * Adds a new Trade Offer Item to the system
+   * Adds a new Trade to the system
    *
-   * offerItem TradeItem Offer item to add to the system (optional)
+   * offerItem Trade Trade item to add to the system (optional)
    * returns inline_response_200
    **/
-  // Connect to local sqlite db
 
+  var offerItem = args.offerItem.value;
+
+  db.Trade.create({
+    // TODO: Figure out how to store JSON string properly
+    saleData: JSON.stringify(offerItem.saleData || {}, null, 2),
+    // TODO: CHECK FORMATTING OF TIMEZONE +2 TIMESTAMP
+    expiryTimestamp: offerItem.expiryTimestamp,
+    postedBy: offerItem.postedBy
+  })
+    .then(trade => {
+      return db.Trade.findAll({
+        where: { tradeId: trade.dataValues.tradeId }
+      })
+    })
+    .then(trades => {
+      if (trades != undefined) {
+        console.log(trades)
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(trades || {}, null, 2));
+      } else {
+        res.end();
+      }
+    })
 }
 
 exports.postUser = function (args, res, next) {
