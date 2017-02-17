@@ -229,18 +229,6 @@ paths:
             $ref: "#/definitions/inline_response_400"
       x-swagger-router-controller: "AppIO"
   /chain/accounts:
-    get:
-      tags:
-      - "ChainIO"
-      description: "Fake get"
-      operationId: "getFakeAccounts"
-      parameters: []
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/inline_response_200_2"
-      x-swagger-router-controller: "ChainIO"
     post:
       tags:
       - "ChainIO"
@@ -767,11 +755,6 @@ definitions:
       meta:
         $ref: "#/definitions/inline_response_200_meta"
       data:
-        type: "object"
-        properties: {}
-  inline_response_200_2:
-    properties:
-      data:
         type: "array"
         items:
-          $ref: "#/definitions/Account"
+          $ref: "#/definitions/User"

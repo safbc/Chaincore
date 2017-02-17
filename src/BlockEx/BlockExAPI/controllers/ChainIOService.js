@@ -113,6 +113,36 @@ exports.getAccounts = function (args, res, next) {
   }
 }
 
+exports.getFakeAccounts = function (args, res, next) {
+  /**
+   * Fake get
+   *
+   * returns inline_response_200_2
+   **/
+  var examples = {};
+  examples['application/json'] = {
+    "data": [{
+      "keys": [{
+        "accountXpub": "48764b4efe18bbf1c3ad9f60ab60a5eb6f6a8d72d560bdf07e261d4a707cd50244db49b4e64547a2686bc3eb282815bf1337cab4a3343ea1c95948b81e6f3df0",
+        "accountDerivationPath": ["AQYAAAAAAAAA"],
+        "rootXpub": "4abb21e69072a7b17357cc514847f556afd6e007a7c92ef4f898208c1103212aef4d36e42441888cd25d5e7d61a13a2811777c0b2f25ce66abb898141abe8f4a",
+        "alias": "aeiou"
+      }],
+      "controlProgram": "766baa20f19b55122a0404313b57fbdab7b59548a311dcf2fcf538f1d7cc025ca625e52b5151ad696c00c0",
+      "quorum": 1.3579000000000001069366817318950779736042022705078125,
+      "alias": "BobAccount1",
+      "id": "acc0RSDADNVG0804",
+      "tags": "{}"
+    }]
+  };
+  if (Object.keys(examples).length > 0) {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
+  } else {
+    res.end();
+  }
+}
+
 exports.getAssets = function (args, res, next) {
   /**
    * Gets list of local assets. If Asset properties provided, will attempt search

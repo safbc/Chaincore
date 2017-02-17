@@ -66,7 +66,6 @@ exports.getTrades = function (args, res, next) {
    * returns inline_response_200
    **/
   db.Trade.findAll({
-    attributes: ['tradeId', 'parentId', 'saleData', 'bidData', 'expiryTimestamp', 'transactionHex', 'status', 'postedBy', 'createdAt', 'updatedAt'],
     order: 'createdAt DESC'
   })
     .then(trades => {
