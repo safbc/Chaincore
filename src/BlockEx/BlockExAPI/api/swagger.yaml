@@ -11,7 +11,7 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "localhost:8080"
+host: "192.168.1.19:443"
 basePath: "/BlockEx/0.0.1"
 tags:
 - name: "AppIO"
@@ -26,7 +26,7 @@ tags:
     \ keys\n* **key**         : create key\n* **transactions**: list transactions\n\
     * **sign**        : submit transactions\n"
 schemes:
-- "https"
+- "http"
 consumes:
 - "application/json"
 produces:
