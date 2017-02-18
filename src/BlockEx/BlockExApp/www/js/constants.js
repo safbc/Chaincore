@@ -7,8 +7,8 @@ angular.module('app.constants', ['ionic'])
 
   .constant('svcURI', {
 
-    restAppTrades: "/app/trades/",
-    restAppUsers: "/app/users/",
+    restAppTrades: "/app/trades",
+    restAppUsers: "/app/users",
 
     restChainAccount: "/chain/account",
     restChainAccounts: "/chain/accounts",
@@ -22,13 +22,16 @@ angular.module('app.constants', ['ionic'])
     restAuth: "Authenticate/",
   })
 
-  .constant('APP_SETTINGS', {
-    // API Url
-    BaseURI: "http://localhost:8080/BlockEx/0.0.1"
+  // .constant('APP_SETTINGS', {
+  //   // API Url
+  //   BaseURI: "http://localhost:8080/BlockEx/0.0.1"
 
-  })
-  .constant('NODE_CONNECTION',
+  // })
+
+  .constant('NODE_SETTINGS',
   {
+    // API URL
+    BaseURL: "http://192.168.1.19:443/BlockEx/0.0.1",
     // Internal server
     // nodeURL: "http://172.16.101.93:1999",
     // clientToken: "UbuntuDev:e72629518809db4f5176d084f80f2261a3f4c70e044c6339251977c79f73c4bb"
