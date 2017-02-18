@@ -4,32 +4,21 @@
   </ion-nav-buttons>
   <ion-content padding="true" class="has-header">
     <div class="list card" id="myAccounts-card" ng-repeat="row in accountsList">
-      <ion-item class="item-avatar">
+      <ion-item class="item">
+        <!--<img ng-src="{{row.avatar}}" ng-click="getBalances(row)" />-->
         <h2>{{row.alias}}</h2>
         <p>{{row.accountId}}</p>
       </ion-item>
-      <ion-item class="assertive" ui-sref="menu.assetInfo">Yen
-        <span class="item-note">100</span>
+
+      <ion-item class="assertive" ui-sref="menu.assetInfo" ng-repeat="asset in row.assets">{{asset.assetAlias}}
+        <span class="item-note">{{asset.balance}}</span>
         <ion-option-button class="button-energized" ng-click="">Sell</ion-option-button>
       </ion-item>
-      <ion-item class="balanced" id="myAccounts-list-item8" ui-sref="menu.assetInfo">Bitcoin
+
+      <!--<ion-item class="balanced" id="myAccounts-list-item8" ui-sref="menu.assetInfo">Bitcoin
         <span class="item-note">1</span>
         <ion-option-button class="button-positive">Sell</ion-option-button>
-      </ion-item>
+      </ion-item>-->
     </div>
-    <!--<div class="list card" id="myAccounts-card22">
-      <ion-item class="item-avatar" id="myAccounts-list-item9">
-        <h2>Account Alias</h2>
-        <p>accountId</p>
-      </ion-item>
-      <ion-item class="assertive" id="myAccounts-list-item10" ui-sref="menu.assetInfo">Yen
-        <span class="item-note">100</span>
-        <ion-option-button class="button-positive">Sell</ion-option-button>
-      </ion-item>
-      <ion-item class="balanced" id="myAccounts-list-item11" ui-sref="menu.assetInfo">Bitcoin
-        <span class="item-note">1</span>
-        <ion-option-button class="button-positive">Sell</ion-option-button>
-      </ion-item>
-    </div>-->
   </ion-content>
 </ion-view>

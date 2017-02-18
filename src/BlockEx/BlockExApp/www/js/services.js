@@ -5,16 +5,16 @@ angular.module('app.services', ['ngResource'])
   // These support all HTTP VERBS
 
 
-  .factory('svcTrades', ['$resource', '$timeout', 'svcURI', 'APP_SETTINGS', function ($resource, $timeout, svcURI, APP_SETTINGS) {
+  .factory('svcTrades', ['$resource', '$timeout', 'svcURI', 'NODE_SETTINGS', function ($resource, $timeout, svcURI, NODE_SETTINGS) {
 
-    var restURI = APP_SETTINGS.BaseURI + svcURI.restAppTrades;
+    var restURI = NODE_SETTINGS.BaseURL + svcURI.restAppTrades;
     return $resource(restURI);
 
   }])
 
-  .factory('svcUsers', ['$resource', '$timeout', 'svcURI', 'APP_SETTINGS', function ($resource, $timeout, svcURI, APP_SETTINGS) {
+  .factory('svcUsers', ['$resource', '$timeout', 'svcURI', 'NODE_SETTINGS', function ($resource, $timeout, svcURI, NODE_SETTINGS) {
 
-    var restURI = APP_SETTINGS.BaseURI + svcURI.restAppUsers + ":username";
+    var restURI = NODE_SETTINGS.BaseURL + svcURI.restAppUsers + ":username";
     return $resource(restURI, { username: '@username' }, {});
 
   }])
@@ -23,9 +23,9 @@ angular.module('app.services', ['ngResource'])
   // All these use POST or PUT only
 
 
-  .factory('svcAccounts', ['$resource', '$timeout', 'svcURI', 'APP_SETTINGS', function ($resource, $timeout, svcURI, APP_SETTINGS) {
+  .factory('svcAccounts', ['$resource', '$timeout', 'svcURI', 'NODE_SETTINGS', function ($resource, $timeout, svcURI, NODE_SETTINGS) {
 
-    var restURI = APP_SETTINGS.BaseURI + svcURI.restChainAccounts;
+    var restURI = NODE_SETTINGS.BaseURL + svcURI.restChainAccounts;
     return $resource(restURI, {}, {
       'query': { method: 'POST', isArray: true }
     });
@@ -33,54 +33,26 @@ angular.module('app.services', ['ngResource'])
 
   }])
 
-  .factory('svcAccount', ['$resource', '$timeout', 'svcURI', 'APP_SETTINGS', function ($resource, $timeout, svcURI, APP_SETTINGS) {
+  .factory('svcAccount', ['$resource', '$timeout', 'svcURI', 'NODE_SETTINGS', function ($resource, $timeout, svcURI, NODE_SETTINGS) {
 
-    var restURI = APP_SETTINGS.BaseURI + svcURI.restChainAccount;
+    var restURI = NODE_SETTINGS.BaseURL + svcURI.restChainAccount;
     return $resource(restURI, {}, {
       'save': { method: 'PUT', isArray: true }
     });
 
   }])
 
-  .factory('svcAssets', ['$resource', '$timeout', 'svcURI', 'APP_SETTINGS', function ($resource, $timeout, svcURI, APP_SETTINGS) {
+  .factory('svcAssets', ['$resource', '$timeout', 'svcURI', 'NODE_SETTINGS', function ($resource, $timeout, svcURI, NODE_SETTINGS) {
 
-    var restURI = APP_SETTINGS.BaseURI + svcURI.restChainAssets;
+    var restURI = NODE_SETTINGS.BaseURL + svcURI.restChainAssets;
     return $resource(restURI, {}, {
       'query': { method: 'POST', isArray: true }
     });
   }])
 
-  .factory('svcKeys', ['$resource', '$timeout', 'svcURI', 'APP_SETTINGS', function ($resource, $timeout, svcURI, APP_SETTINGS) {
+  .factory('svcKeys', ['$resource', '$timeout', 'svcURI', 'NODE_SETTINGS', function ($resource, $timeout, svcURI, NODE_SETTINGS) {
 
-    var restURI = APP_SETTINGS.BaseURI + svcURI.restChainKeys;
-    return $resource(restURI, {}, {
-      'query': { method: 'POST', isArray: true }
-    });
-
-  }])
-
-
-  .factory('svcBalances', ['$resource', '$timeout', 'svcURI', 'APP_SETTINGS', function ($resource, $timeout, svcURI, APP_SETTINGS) {
-
-    var restURI = APP_SETTINGS.BaseURI + svcURI.restChainBalances;
-    return $resource(restURI, {}, {
-      'query': { method: 'POST', isArray: true }
-    });
-
-  }])
-
-  .factory('svcTransactions', ['$resource', '$timeout', 'svcURI', 'APP_SETTINGS', function ($resource, $timeout, svcURI, APP_SETTINGS) {
-
-    var restURI = APP_SETTINGS.BaseURI + svcURI.restChainTransactions;
-    return $resource(restURI, {}, {
-      'query': { method: 'POST', isArray: true }
-    });
-
-  }])
-
-  .factory('svcSign', ['$resource', '$timeout', 'svcURI', 'APP_SETTINGS', function ($resource, $timeout, svcURI, APP_SETTINGS) {
-
-    var restURI = APP_SETTINGS.BaseURI + svcURI.restChainSign;
+    var restURI = NODE_SETTINGS.BaseURL + svcURI.restChainKeys;
     return $resource(restURI, {}, {
       'query': { method: 'POST', isArray: true }
     });
@@ -88,7 +60,35 @@ angular.module('app.services', ['ngResource'])
   }])
 
 
-  .factory('svcNodeSettings', ['$rootScope', 'svcURI', 'NODE_CONNECTION', function ($rootScope, svcURI, NODE_CONNECTION) {
+  .factory('svcBalances', ['$resource', '$timeout', 'svcURI', 'NODE_SETTINGS', function ($resource, $timeout, svcURI, NODE_SETTINGS) {
+
+    var restURI = NODE_SETTINGS.BaseURL + svcURI.restChainBalances;
+    return $resource(restURI, {}, {
+      'query': { method: 'POST', isArray: true }
+    });
+
+  }])
+
+  .factory('svcTransactions', ['$resource', '$timeout', 'svcURI', 'NODE_SETTINGS', function ($resource, $timeout, svcURI, NODE_SETTINGS) {
+
+    var restURI = NODE_SETTINGS.BaseURL + svcURI.restChainTransactions;
+    return $resource(restURI, {}, {
+      'query': { method: 'POST', isArray: true }
+    });
+
+  }])
+
+  .factory('svcSign', ['$resource', '$timeout', 'svcURI', 'NODE_SETTINGS', function ($resource, $timeout, svcURI, NODE_SETTINGS) {
+
+    var restURI = NODE_SETTINGS.BaseURL + svcURI.restChainSign;
+    return $resource(restURI, {}, {
+      'query': { method: 'POST', isArray: true }
+    });
+
+  }])
+
+
+  .factory('svcNodeSettings', ['$rootScope', 'svcURI', 'NODE_SETTINGS', function ($rootScope, svcURI, NODE_SETTINGS) {
 
     var _settings = {};
     try {
@@ -98,7 +98,7 @@ angular.module('app.services', ['ngResource'])
 
     }
 
-    _settings = angular.extend({}, NODE_CONNECTION, _settings);
+    _settings = angular.extend({}, NODE_SETTINGS, _settings);
     if (!_settings) {
       window.localStorage['settings'] = JSON.stringify(_settings);
     }

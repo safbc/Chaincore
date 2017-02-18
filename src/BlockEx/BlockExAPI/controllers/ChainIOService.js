@@ -226,8 +226,7 @@ exports.getBalances = function (args, res, next) {
         // Get ballances for this account
         client.balances.queryAll({
           filter: 'account_alias=$1',
-          filterParams: [request.query.accountAlias],
-          sumBy: ['asset_alias']
+          filterParams: [request.query.accountAlias]
         }, (balance, next, done) => {
           // console.log('Bank 1 balance of ' + balance.sumBy.assetAlias + ': ' + balance.amount)
           balances.push(balance)
@@ -236,10 +235,13 @@ exports.getBalances = function (args, res, next) {
           .then(() => {
             if (balances.length > 0) {
               res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify(balances || {}, null, 2));
+              var out = JSON.stringify(balances || {}, null, 2)
+              res.end(out);
             } else {
-              res.end();
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify(balances || {}, [], 2));
             }
+
           }).catch(console.log.bind(console));
       } else {
         //  Get all balances
@@ -253,15 +255,17 @@ exports.getBalances = function (args, res, next) {
               res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify(balances || {}, null, 2));
             } else {
-              res.end();
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify(balances || {}, [], 2));
             }
-          }).catch(console.log.bind(console));
+          })
+        // .catch(console.log.bind(console));
       }
 
     }
   } else {
     res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(balances || {}, null, 2));
+    res.end(JSON.stringify(balances || [], null, 2));
   }
 
 

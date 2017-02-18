@@ -5,7 +5,7 @@
   <ion-content padding="true" class="has-header">
     <div class="list card" id="myProfile-card219" ng-repeat="row in userProfile">
       <ion-item class="item-avatar" id="myProfile-list-item100">
-        <img src="{{row.avatar}}" />
+        <img ng-src="{{row.avatar}}" />
         <h2>{{row.fullname}}</h2>
         <p>{{row.username}}</p>
       </ion-item>
