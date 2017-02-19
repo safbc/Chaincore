@@ -12,7 +12,8 @@ angular.module('app', [
   'app.controllers',
   'app.routes',
   'app.directives',
-  'app.services'
+  'app.services',
+  'app.filters'
 ])
 
   .config(function ($ionicConfigProvider, $sceDelegateProvider) {
