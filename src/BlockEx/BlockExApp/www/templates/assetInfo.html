@@ -1,43 +1,42 @@
 <ion-view title="Asset Info" id="page3">
-    <ion-content padding="true" class="has-header">
-        <div class="list card" id="assetInfo-card23">
-            <ion-item class="item-avatar" id="assetInfo-list-item12">
-                <h2>assetAlias</h2>
-                <p>assetId</p>
-            </ion-item>
-            <ion-item class="item-icon-right" id="assetInfo-list-item16">Circulation
-                <span class="item-note">1000</span>
-                <i class="icon ion-social-bitcoin-outline icon-accessory"></i>
-            </ion-item>
-            <ion-item class="item-icon-right" id="assetInfo-list-item14">Keys
-                <span class="item-note">1</span>
-                <i class="icon ion-key icon-accessory"></i>
-            </ion-item>
-            <ion-item class="item-icon-right" id="assetInfo-list-item15">Quorum
-                <span class="item-note">1</span>
-                <i class="icon ion-key icon-accessory"></i>
-            </ion-item>
-            <div class="item item-body" id="assetInfo-list-item-container7">
-                <div id="assetInfo-markdown10" class="show-list-numbers-and-dots">
-                    <p style="margin-top:0px;color:#000000;">
-                        <strong>Tags</strong>
-                    </p>
-                </div>
-                <div id="assetInfo-markdown11" class="show-list-numbers-and-dots">
-                    <p style="margin-top:0px;color:#000000;">{ "Type": "Bearer" }
-                    </p>
-                </div>
-                <div id="assetInfo-markdown14" class="show-list-numbers-and-dots">
-                    <p style="color:#000000;">
-                        <strong>Definition</strong>
-                    </p>
-                </div>
-                <div id="assetInfo-markdown13" class="show-list-numbers-and-dots">
-                    <p style="margin-top:0px;color:#000000;">{ "Alias": "IDToken", "Issuer": "Bankserv" }
-                    </p>
-                </div>
-            </div>
+  <ion-content padding="true" class="has-header">
+    <div class="list card" ng-repeat="asset in assetList">
+      <ion-item class="item" id="assetInfo-list-item12">
+        <h2>{{asset.alias | accAlias}}</h2>
+        <p>{{asset.id}}</p>
+      </ion-item>
+      <ion-item class="item-icon-right" id="assetInfo-list-item16">Circulation
+        <span class="item-note">{{asset.balance}}</span>
+        <i class="icon ion-social-bitcoin-outline icon-accessory"></i>
+      </ion-item>
+      <ion-item class="item-icon-right" id="assetInfo-list-item15">Quorum
+        <span class="item-note">{{asset.quorum}}</span>
+        <i class="icon ion-key icon-accessory"></i>
+      </ion-item>
+      <div class="item item-body" id="assetInfo-list-item-container7">
+        <div id="assetInfo-markdown14" class="show-list-numbers-and-dots">
+          <h2>Definition</h2>
         </div>
-        <button id="assetInfo-button1" class="button button-positive  button-block">Trade</button>
-    </ion-content>
+        <div id="assetInfo-markdown13" class="show-list-numbers-and-dots">
+          <p style="margin-top:0px;color:#000000;">{{asset.definition | json }}
+          </p>
+        </div>
+        <div id="assetInfo-markdown10" class="show-list-numbers-and-dots">
+          <h2>Tags</h2>
+        </div>
+        <div id="assetInfo-markdown11" class="show-list-numbers-and-dots">
+          <p style="margin-top:0px;color:#000000;">{{ asset.tags | json }}
+          </p>
+        </div>
+        <div id="assetInfo-markdown10" class="show-list-numbers-and-dots">
+          <h2>Keys</h2>
+        </div>
+        <div id="assetInfo-markdown11" class="show-list-numbers-and-dots" ng-repeat="key in asset.keys">
+          <p style="margin-top:0px;color:#000000;">{{key | json}}
+          </p>
+        </div>
+      </div>
+    </div>
+    <button id="assetInfo-button1" class="button button-positive  button-block" ng-click="">Trade</button>
+  </ion-content>
 </ion-view>

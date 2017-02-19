@@ -167,38 +167,47 @@ exports.getAssets = function (args, res, next) {
   const client = new chain.Client(nodeURL, clientToken)
 
   var assets = [];
-  var filter = '';
+  var filter = {};
+
+  if (request.asset == undefined) {
+    request.asset = {};
+    filter = {};
+  } else if (request.asset.alias == undefined && request.asset.id == undefined) {
+    filter = {};
+  } else if (request.asset.alias != undefined && request.asset.alias != null && request.asset.alias != '') {
+    filter = { filter: 'alias=$1', filterParams: [request.asset.alias] }
+  } else if (request.asset.id != undefined) {
+    filter = { filter: 'id=$1', filterParams: [request.asset.id] }
+  }
+
+  client.assets.queryAll(filter, (asset, next, done) => {
+    console.log('Asset: ' + asset.id + ' (' + asset.alias + ')')
+    assets.push(asset)
+    next()
+  })
+    .then(() => {
+
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify(assets));
+
+    }).catch(console.log.bind(console));
 
   // Is this going to be filtered search or not?
-  if (request.asset.alias == undefined) {
-    client.assets.queryAll({}, (asset, next, done) => {
-      console.log('Asset: ' + asset.id + ' (' + asset.alias + ')')
-      assets.push(asset)
-      next()
-    })
-      .then(() => {
-        if (assets.length > 0) {
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(assets || {}, null, 2));
-        } else {
-          res.end();
-        }
-      }).catch(console.log.bind(console));
-  } else {
-    client.assets.queryAll({ filter: 'alias=$1', filterParams: [request.asset.alias] }, (asset, next, done) => {
-      console.log('Asset: ' + asset.id + ' (' + asset.alias + ')')
-      assets.push(asset)
-      next()
-    })
-      .then(() => {
-        if (assets.length > 0) {
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(assets || {}, null, 2));
-        } else {
-          res.end();
-        }
-      }).catch(console.log.bind(console));
-  }
+  // if (request.asset.alias == undefined && request.asset.id == undefined) {
+
+  // } else {
+  //   client.assets.queryAll({ filter: 'alias=$1', filterParams: [request.asset.alias] }, (asset, next, done) => {
+  //     console.log('Asset: ' + asset.id + ' (' + asset.alias + ')')
+  //     assets.push(asset)
+  //     next()
+  //   })
+  //     .then(() => {
+
+  //       res.setHeader('Content-Type', 'application/json');
+  //       res.end(JSON.stringify(assets));
+
+  //     }).catch(console.log.bind(console));
+  // }
 
 }
 
@@ -206,14 +215,14 @@ exports.getBalances = function (args, res, next) {
   /**
    * Gets all asset balances on Node or of specified account.
    *
-   * request ChainRequest ChainRequest object with Connection and Query [queryType=balance] properties specified. (optional)
+   * request ChainRequest ChainRequest object with Connection and Query [queryType=accountbalance or assetbalance] properties specified. (optional)
    * returns List
    **/
 
   const chain = require('chain-sdk');
 
   var request = args.request.value;
-  console.log("Balances request for acc: " + request.query.accountAlias);
+  console.log("Balances request for asset or acc: " + JSON.stringify(request.query));
   // set up chain node connection properties
   const nodeURL = request.connection.nodeURL;
   const clientToken = request.connection.clientToken
@@ -222,57 +231,162 @@ exports.getBalances = function (args, res, next) {
   const client = new chain.Client(nodeURL, clientToken)
 
   var balances = [];
+  var filter = {};
 
-  if (request.query != undefined) {
-    if (request.query.queryType == 'Balance') {
-      if (request.query.accountAlias != undefined) {
-        // Get ballances for this account
-        client.balances.queryAll({
-          filter: 'account_alias=$1',
-          filterParams: [request.query.accountAlias]
-        }, (balance, next, done) => {
-          console.log(request.query.accountAlias + '\'s balance of ' + balance.sumBy.assetAlias + ': ' + balance.amount)
+  // Exit if no querytype specified
+  if (request.query == undefined) {
+    res.setHeader('Content-Type', 'application/json');
+    var out = JSON.stringify([])
+    res.end(out);
+  }
+  else {
+    if (request.query.queryType == undefined) {
+      // fall through if incorrect parameters
+      request.query.queryType = ""
+    }
+
+    switch (request.query.queryType) {
+
+
+      case "AccountBalance":
+        // Set up the search parameters
+        if (request.query.alias == undefined && request.query.id == undefined) {
+          filter = {};
+
+        } else if (request.query.alias != undefined && request.query.alias != null && request.query.alias != '') {
+          filter = { filter: 'account_alias=$1', filterParams: [request.query.alias] };
+
+        } else if (request.query.id != undefined) {
+          filter = { filter: 'asset_id=$1', filterParams: [request.query.asset_id] };
+
+        }
+
+        // Perform the search
+        client.balances.queryAll(filter, (balance, next, done) => {
+          console.log(JSON.stringify(balance))
           //balance.accountAlias = request.query.accountAlias;
           balances.push(balance)
           next()
         })
           .then(() => {
-            if (balances.length > 0) {
-              res.setHeader('Content-Type', 'application/json');
-              var out = JSON.stringify(balances)
-              // var out = JSON.stringify(balances || {}, null, 2)
-              res.end(out);
-            } else {
-              res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify(balances));
-              // res.end(JSON.stringify(balances || {}, [], 2));
-            }
+
+            res.setHeader('Content-Type', 'application/json');
+            var out = JSON.stringify(balances)
+            res.end(out);
 
           }).catch(function (err) { console.log("error:" + err) });
-      } else {
-        //  Get all balances
-        client.balances.queryAll({ sumBy: ['asset_alias'] }, (balance, next, done) => {
-          // console.log('Bank 1 balance of ' + balance.sumBy.assetAlias + ': ' + balance.amount)
+        break;
+
+
+
+
+      case "AssetBalance":
+        // Set up the search parameters
+        if (request.query.alias == undefined && request.query.id == undefined) {
+          filter = {};
+
+        } else if (request.query.alias != undefined && request.query.alias != null && request.query.alias != '') {
+          filter = { filter: 'asset_alias=$1', filterParams: [request.query.alias] }
+
+        } else if (request.query.id != undefined) {
+          filter = { filter: 'asset_id=$1', filterParams: [request.query.asset_id] }
+
+        }
+
+        // Perform the search
+        client.balances.queryAll(filter, (balance, next, done) => {
+          console.log(JSON.stringify(balance))
+          //balance.accountAlias = request.query.accountAlias;
           balances.push(balance)
           next()
         })
           .then(() => {
-            if (balances.length > 0) {
-              res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify(balances || {}, null, 2));
-            } else {
-              res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify(balances || {}, [], 2));
-            }
-          })
-        // .catch(console.log.bind(console));
-      }
 
+            res.setHeader('Content-Type', 'application/json');
+            var out = JSON.stringify(balances)
+            res.end(out);
+
+          }).catch(function (err) { console.log("error:" + err) });
+        break;
+
+
+      case "TxSpender":
+
+        break;
+      case "TxController":
+
+        break;
+
+      case "TxAsset":
+
+        break;
+
+      case "TxDateRange":
+
+        break;
+
+      default:
+        res.setHeader('Content-Type', 'application/json');
+        var out = JSON.stringify([])
+        res.end(out);
+        break;
     }
-  } else {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(balances || [], null, 2));
   }
+
+  // } else if (request.query.alias == undefined && request.query.id == undefined) {
+  //   filter = {};
+
+  // } else if (request.query.alias != undefined && request.query.alias != null && request.query.alias != '') {
+  //   filter = { filter: 'account_alias=$1', filterParams: [request.query.alias] }
+
+  // } else if (request.query.id != undefined) {
+  //   filter = { filter: 'asset_id=$1', filterParams: [request.query.asset_id] }
+
+  // }
+
+
+  // if (request.query != undefined) {
+  //   if (request.query.queryType == 'Balance') {
+  //     if (request.query.accountAlias != undefined) {
+  //       // Get ballances for this account
+  //       client.balances.queryAll({
+  //         filter: 'account_alias=$1',
+  //         filterParams: [request.query.accountAlias]
+  //       }, (balance, next, done) => {
+  //         console.log(request.query.accountAlias + '\'s balance of ' + balance.sumBy.assetAlias + ': ' + balance.amount)
+  //         //balance.accountAlias = request.query.accountAlias;
+  //         balances.push(balance)
+  //         next()
+  //       })
+  //         .then(() => {
+
+  //           res.setHeader('Content-Type', 'application/json');
+  //           var out = JSON.stringify(balances)
+  //           // var out = JSON.stringify(balances || {}, null, 2)
+  //           res.end(out);
+
+  //         }).catch(function (err) { console.log("error:" + err) });
+  //     } else {
+  //       //  Get all balances
+  //       client.balances.queryAll({ sumBy: ['asset_alias'] }, (balance, next, done) => {
+  //         // console.log('Bank 1 balance of ' + balance.sumBy.assetAlias + ': ' + balance.amount)
+  //         balances.push(balance)
+  //         next()
+  //       })
+  //         .then(() => {
+
+  //           res.setHeader('Content-Type', 'application/json');
+  //           res.end(JSON.stringify(balances));
+
+  //         })
+  //       // .catch(console.log.bind(console));
+  //     }
+
+  //   }
+  // } else {
+  //   res.setHeader('Content-Type', 'application/json');
+  //   res.end(JSON.stringify(balances || [], null, 2));
+  // }
 
 
 }
