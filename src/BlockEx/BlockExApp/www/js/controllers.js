@@ -27,7 +27,7 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
   }
   )
 
-  .controller('myAccountsCtrl', function ($scope, $stateParams, $timeout, svcUsers, svcAccounts, svcAssets, svcBalances, svcNodeSettings) {
+  .controller('myAccountsCtrl', function ($scope, $stateParams, $timeout, svcUsers, svcAccounts, svcAssets, svcBalances, svcNodeSettings, accAliasFilter) {
 
     // Set up the API services
     $scope.svcNodeSettings = svcNodeSettings;
@@ -35,6 +35,10 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
     $scope.start = function () {
       // Fetch the default system settings on load
       $scope.settings = svcNodeSettings.getSettings();
+
+      $scope.connection = {};
+      $scope.connection.nodeURL = $scope.settings.nodeURL;
+      $scope.connection.clientToken = $scope.settings.clientToken;
 
       // Set up the API services
       //$scope.SVCNode = svcNodeSettings;
@@ -51,7 +55,7 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
       $scope.accountsList = [];
       $scope.accountBalances = [];
 
-      // Set up base request object
+      // Base request object example
       // $scope.Request = {
       //   "connection": {
       //     "nodeURL": "http://172.16.101.93:1999",
@@ -66,12 +70,13 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
 
       $scope.Request = {};
       $scope.Request.connection = {};
-      $scope.Request.account = {};
+      // $scope.Request.connection.nodeURL = "http://41.76.226.170:1999";
+      // $scope.Request.connection.clientToken = "AppDev:18bbc4a6fab7a3f27ce4ea636ec5cd6470b3a1b84449590125f1191d069ab0a2";
+      $scope.Request.connection.nodeURL = $scope.settings.nodeURL;
+      $scope.Request.connection.clientToken = $scope.settings.clientToken;
+
       $scope.Request.query = {};
-      $scope.Request.connection.nodeURL = "http://41.76.226.170:1999";
-      $scope.Request.connection.clientToken = "AppDev:18bbc4a6fab7a3f27ce4ea636ec5cd6470b3a1b84449590125f1191d069ab0a2";
-      $scope.Request.account = {};
-      $scope.Request.query.type = "Balance";
+
 
 
       $scope.svcAccounts.query($scope.Request).$promise
@@ -80,13 +85,13 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
         })
         .then(function (data) {
           $scope.accountsList = data;
-          //return Promise.all([$scope.getbalances(data[0])]);
-          $scope.getBalances();
         })
         .catch(function (data) {
-          //TODO: handle the error conditions...
           console.log('Error: ' + data);
         }).finally(function () {
+
+          //TODO: Kick of ballance queries
+          $scope.getBalances();
           console.log('Done: ');
         });
 
@@ -95,37 +100,99 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
 
     // Update the asset balances for all accounts in the current accountsList
     $scope.getBalances = function () {
+      var a = [];
+      $scope.accountsList.forEach(function (element) {
+        this['sr' + element.alias] = {};
+        this['sr' + element.alias].connection = JSON.parse(JSON.stringify($scope.connection));
+        this['sr' + element.alias].query = {};
+        this['sr' + element.alias].query = { queryType: "Balance", accountAlias: element.alias };
+        //console.log(JSON.stringify(this['sr' + element.alias]));
+        a.push($scope.getAssetBalances(this['sr' + element.alias]));
+      }, this);
 
-      if ($scope.accountsList.length != 0) {
+      function pr(requests) {
+        //console.log(JSON.stringify(requests));
+        Promise.all(requests)
+          .then(function (items) {
+            //console.log("results: " + JSON.stringify(items));
 
-        $scope.accountsList.forEach(function (acc) {
-          var request = $scope.Request;
-          request.query = { queryType: "Balance", accountAlias: acc.alias };
+            // Inject results values into $scope.accountList
+            for (var index = 0; index < items.length; index++) {
+              $scope.accountsList[index].assets = items[index];
+            }
 
+            items.forEach(function (element) {
 
-          $scope.svcBalances.query(request).$promise
-            .then(function (data) {
-              console.log(acc + ' : ' + data);
-              if (data != undefined) {
-                var assets = [];
-                data.forEach(function (ass) {
-                  if (ass.sumBy.assetAlias == null) {
-                    ass.sumBy.assetAlias = 'external';
-                  }
-                  assets.push({ assetAlias: ass.sumBy.assetAlias, balance: ass.amount });
-                });
-                acc.assets = assets;
-              }
+            }, this);
 
-            })
-        })
+          })
+          .catch(function (err) {
+            console.log("err: " + err);
+          })
+      };
 
-      }
-
+      pr(a);
     }
 
-    $scope.start();
+    // $scope.click = function () {
+    //   var a = [];
+    //   $scope.accountsList.forEach(function (element) {
+    //     this['sr' + element.alias] = {};
+    //     this['sr' + element.alias].connection = JSON.parse(JSON.stringify($scope.connection));
+    //     this['sr' + element.alias].query = {};
+    //     this['sr' + element.alias].query = { queryType: "Balance", accountAlias: element.alias };
+    //     console.log(JSON.stringify(this['sr' + element.alias]));
+    //     a.push($scope.getAssetBalances(this['sr' + element.alias]));
+    //   }, this);
 
+    //   function pr(requests) {
+    //     //console.log(JSON.stringify(requests));
+    //     Promise.all(requests)
+    //       .then(function (items) {
+    //         console.log("results: " + JSON.stringify(items));
+
+    //         // Inject results values into $scope.accountList
+    //         for (var index = 0; index < items.length; index++) {
+    //           $scope.accountsList[index].assets = items[index];
+    //         }
+
+    //         items.forEach(function (element) {
+
+    //         }, this);
+
+    //       })
+    //       .catch(function (err) {
+    //         console.log("err: " + err);
+    //       })
+    //   };
+
+    //   pr(a);
+
+    // };
+
+    $scope.getAssetBalances = function (r) {
+      //console.log('getBalances: ' + JSON.stringify(r));
+      //var data = [];
+      return new Promise(function (resolve, reject) {
+        var v = null;
+        $scope.svcBalances.query(r).$promise
+          .then(function (data) {
+            //console.log("did resolve " + r.query.accountAlias + "data:" + data);
+            v = data;
+          })
+          .catch(function (err) {
+            //console.log("did reject " + r.query.accountAlias + "data:" + err);
+            //v = err;
+
+          }).finally(function () {
+            resolve(v);
+          })
+
+      })
+    };
+
+
+    $scope.start();
 
   })
 
@@ -179,7 +246,7 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
   }
   )
 
-  .controller('assetInfoCtrl', function ($scope, $stateParams, svcNodeSettings) {
+  .controller('assetInfoCtrl', function ($scope, $stateParams, svcNodeSettings, svcAssets, svcBalances) {
 
     // Set up the API services
     $scope.svcNodeSettings = svcNodeSettings;
@@ -187,6 +254,35 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
     $scope.start = function () {
       // Fetch the default system settings on load
       $scope.settings = svcNodeSettings.getSettings();
+
+      // Set up the API services
+      $scope.svcAssets = svcAssets;
+      $scope.svcBalances = svcBalances;
+      // $scope.svcUsers = svcUsers;
+      // $scope.svcAccounts = svcAccounts;
+
+      // Create Chain Node connection object
+      $scope.connection = {};
+      $scope.connection.nodeURL = $scope.settings.nodeURL;
+      $scope.connection.clientToken = $scope.settings.clientToken;
+
+      // Base request object example
+      // $scope.Request = {
+      //   "connection": {
+      //     "nodeURL": "http://172.16.101.93:1999",
+      //     "clientToken": "UbuntuDev:e72629518809db4f5176d084f80f2261a3f4c70e044c6339251977c79f73c4bb"
+      //   },
+      //   "account": {},
+      //   "asset": {},
+      //   "transaction": {},
+      //   "hsmkey": [],
+      //   "query": {}
+      // };
+
+      $scope.Request = {};
+      $scope.Request.connection = $scope.connection;
+
+      $scope.Request.query = {};
     }
 
     $scope.start();
