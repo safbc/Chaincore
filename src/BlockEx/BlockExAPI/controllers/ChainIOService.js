@@ -13,11 +13,11 @@ exports.createAccount = function (args, res, next) {
   var request = args.request.value;
 
   // set up chain node connection properties
-  const baseurl = request.connection.nodeURL;
-  const clienttoken = request.connection.clientToken
+  const nodeURL = request.connection.nodeURL;
+  const clientToken = request.connection.clientToken
 
   // Create new chain client connection
-  const client = new chain.Client(baseurl, clienttoken)
+  const client = new chain.Client(nodeURL, clientToken)
 
   var accountAlias = request.account.alias;
 
@@ -72,14 +72,17 @@ exports.getAccounts = function (args, res, next) {
   var request = args.request.value;
 
   // set up chain node connection properties
-  const baseurl = request.connection.nodeURL;
-  const clienttoken = request.connection.clientToken
+  const nodeURL = request.connection.nodeURL;
+  const clientToken = request.connection.clientToken
 
   // define chain client connection
-  const client = new chain.Client(baseurl, clienttoken)
+  const client = new chain.Client(nodeURL, clientToken)
 
   var accounts = [];
   var filter = '';
+  if (request.account == undefined) {
+    request.account = {};
+  }
   // Is this going to be filtered search or not?
 
   if (request.account.alias == undefined) {
@@ -157,11 +160,11 @@ exports.getAssets = function (args, res, next) {
   var request = args.request.value;
 
   // set up chain node connection properties
-  const baseurl = request.connection.nodeURL;
-  const clienttoken = request.connection.clientToken
+  const nodeURL = request.connection.nodeURL;
+  const clientToken = request.connection.clientToken
 
   // define chain client connection
-  const client = new chain.Client(baseurl, clienttoken)
+  const client = new chain.Client(nodeURL, clientToken)
 
   var assets = [];
   var filter = '';
@@ -210,13 +213,13 @@ exports.getBalances = function (args, res, next) {
   const chain = require('chain-sdk');
 
   var request = args.request.value;
-
+  console.log("Balances request for acc: " + request.query.accountAlias);
   // set up chain node connection properties
-  const baseurl = request.connection.nodeURL;
-  const clienttoken = request.connection.clientToken
+  const nodeURL = request.connection.nodeURL;
+  const clientToken = request.connection.clientToken
 
   // define chain client connection
-  const client = new chain.Client(baseurl, clienttoken)
+  const client = new chain.Client(nodeURL, clientToken)
 
   var balances = [];
 
@@ -228,21 +231,24 @@ exports.getBalances = function (args, res, next) {
           filter: 'account_alias=$1',
           filterParams: [request.query.accountAlias]
         }, (balance, next, done) => {
-          // console.log('Bank 1 balance of ' + balance.sumBy.assetAlias + ': ' + balance.amount)
+          console.log(request.query.accountAlias + '\'s balance of ' + balance.sumBy.assetAlias + ': ' + balance.amount)
+          //balance.accountAlias = request.query.accountAlias;
           balances.push(balance)
           next()
         })
           .then(() => {
             if (balances.length > 0) {
               res.setHeader('Content-Type', 'application/json');
-              var out = JSON.stringify(balances || {}, null, 2)
+              var out = JSON.stringify(balances)
+              // var out = JSON.stringify(balances || {}, null, 2)
               res.end(out);
             } else {
               res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify(balances || {}, [], 2));
+              res.end(JSON.stringify(balances));
+              // res.end(JSON.stringify(balances || {}, [], 2));
             }
 
-          }).catch(console.log.bind(console));
+          }).catch(function (err) { console.log("error:" + err) });
       } else {
         //  Get all balances
         client.balances.queryAll({ sumBy: ['asset_alias'] }, (balance, next, done) => {
@@ -284,11 +290,11 @@ exports.getKeys = function (args, res, next) {
   var request = args.request.value;
 
   // set up chain node connection properties
-  const baseurl = request.connection.nodeURL;
-  const clienttoken = request.connection.clientToken
+  const nodeURL = request.connection.nodeURL;
+  const clientToken = request.connection.clientToken
 
   // define chain client connection
-  const client = new chain.Client(baseurl, clienttoken)
+  const client = new chain.Client(nodeURL, clientToken)
 
   var keys = [];
   var keyAliases = [];
@@ -344,11 +350,11 @@ exports.getTransactions = function (args, res, next) {
   var request = args.request.value;
 
   // set up chain node connection properties
-  const baseurl = request.connection.nodeURL;
-  const clienttoken = request.connection.clientToken
+  const nodeURL = request.connection.nodeURL;
+  const clientToken = request.connection.clientToken
 
   // define chain client connection
-  const client = new chain.Client(baseurl, clienttoken)
+  const client = new chain.Client(nodeURL, clientToken)
 
   var myFilter = {};
   var transactions = [];
@@ -419,13 +425,13 @@ exports.signTransaction = function (args, res, next) {
   var request = args.request.value;
 
   // set up chain node connection properties
-  const baseurl = request.connection.nodeURL;
-  const hsmurl = baseurl + '/mockhsm'
-  const clienttoken = request.connection.clientToken
+  const nodeURL = request.connection.nodeURL;
+  const hsmurl = nodeURL + '/mockhsm'
+  const clientToken = request.connection.clientToken
 
   // define chain client connection
-  const client = new chain.Client(baseurl, clienttoken)
-  const hsmConnection = new chain.Connection(hsmurl, clienttoken)
+  const client = new chain.Client(nodeURL, clientToken)
+  const hsmConnection = new chain.Connection(hsmurl, clientToken)
   const signer = new chain.HsmSigner()
 
   var keys = [];
