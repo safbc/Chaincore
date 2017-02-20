@@ -20,7 +20,8 @@ $ ionic serve
 ```
 
 To see it running on your mobile, you need to install the [Ionic View](http://view.ionic.io/) app from your App Store.
-Then choose `Preview an App` from the menu and enter #*1b48128d*# as the APP ID
+
+Then choose `Preview an App` from the menu and enter *1b48128d* as the APP ID
 
 ## Credits
 
