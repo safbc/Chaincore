@@ -16,9 +16,6 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
     }
 
     $scope.start();
-
-
-
   }
   )
 
@@ -71,6 +68,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
     $scope.svcNodeSettings = svcNodeSettings;
 
     $scope.start = function () {
+      $ionicLoading.show({
+        template: 'Loading ...'
+      });
       // Fetch the default system settings on load
       $scope.settings = svcNodeSettings.getSettings();
 
@@ -108,8 +108,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
       $scope.Request = {};
       $scope.Request.connection = {};
-      // $scope.Request.connection.nodeURL = "http://41.76.226.170:1999";
-      // $scope.Request.connection.clientToken = "AppDev:18bbc4a6fab7a3f27ce4ea636ec5cd6470b3a1b84449590125f1191d069ab0a2";
+
       $scope.Request.connection.nodeURL = $scope.settings.nodeURL;
       $scope.Request.connection.clientToken = $scope.settings.clientToken;
 
@@ -126,6 +125,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
         })
         .catch(function (data) {
           console.log('Error: ' + data);
+          $ionicLoading.show({
+            template: 'Error!'
+          });
         }).finally(function () {
 
           //TODO: Kick of ballance queries
@@ -162,7 +164,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
             items.forEach(function (element) {
 
             }, this);
-
+            $ionicLoading.hide({
+              template: 'Loading ...'
+            });
           })
           .catch(function (err) {
             console.log("err: " + err);
@@ -171,42 +175,6 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
       pr(a);
     }
-
-    // $scope.click = function () {
-    //   var a = [];
-    //   $scope.accountsList.forEach(function (element) {
-    //     this['sr' + element.alias] = {};
-    //     this['sr' + element.alias].connection = JSON.parse(JSON.stringify($scope.connection));
-    //     this['sr' + element.alias].query = {};
-    //     this['sr' + element.alias].query = { queryType: "Balance", accountAlias: element.alias };
-    //     console.log(JSON.stringify(this['sr' + element.alias]));
-    //     a.push($scope.getAssetBalances(this['sr' + element.alias]));
-    //   }, this);
-
-    //   function pr(requests) {
-    //     //console.log(JSON.stringify(requests));
-    //     Promise.all(requests)
-    //       .then(function (items) {
-    //         console.log("results: " + JSON.stringify(items));
-
-    //         // Inject results values into $scope.accountList
-    //         for (var index = 0; index < items.length; index++) {
-    //           $scope.accountsList[index].assets = items[index];
-    //         }
-
-    //         items.forEach(function (element) {
-
-    //         }, this);
-
-    //       })
-    //       .catch(function (err) {
-    //         console.log("err: " + err);
-    //       })
-    //   };
-
-    //   pr(a);
-
-    // };
 
     $scope.getAssetBalances = function (r) {
       //console.log('getBalances: ' + JSON.stringify(r));
@@ -393,6 +361,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.SVCappTrades.query().$promise
         .then(function (data) {
           $scope.Offers.trades = data;
+          $scope.Offers.trades.saleData = JSON.parse(data.saleData);
         })
         .finally(function () {
           $ionicLoading.hide({

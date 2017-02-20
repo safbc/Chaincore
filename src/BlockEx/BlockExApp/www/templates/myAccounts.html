@@ -2,9 +2,9 @@
   <ion-nav-buttons side="right" class="has-header">
     <button class="button icon ion-android-add"></button>
   </ion-nav-buttons>
-  <ion-content padding="true" class="has-header">
+  <ion-content padding="true" class="has-header" style="background: #0F0E0E">
     <div class="list card" id="myAccounts-card" ng-repeat="row in accountsList">
-      <ion-item class="item" ng-click="click()">
+      <ion-item class="item">
         <!--<img ng-src=" {{row.avatar}} " ng-click="getBalances(row) " />-->
         <h2>{{row.alias}}</h2>
         <p>{{row.accountId}}</p>
