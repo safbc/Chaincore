@@ -12,6 +12,6 @@ RUN npm install
 COPY . /usr/src/app
 
 # replace this with your application's default port
-EXPOSE 443
+EXPOSE 3000
 
 CMD [ "npm", "start" ]
