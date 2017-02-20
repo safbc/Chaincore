@@ -7,6 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('app', [
   'ionic',
+  'ionic.cloud',
   'ngResource',
   'app.constants',
   'app.controllers',
@@ -14,14 +15,32 @@ angular.module('app', [
   'app.directives',
   'app.services',
   'app.filters'
+  // ,'stormpath'
+  // ,'stormpath.templates'
 ])
-
+  .config(function ($ionicCloudProvider) {
+    $ionicCloudProvider.init({
+      "core": {
+        "app_id": "1b48128d"
+      }
+    });
+  })
   .config(function ($ionicConfigProvider, $sceDelegateProvider) {
-
 
     $sceDelegateProvider.resourceUrlWhitelist(['self', '*://www.youtube.com/**', '*://player.vimeo.com/video/**']);
 
   })
+
+  // .config(function (STORMPATH_CONFIG) {
+  //   // Specify your Client API domain here:
+  //   STORMPATH_CONFIG.ENDPOINT_PREFIX = 'https://noble-tsunami.apps.stormpath.io';
+  // })
+  // .run(function ($stormpath) {
+  //   $stormpath.uiRouter({
+  //     loginState: 'menu.login',
+  //     defaultPostLoginState: 'menu.availableTradeOffers'
+  //   });
+  // })
 
   .run(function ($ionicPlatform) {
     $ionicPlatform.ready(function () {

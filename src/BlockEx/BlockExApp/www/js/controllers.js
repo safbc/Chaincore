@@ -1,4 +1,4 @@
-angular.module('app.controllers', ['ionic', 'ngResource'])
+angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
   .controller('myProfileCtrl', function ($scope, $stateParams, $timeout, svcUsers, svcNodeSettings) {
 
@@ -27,7 +27,7 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
   }
   )
 
-  .controller('myAccountsCtrl', function ($scope, $stateParams, $timeout, svcUsers, svcAccounts, svcAssets, svcBalances, svcNodeSettings, accAliasFilter) {
+  .controller('myAccountsCtrl', function ($scope, $stateParams, $timeout, $ionicAuth, $ionicUser, svcUsers, svcAccounts, svcAssets, svcBalances, svcNodeSettings, accAliasFilter) {
 
     // Set up the API services
     $scope.svcNodeSettings = svcNodeSettings;
@@ -196,122 +196,126 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
 
   })
 
-  .controller('assetInfoCtrl', function ($scope, $stateParams, svcNodeSettings, svcAssets, svcBalances, accAliasFilter) {
-
-    // Set up the API services
-    $scope.svcNodeSettings = svcNodeSettings;
-
-    $scope.start = function () {
-      // Fetch the default system settings on load
-      $scope.settings = svcNodeSettings.getSettings();
+  .controller('assetInfoCtrl', function ($scope, $stateParams, $ionicAuth, $ionicUser, svcNodeSettings, svcAssets, svcBalances, accAliasFilter) {
+    if ($ionicAuth.isAuthenticated()) {
+      // $ionicUser is authenticated!
 
       // Set up the API services
-      $scope.svcAssets = svcAssets;
-      $scope.svcBalances = svcBalances;
-      // $scope.svcUsers = svcUsers;
-      // $scope.svcAccounts = svcAccounts;
+      $scope.svcNodeSettings = svcNodeSettings;
 
-      // Create Chain Node connection object
-      $scope.connection = {};
-      $scope.connection.nodeURL = $scope.settings.nodeURL;
-      $scope.connection.clientToken = $scope.settings.clientToken;
+      $scope.start = function () {
+        // Fetch the default system settings on load
+        $scope.settings = svcNodeSettings.getSettings();
 
-      // Base request object example
-      // $scope.Request = {
-      //   "connection": {
-      //     "nodeURL": "http://172.16.101.93:1999",
-      //     "clientToken": "UbuntuDev:e72629518809db4f5176d084f80f2261a3f4c70e044c6339251977c79f73c4bb"
-      //   },
-      //   "asset": {},
-      // };
+        // Set up the API services
+        $scope.svcAssets = svcAssets;
+        $scope.svcBalances = svcBalances;
+        // $scope.svcUsers = svcUsers;
+        // $scope.svcAccounts = svcAccounts;
 
-      $scope.Request = {};
-      $scope.Request.connection = $scope.connection;
-      $scope.Request.asset = { alias: "BankservCoin" };
+        // Create Chain Node connection object
+        $scope.connection = {};
+        $scope.connection.nodeURL = $scope.settings.nodeURL;
+        $scope.connection.clientToken = $scope.settings.clientToken;
 
+        // Base request object example
+        // $scope.Request = {
+        //   "connection": {
+        //     "nodeURL": "http://172.16.101.93:1999",
+        //     "clientToken": "UbuntuDev:e72629518809db4f5176d084f80f2261a3f4c70e044c6339251977c79f73c4bb"
+        //   },
+        //   "asset": {},
+        // };
 
-      $scope.assetList = [];
-
-      $scope.svcAssets.query($scope.Request).$promise
-        .then(function (data) {
-          return data;
-        })
-        .then(function (data) {
-          $scope.assetList = data;
-        })
-        .catch(function (data) {
-          console.log('Error: ' + data);
-        }).finally(function () {
-
-          console.log('Done: ');
-        });
+        $scope.Request = {};
+        $scope.Request.connection = $scope.connection;
+        $scope.Request.asset = { alias: "BankservCoin" };
 
 
-    }
+        $scope.assetList = [];
 
-    // Update the asset balances for all accounts in the current accountsList
-    $scope.getBalances = function () {
-      var a = [];
-      $scope.assetList.forEach(function (element) {
-        this['sr' + element.alias] = {};
-        this['sr' + element.alias].connection = JSON.parse(JSON.stringify($scope.connection));
-        this['sr' + element.alias].query = {};
-        this['sr' + element.alias].query = { queryType: "AssetBalance", alias: element.alias };
-        //console.log(JSON.stringify(this['sr' + element.alias]));
-        a.push($scope.getAssetBalances(this['sr' + element.alias]));
-      }, this);
-
-      function pr(requests) {
-        //console.log(JSON.stringify(requests));
-        Promise.all(requests)
-          .then(function (items) {
-            //console.log("results: " + JSON.stringify(items));
-
-            // Inject results values into $scope.accountList
-            for (var index = 0; index < items.length; index++) {
-              $scope.accountsList[index].assets = items[index];
-            }
-
-            items.forEach(function (element) {
-
-            }, this);
-
+        $scope.svcAssets.query($scope.Request).$promise
+          .then(function (data) {
+            return data;
           })
-          .catch(function (err) {
-            console.log("err: " + err);
+          .then(function (data) {
+            $scope.assetList = data;
           })
+          .catch(function (data) {
+            console.log('Error: ' + data);
+          }).finally(function () {
+
+            console.log('Done: ');
+          });
+
+
+      }
+
+      // Update the asset balances for all accounts in the current accountsList
+      $scope.getBalances = function () {
+        var a = [];
+        $scope.assetList.forEach(function (element) {
+          this['sr' + element.alias] = {};
+          this['sr' + element.alias].connection = JSON.parse(JSON.stringify($scope.connection));
+          this['sr' + element.alias].query = {};
+          this['sr' + element.alias].query = { queryType: "AssetBalance", alias: element.alias };
+          //console.log(JSON.stringify(this['sr' + element.alias]));
+          a.push($scope.getAssetBalances(this['sr' + element.alias]));
+        }, this);
+
+        function pr(requests) {
+          //console.log(JSON.stringify(requests));
+          Promise.all(requests)
+            .then(function (items) {
+              //console.log("results: " + JSON.stringify(items));
+
+              // Inject results values into $scope.accountList
+              for (var index = 0; index < items.length; index++) {
+                $scope.accountsList[index].assets = items[index];
+              }
+
+              items.forEach(function (element) {
+
+              }, this);
+
+            })
+            .catch(function (err) {
+              console.log("err: " + err);
+            })
+        };
+
+        pr(a);
+      }
+
+      $scope.getAssetBalances = function (r) {
+        //console.log('getBalances: ' + JSON.stringify(r));
+        //var data = [];
+        return new Promise(function (resolve, reject) {
+          var v = null;
+          $scope.svcBalances.query(r).$promise
+            .then(function (data) {
+              //console.log("did resolve " + r.query.accountAlias + "data:" + data);
+              v = data;
+            })
+            .catch(function (err) {
+              //console.log("did reject " + r.query.accountAlias + "data:" + err);
+              //v = err;
+
+            }).finally(function () {
+              resolve(v);
+            })
+
+        })
       };
 
-      pr(a);
+      $scope.start();
     }
 
-    $scope.getAssetBalances = function (r) {
-      //console.log('getBalances: ' + JSON.stringify(r));
-      //var data = [];
-      return new Promise(function (resolve, reject) {
-        var v = null;
-        $scope.svcBalances.query(r).$promise
-          .then(function (data) {
-            //console.log("did resolve " + r.query.accountAlias + "data:" + data);
-            v = data;
-          })
-          .catch(function (err) {
-            //console.log("did reject " + r.query.accountAlias + "data:" + err);
-            //v = err;
-
-          }).finally(function () {
-            resolve(v);
-          })
-
-      })
-    };
-
-    $scope.start();
 
   }
   )
 
-  .controller('availableTradeOffersCtrl', function ($scope, $stateParams, svcTrades, svcUsers, svcNodeSettings) {
+  .controller('availableTradeOffersCtrl', function ($scope, $stateParams, $ionicAuth, $ionicUser, svcTrades, svcUsers, svcNodeSettings) {
 
     $scope.start = function () {
       // Fetch the default system settings on load
@@ -346,7 +350,7 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
   }
   )
 
-  .controller('bidsMadeForOfferIdCtrl', function ($scope, $stateParams, svcNodeSettings) {
+  .controller('bidsMadeForOfferIdCtrl', function ($scope, $stateParams, $ionicAuth, $ionicUser, svcNodeSettings) {
 
     // Set up the API services
     $scope.svcNodeSettings = svcNodeSettings;
@@ -361,7 +365,7 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
   }
   )
 
-  .controller('menuCtrl', function ($scope, $stateParams, svcNodeSettings) {
+  .controller('menuCtrl', function ($scope, $stateParams, $ionicAuth, $ionicUser, svcNodeSettings) {
 
     // Set up the API services
     $scope.svcNodeSettings = svcNodeSettings;
@@ -375,7 +379,7 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
   }
   )
 
-  .controller('transactionsCtrl', function ($scope, $stateParams, svcNodeSettings) {
+  .controller('transactionsCtrl', function ($scope, $stateParams, $ionicAuth, $ionicUser, svcNodeSettings) {
 
     // Set up the API services
     $scope.svcNodeSettings = svcNodeSettings;
@@ -389,7 +393,7 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
   }
   )
 
-  .controller('transactionDetailCtrl', function ($scope, $stateParams, svcNodeSettings) {
+  .controller('transactionDetailCtrl', function ($scope, $stateParams, $ionicAuth, $ionicUser, svcNodeSettings) {
 
     // Set up the API services
     $scope.svcNodeSettings = svcNodeSettings;
@@ -403,7 +407,7 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
   }
   )
 
-  .controller('newTradeCtrl', function ($scope, $stateParams, svcNodeSettings) {
+  .controller('newTradeCtrl', function ($scope, $stateParams, $ionicAuth, $ionicUser, svcNodeSettings) {
 
     // Set up the API services
     $scope.svcNodeSettings = svcNodeSettings;
@@ -417,7 +421,7 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
   }
   )
 
-  .controller('bidOnTradeIDCtrl', function ($scope, $stateParams, svcNodeSettings) {
+  .controller('bidOnTradeIDCtrl', function ($scope, $stateParams, $ionicAuth, $ionicUser, svcNodeSettings) {
 
     // Set up the API services
     $scope.svcNodeSettings = svcNodeSettings;
@@ -431,7 +435,7 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
   }
   )
 
-  .controller('newAccountCtrl', function ($scope, $stateParams, svcNodeSettings) {
+  .controller('newAccountCtrl', function ($scope, $stateParams, $ionicAuth, $ionicUser, svcNodeSettings) {
 
     // Set up the API services
     $scope.svcNodeSettings = svcNodeSettings;
@@ -445,7 +449,63 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
   }
   )
 
-  .controller('loginCtrl', function ($scope, $stateParams, svcNodeSettings) {
+  .controller('loginCtrl', function ($scope, $stateParams, $ionicAuth, $ionicUser) {
+
+    $scope.loginForm = { name: '', email: '', password: '' };
+
+    $scope.formLogin = function (details) {
+      $ionicAuth.login('basic', details)
+        .then(function (data) {
+
+          return data;
+        }
+        );
+    }
+
+
+    $scope.googleLogin = function () {
+      $ionicGoogleAuth.login()
+        .then(function () {
+
+          // TODO: Redirect to home page
+        }
+        );
+    }
+
+  }
+  )
+
+  .controller('signupCtrl', function ($scope, $stateParams, $ionicAuth, $ionicUser, svcNodeSettings) {
+
+    // $ionicUser.details.name = '';
+    // // $ionicUser.details.image = 'https://pbs.twimg.com/profile_images/617058765167329280/9BkeDJlV.png';
+    // $ionicUser.details.password = '';
+
+    $scope.signupForm = { username: '', name: '', email: '', password: '' };
+
+    $scope.formSignup = function (details) {
+
+      $ionicAuth.signup(details).then(function () {
+        // `$ionicUser` is now registered
+        return $ionicAuth.login('basic', details);
+
+      }, function (err) {
+        for (var e of err.details) {
+          if (e === 'conflict_email') {
+            alert('Email already exists.');
+          } else {
+            // handle other errors
+          }
+        }
+      });
+    }
+
+
+  }
+  )
+
+
+  .controller('confirmTradeCtrl', function ($scope, $stateParams, $ionicAuth, $ionicUser, svcNodeSettings) {
 
     // Set up the API services
     $scope.svcNodeSettings = svcNodeSettings;
@@ -459,21 +519,7 @@ angular.module('app.controllers', ['ionic', 'ngResource'])
   }
   )
 
-  .controller('confirmTradeCtrl', function ($scope, $stateParams, svcNodeSettings) {
-
-    // Set up the API services
-    $scope.svcNodeSettings = svcNodeSettings;
-
-    $scope.start = function () {
-      // Fetch the default system settings on load
-      $scope.settings = svcNodeSettings.getSettings();
-    }
-
-    $scope.start();
-  }
-  )
-
-  .controller('settingsCtrl', function ($scope, $stateParams, svcNodeSettings) {
+  .controller('settingsCtrl', function ($scope, $stateParams, $ionicAuth, $ionicUser, svcNodeSettings) {
 
     // Set up the API services
     $scope.svcNodeSettings = svcNodeSettings;

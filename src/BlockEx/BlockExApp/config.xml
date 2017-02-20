@@ -2,7 +2,7 @@
 <widget id="com.ionicframework.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>BlockEx</name>
     <description>
-        An Ionic Framework and Cordova project.
+        An asset trading platform powered by the Chain Core blockchain.
     </description>
     <author email="dibbs.za@gmail.com" href="">
       Gary de Beer

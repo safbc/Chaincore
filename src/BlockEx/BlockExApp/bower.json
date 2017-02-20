@@ -1,7 +1,8 @@
 {
-  "name": "HelloIonic",
+  "name": "blockex",
   "private": "true",
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.3.2"
-  }
+  },
+  "dependencies": {}
 }

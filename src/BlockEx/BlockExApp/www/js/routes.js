@@ -122,6 +122,16 @@ angular.module('app.routes', [])
         }
       })
 
+      .state('menu.signup', {
+        url: '/signup',
+        views: {
+          'side-menu21': {
+            templateUrl: 'templates/signup.html',
+            controller: 'signupCtrl'
+          }
+        }
+      })
+
       .state('menu.confirmTrade', {
         url: '/confirmTrade',
         views: {

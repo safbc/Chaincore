@@ -25,13 +25,11 @@ Then choose `Preview an App` from the menu and enter *1b48128d* as the APP ID
 
 ## Credits
 
-### App UI
+### App UI & Security
 
 This is a hybrid mobile app and was built using [Ionic Framework 1.2](http://ionicframework.com/) (See the Ionic App Base section below).
 
-### App Security
-
-Authentication services in this app are powered by the [Stormpath](https://stormpath.com/) API.
+Security services are provided by Ionic Cloud Services.
 
 ### Blockchain Network
 
