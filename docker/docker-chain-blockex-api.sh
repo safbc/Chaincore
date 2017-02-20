@@ -74,7 +74,7 @@ echo "
 Starting up API server...
 
 "
-docker run -d --name chain \
+docker run -d --name blockex-api \
     --network="host" \
     -v $APIDATA:/usr/src/app/data \
     -p $PORT:$PORT \
