@@ -76,7 +76,7 @@ Starting up API server...
 "
 docker run -d --name chain \
     --network="host" \
-    -v $APIDATA:/data \
+    -v $APIDATA:/usr/src/app/data \
     -p $PORT:$PORT \
     springblock/blockex-api:latest
 
