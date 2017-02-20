@@ -50,7 +50,7 @@ echo "Public IP: $IP"
 #Set up operation parameters - change these as required
 
 #DO NOT CHANGE THESE VALUES
-PORT=443
+PORT=3000
 WORKDIR="/Chaincore/blockex"
 APIDATA="$WORKDIR/data"
 
