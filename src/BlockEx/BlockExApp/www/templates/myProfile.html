@@ -2,18 +2,19 @@
   <ion-nav-buttons side="right" class="has-header">
     <button class="button button-icon icon ion-ios-compose-outline"></button>
   </ion-nav-buttons>
-  <ion-content padding="true" class="has-header">
+  <ion-content padding="true" class="has-header" style="background: #0F0E0E">
     <div class="list card" id="myProfile-card219">
-      <ion-item class="item-avatar">
-        <img ng-src="{{userInfo.image}}" style="max-width: 90%" />
-        <h2>{{userInfo.name}}</h2>
-        <p></p>
+      <div class="item item-body">
+        <img class="full-image" ng-src="{{userInfo.image}}">
+      </div>
+      <ion-item class="item">
+        {{userInfo.name}}
       </ion-item>
-      <ion-item class="assertive" id="myProfile-list-item101">email
-        <span class="item-note">{{userInfo.email}}</span>
+      <ion-item class="positive">
+        <span class="input-label">email</span> {{userInfo.email}}
       </ion-item>
-      <ion-item class="balanced" id="myProfile-list-item106" ui-sref="menu.assetInfo">joined
-        <span class="item-note">{{userInfo.email}}</span>
+      <ion-item class="positive" id="myProfile-list-item106" ui-sref="menu.assetInfo">
+        <span class="input-label">joined</span> {{userInfo.createdAt | date}}
       </ion-item>
     </div>
     <!--<button id="myProfile-button10" class="button button-positive  button-block">Reset Password</button>-->

@@ -1,8 +1,8 @@
 <ion-view title="Available Trade Offers" id="page2">
   <ion-nav-buttons side="right" class="has-header">
-    <button class="button icon ion-android-add"></button>
+    <button class="button icon ion-android-add" ui-sref="menu.newTrade"></button>
   </ion-nav-buttons>
-  <ion-content padding="true" class="has-header">
+  <ion-content padding="true" class="has-header" style="background: #0F0E0E">
     <div class="list card" ng-repeat="row in Offers.trades">
       <ion-item class="item-avatar" ui-sref="menu.transactions">
         <img ng-repeat="user in userProfiles | filter:row.postedBy" ng-src="{{user.avatar}}" />
@@ -16,6 +16,9 @@
       <ion-item id="availableTradeOffers-list-item80" ui-sref="menu.bidsMadeForOfferId">Bids on this offer
         <span class="item-note">1</span>
       </ion-item>
+    </div>
+    <div class="list card" ng-show="noData">
+      <h2>No Records</h2>
     </div>
   </ion-content>
 </ion-view>
