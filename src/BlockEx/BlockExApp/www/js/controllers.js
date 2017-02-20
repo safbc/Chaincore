@@ -351,6 +351,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $ionicLoading.show({
         template: 'Retreiving offers ...'
       });
+      $scope.noData = true;
       // Fetch the default system settings on load
       $scope.settings = svcNodeSettings.getSettings();
 
@@ -360,8 +361,15 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
       $scope.SVCappTrades.query().$promise
         .then(function (data) {
-          $scope.Offers.trades = data;
-          $scope.Offers.trades.saleData = JSON.parse(data.saleData);
+
+          if (data.length > 0) {
+            $scope.Offers.trades = data;
+            $scope.noData = false;
+            $scope.getUsers();
+          } else {
+            $scope.noData = true;
+          }
+          // $scope.Offers.trades.saleData = JSON.parse(data.saleData);
         })
         .finally(function () {
           $ionicLoading.hide({
@@ -369,16 +377,19 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
           });
         });
 
-      // Get User information
-      $scope.userProfiles = [];
-      $scope.SVCappUsers = svcUsers;
+      $scope.getUsers = function () {
+        // Get User information
+        $scope.userProfiles = [];
+        $scope.SVCappUsers = svcUsers;
 
-      $scope.SVCappUsers.query({}).$promise
-        .then(function (data) {
-          $scope.userProfiles = data;
-        })
-        .finally(function () {
-        });
+        $scope.SVCappUsers.query({}).$promise
+          .then(function (data) {
+            $scope.userProfiles = data;
+          })
+          .finally(function () {
+          });
+      };
+
     }
 
     $scope.start();
