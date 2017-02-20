@@ -11,6 +11,7 @@ angular.module('app.routes', [])
 
 
       .state('menu.myAccounts', {
+   cache: false,
         url: '/myaccount',
         views: {
           'side-menu21': {
@@ -31,6 +32,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.availableTradeOffers', {
+   cache: false,
         url: '/tradesList',
         views: {
           'side-menu21': {
@@ -41,6 +43,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.bidsMadeForOfferId', {
+   cache: false,
         url: '/tradeBids',
         views: {
           'side-menu21': {
@@ -67,6 +70,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.transactions', {
+   cache: false,
         url: '/txList',
         views: {
           'side-menu21': {
@@ -87,6 +91,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.newTrade', {
+   cache: false,
         url: '/tradeNew',
         views: {
           'side-menu21': {
@@ -97,6 +102,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.bidOnTradeID', {
+   cache: false,
         url: '/tradeBid',
         views: {
           'side-menu21': {
@@ -107,12 +113,14 @@ angular.module('app.routes', [])
       })
 
       .state('menu.newAccount', {
+   cache: false,
         url: '/accountNew',
         templateUrl: 'templates/newAccount.html',
         controller: 'newAccountCtrl'
       })
 
       .state('menu.login', {
+   cache: false,
         url: '/login',
         views: {
           'side-menu21': {
@@ -123,6 +131,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.logout', {
+   cache: false,
         url: '/logout',
         views: {
           'side-menu21': {
@@ -143,6 +152,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.confirmTrade', {
+   cache: false,
         url: '/confirmTrade',
         views: {
           'side-menu21': {
@@ -158,6 +168,16 @@ angular.module('app.routes', [])
           'side-menu21': {
             templateUrl: 'templates/settings.html',
             controller: 'settingsCtrl'
+          }
+        }
+      })
+
+      .state('menu.about', {
+        url: '/about',
+        views: {
+          'side-menu21': {
+            templateUrl: 'templates/about.html',
+            controller: 'aboutCtrl'
           }
         }
       })

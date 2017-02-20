@@ -3,6 +3,10 @@
     <button class="button icon ion-android-add" ui-sref="menu.newTrade"></button>
   </ion-nav-buttons>
   <ion-content padding="true" class="has-header" style="background: #0F0E0E">
+    <ion-refresher
+      pulling-text="Pull to refresh..."
+      on-refresh="doRefresh()">
+    </ion-refresher>
     <div class="list card" ng-repeat="row in Offers.trades">
       <ion-item class="item-avatar" ui-sref="menu.transactions">
         <img ng-repeat="user in userProfiles | filter:row.postedBy" ng-src="{{user.avatar}}" />
