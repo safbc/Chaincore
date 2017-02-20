@@ -4,24 +4,35 @@
       <ion-list>
         <label class="item item-input">
           <span class="input-label">Email</span>
-          <input type="text" placeholder="" ng-model="signupForm.email">
+          <input type="text" ng-model="signupForm.details.email">
         </label>
         <label class="item item-input">
           <span class="input-label">Full Name</span>
-          <input type="text" placeholder="" ng-model="signupForm.name">
+          <input type="text" ng-model="signupForm.details.name">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Alias</span>
+          <input type="text" ng-model="signupForm.details.username">
         </label>
         <label class="item item-input">
           <span class="input-label" >Password</span>
-          <input type="password" placeholder="" ng-model="signupForm.password">
+          <input type="password"  ng-model="signupForm.details.password">
         </label>
-        <!--<label class="item item-input">
+        <label class="item item-input">
           <span class="input-label" >Password confirm</span>
-          <input type="password" placeholder="" ng-model="signupForm.password1">
-        </label>-->
+          <input type="password" ng-model="signupForm.passwordMatch">
+        </label>
+        <label class="item item-input">
+          <span class="input-label" >Select Avatar</span>
+          <img ng-src="{{signupForm.details.image}}" style="max-width: 72px" ng-model="signupForm.details.image">
+        </label>
+        <div class="row item item-input">
+          <div class="col" ng-repeat="row in avatarsList" ng-click="setAvatar(row)">
+            <img ng-src="{{row}}" style="max-width: 98%" /></div>
+        </div>
       </ion-list>
       <div class="spacer" style="height: 40px;"></div>
       <a id="login-button5" class="button button-stable  button-block" ng-click="formSignup(signupForm)">Signup</a>
-      <!--<a href-inappbrowser="/signup" id="login-button6" class="button button-positive  button-block button-clear">Or create an account</a>-->
     </form>
   </ion-content>
 </ion-view>

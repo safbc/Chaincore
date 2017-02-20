@@ -22,6 +22,12 @@ angular.module('app', [
     $ionicCloudProvider.init({
       "core": {
         "app_id": "1b48128d"
+      },
+      "auth": {
+        "google": {
+          "webClientId": "777580572465-7ndlhec6srusgbobl6nfj9fkfqd7lvso.apps.googleusercontent.com",
+          "scope": ["permission1", "permission2"]
+        }
       }
     });
   })
