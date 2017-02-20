@@ -42,15 +42,15 @@ docker rm blockex-api
 
 # get IPs from ifconfig and dig and display for information
 LOCALIP=$(ifconfig | grep 'inet ' | grep -v '172.17' | head -n1 | awk '{print $2}' | cut -d':' -f2)
-#IP=$(dig +short myip.opendns.com @resolver1.opendns.com)
+IP=$(dig +short myip.opendns.com @resolver1.opendns.com)
 
 echo "Local IP: $LOCALIP"
-#echo "Public IP: $IP"
+echo "Public IP: $IP"
 
 #Set up operation parameters - change these as required
 
 #DO NOT CHANGE THESE VALUES
-PORT=1999
+PORT=443
 WORKDIR="/Chaincore/blockex"
 APIDATA="$WORKDIR/data"
 
@@ -90,7 +90,7 @@ docker logs blockex-api
 
 echo "
 
-Access the Swagger documentation interface at: http://$LOCALIP:$PORT/docs
+Access the Swagger documentation interface at: http://$IP:$PORT/docs
 
 "
 
