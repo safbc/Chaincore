@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.ionicframework.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.bankservafrica.blockex" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>BlockEx</name>
     <description>
         An asset trading platform powered by the Chain Core blockchain.
@@ -13,17 +13,13 @@
     <preference name="UIWebViewBounce" value="false" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="SplashScreenDelay" value="2000" />
-    <preference name="FadeSplashScreenDuration" value="2000"/>
-
-    <!-- Ionic supports Android Jellybean and up -->
+    <preference name="FadeSplashScreenDuration" value="2000" />
     <preference name="android-minSdkVersion" value="16" />
-
-    <!-- Don't store local data in an iCloud backup. Turn this to "cloud" to enable storage
-         to be sent to iCloud. Note: enabling this could result in Apple rejecting your app.
-    -->
     <preference name="BackupWebStorage" value="none" />
-
     <feature name="StatusBar">
-      <param name="ios-package" value="CDVStatusBar" onload="true" />
+        <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
+    <plugin name="cordova-plugin-googleplus" spec="~5.1.1">
+        <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.777580572465-nek7jo4n1he20876ode8lp9fieqfh6jj" />
+    </plugin>
 </widget>

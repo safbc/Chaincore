@@ -28,7 +28,7 @@ angular.module('app.constants', ['ionic'])
   .constant('NODE_SETTINGS',
   {
     // API URL
-    BaseURL: "http://41.76.226.170:443/BlockEx/0.0.1",
+    BaseURL: "http://41.76.226.170:3000/BlockEx/0.0.1",
     // Internal server
     // nodeURL: "http://172.16.101.93:1999",
     // clientToken: "UbuntuDev:e72629518809db4f5176d084f80f2261a3f4c70e044c6339251977c79f73c4bb"

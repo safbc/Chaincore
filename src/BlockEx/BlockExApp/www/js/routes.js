@@ -106,7 +106,7 @@ angular.module('app.routes', [])
         }
       })
 
-      .state('newAccount', {
+      .state('menu.newAccount', {
         url: '/accountNew',
         templateUrl: 'templates/newAccount.html',
         controller: 'newAccountCtrl'
@@ -118,6 +118,16 @@ angular.module('app.routes', [])
           'side-menu21': {
             templateUrl: 'templates/login.html',
             controller: 'loginCtrl'
+          }
+        }
+      })
+
+      .state('menu.logout', {
+        url: '/logout',
+        views: {
+          'side-menu21': {
+            template: '',
+            controller: 'logoutCtrl'
           }
         }
       })

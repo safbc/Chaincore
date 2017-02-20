@@ -9,14 +9,19 @@
     <ion-nav-view name="side-menu21"></ion-nav-view>
   </ion-side-menu-content>
   <ion-side-menu side="left" id="side-menu21" style="background-color:#7C7A71;">
-    <ion-header-bar class="bar-stable">
+    <ion-header-bar class="bar-positive">
       <div class="title">Menu</div>
     </ion-header-bar>
     <ion-content padding="true" class="side-menu-left has-header ">
       <ion-list id="menu-list1" class="manual-list-fullwidth">
-        <ion-item class="item-icon-right" id="menu-list-item1" ui-sref="menu.myProfile" menu-close="">My Profile
-          <i class="icon ion-ios-person-outline"></i>
+        <ion-item class="item-icon-avatar" ui-sref="menu.myProfile" menu-close="" ng-show="isAuthenticated">
+          <img ng-src="{{userInfo.image}}" />
+          <h2>{{userInfo.name}}</h2>
+          <p>{{userInfo.email}}</p>
         </ion-item>
+        <!--<ion-item class="item-icon-right" id="menu-list-item1" ui-sref="menu.myProfile" menu-close="">My Profile
+          <i class="icon ion-ios-person-outline"></i>
+        </ion-item>-->
         <ion-item class="item-icon-right" id="menu-list-item107" ui-sref="menu.myAccounts" menu-close="">My Accounts
           <i class="icon ion-ios-information-outline"></i>
         </ion-item>

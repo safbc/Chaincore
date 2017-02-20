@@ -3,25 +3,20 @@
     <button class="button button-icon icon ion-ios-compose-outline"></button>
   </ion-nav-buttons>
   <ion-content padding="true" class="has-header">
-    <div class="list card" id="myProfile-card219" ng-repeat="row in userProfile">
-      <ion-item class="item-avatar" id="myProfile-list-item100">
-        <img ng-src="{{row.avatar}}" />
-        <h2>{{row.fullname}}</h2>
-        <p>{{row.username}}</p>
+    <div class="list card" id="myProfile-card219">
+      <ion-item class="item-avatar">
+        <img ng-src="{{userInfo.image}}" style="max-width: 90%" />
+        <h2>{{userInfo.name}}</h2>
+        <p></p>
       </ion-item>
       <ion-item class="assertive" id="myProfile-list-item101">email
-        <span class="item-note">{{row.email}}</span>
-        <ion-option-button class="button-energized">Sell</ion-option-button>
-      </ion-item>
-      <ion-item class="balanced" id="myProfile-list-item102" ui-sref="menu.assetInfo">phone
-        <span class="item-note">{{row.phone}}</span>
-        <ion-option-button class="button-positive">Sell</ion-option-button>
+        <span class="item-note">{{userInfo.email}}</span>
       </ion-item>
       <ion-item class="balanced" id="myProfile-list-item106" ui-sref="menu.assetInfo">joined
-        <span class="item-note">{{row.createAt}}</span>
-        <ion-option-button class="button-positive">Sell</ion-option-button>
+        <span class="item-note">{{userInfo.email}}</span>
       </ion-item>
     </div>
-    <button id="myProfile-button10" class="button button-positive  button-block">Change Password</button>
+    <!--<button id="myProfile-button10" class="button button-positive  button-block">Reset Password</button>-->
+    <a href-inappbrowser="{{passwordResetUrl}}" class="button button-positive  button-block ">Reset Password</a>
   </ion-content>
 </ion-view>
