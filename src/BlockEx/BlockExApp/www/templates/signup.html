@@ -2,7 +2,32 @@
   <ion-content padding="true" class="has-header" style="background: #0F0E0E">
     <form class="list">
       <ion-list>
-        <label class="item item-input">
+        <div class="item item-input-inset">
+          <label class="item-input-wrapper">
+            <input type="email" style="width: 100%"  placeholder="Email" ng-model="signupForm.details.email">
+          </label>
+        </div>
+        <div class="item item-input-inset">
+          <label class="item-input-wrapper">
+            <input type="text" style="width: 100%" placeholder="Full name" ng-model="signupForm.details.name">
+          </label>
+        </div>
+        <div class="item item-input-inset">
+          <label class="item-input-wrapper">
+            <input type="text" style="width: 100%" placeholder="Alias" ng-model="signupForm.details.username">
+          </label>
+        </div>
+        <div class="item item-input-inset">
+          <label class="item-input-wrapper">
+            <input type="password" style="width: 100%" placeholder="Password"  ng-model="signupForm.details.password">
+          </label>
+        </div>
+        <div class="item item-input-inset">
+          <label class="item-input-wrapper">
+            <input type="password" style="width: 100%" placeholder="Password confirm" ng-model="signupForm.passwordMatch">
+          </label>
+        </div>
+        <!--<label class="item item-input">
           <span class="input-label">Email</span>
           <input type="text" ng-model="signupForm.details.email">
         </label>
@@ -17,11 +42,12 @@
         <label class="item item-input">
           <span class="input-label" >Password</span>
           <input type="password"  ng-model="signupForm.details.password">
-        </label>
-        <label class="item item-input">
+        </label>-->
+
+        <!--<label class="item item-input">
           <span class="input-label" >Password confirm</span>
           <input type="password" ng-model="signupForm.passwordMatch">
-        </label>
+        </label>-->
         <label class="item item-input">
           <span class="input-label" >Select Avatar</span>
           <img ng-src="{{signupForm.details.image}}" style="max-width: 72px" ng-model="signupForm.details.image">
@@ -32,7 +58,7 @@
         </div>
       </ion-list>
       <div class="spacer" style="height: 40px;"></div>
-      <a id="login-button5" class="button button-stable  button-block" ng-click="formSignup(signupForm)">Signup</a>
+      <a class="button button-positive  button-block" ng-click="formSignup(signupForm)">Signup</a>
     </form>
   </ion-content>
 </ion-view>

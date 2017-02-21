@@ -11,12 +11,23 @@ angular.module('app.routes', [])
 
 
       .state('menu.myAccounts', {
-   cache: false,
-        url: '/myaccount',
+        cache: false,
+        url: '/myAccount',
         views: {
           'side-menu21': {
             templateUrl: 'templates/myAccounts.html',
             controller: 'myAccountsCtrl'
+          }
+        }
+      })
+
+      .state('menu.newAccount', {
+        cache: false,
+        url: '/accountNew',
+        views: {
+          'side-menu21': {
+            templateUrl: 'templates/newAccount.html',
+            controller: 'newAccountCtrl'
           }
         }
       })
@@ -32,7 +43,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.availableTradeOffers', {
-   cache: false,
+        cache: false,
         url: '/tradesList',
         views: {
           'side-menu21': {
@@ -43,7 +54,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.bidsMadeForOfferId', {
-   cache: false,
+        cache: false,
         url: '/tradeBids',
         views: {
           'side-menu21': {
@@ -71,7 +82,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.transactions', {
-   cache: false,
+        cache: false,
         url: '/txList',
         views: {
           'side-menu21': {
@@ -92,7 +103,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.newTrade', {
-   cache: false,
+        cache: false,
         url: '/tradeNew',
         views: {
           'side-menu21': {
@@ -103,7 +114,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.bidOnTradeID', {
-   cache: false,
+        cache: false,
         url: '/tradeBid',
         views: {
           'side-menu21': {
@@ -113,15 +124,9 @@ angular.module('app.routes', [])
         }
       })
 
-      .state('menu.newAccount', {
-   cache: false,
-        url: '/accountNew',
-        templateUrl: 'templates/newAccount.html',
-        controller: 'newAccountCtrl'
-      })
 
       .state('menu.login', {
-   cache: false,
+        cache: false,
         url: '/login',
         views: {
           'side-menu21': {
@@ -132,7 +137,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.logout', {
-   cache: false,
+        cache: false,
         url: '/logout',
         views: {
           'side-menu21': {
@@ -153,7 +158,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.confirmTrade', {
-   cache: false,
+        cache: false,
         url: '/confirmTrade',
         views: {
           'side-menu21': {

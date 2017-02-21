@@ -8,7 +8,7 @@ angular.module('app.constants', ['ionic'])
   .constant('svcURI', {
     // API URL
     BaseURL: "http://41.76.226.170:3000/BlockEx/0.0.1",
-    
+
     restAppTrades: "/app/trades",
     restAppUsers: "/app/users",
 
@@ -29,7 +29,7 @@ angular.module('app.constants', ['ionic'])
 
   .constant('NODE_SETTINGS',
   {
-    nodeURL: "http://yourhost:1999",
+    nodeURL: "http://localhost:1999",
     clientToken: ""
   })
   ;
