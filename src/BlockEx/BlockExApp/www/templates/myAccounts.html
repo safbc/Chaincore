@@ -1,9 +1,9 @@
-<ion-view title="My Accounts" id="page1">
+<ion-view title="My Accounts">
   <ion-nav-buttons side="right" class="has-header">
-    <button class="button icon ion-android-add"></button>
+    <button class="button icon ion-android-add" ui-sref="menu.newAccount"></button>
   </ion-nav-buttons>
   <ion-content padding="true" class="has-header" style="background: #0F0E0E">
-    <div class="list card" id="myAccounts-card" ng-repeat="row in accountsList">
+    <div class="list card" ng-repeat="row in accountsList">
       <ion-item class="item">
         <!--<img ng-src=" {{row.avatar}} " ng-click="getBalances(row) " />-->
         <h2>{{row.alias}}</h2>
@@ -14,12 +14,6 @@
         <span class="item-note ">{{asset.amount}}</span>
         <ion-option-button class="button-energized " ng-click=" ">Sell</ion-option-button>
       </ion-item>
-
-      <!--<ion-item class="balanced " id="myAccounts-list-item8 " ui-sref="menu.assetInfo ">Bitcoin
-        <span class="item-note ">1</span>
-        <ion-option-button class="button-positive ">Sell</ion-option-button>
-      </ion-item>-->
     </div>
-    <!--<div>{{appUser}}</div>-->
   </ion-content>
 </ion-view>

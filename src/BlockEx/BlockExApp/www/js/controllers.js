@@ -1,18 +1,25 @@
 angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
-  .controller('menuCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, svcNodeSettings) {
-    if (!$ionicAuth.isAuthenticated()) {
-      $state.go('menu.login');
-    }
+  .controller('menuCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory, svcNodeSettings) {
 
-    $scope.isAuthenticated = $ionicAuth.isAuthenticated();
-    $scope.userInfo = $ionicUser.details;
-    // Set up the API services
-    $scope.svcNodeSettings = svcNodeSettings;
+    $scope.$on('user:updated', function (event, data) {
+      // you could inspect the data to see if what you care about changed, or just update your own scope
+      $scope.userInfo = $ionicUser.details;
+      $scope.isAuthenticated = $ionicAuth.isAuthenticated();
+    });
 
     $scope.start = function () {
-      // Fetch the default system settings on load
-      $scope.settings = svcNodeSettings.getSettings();
+      $scope.isAuthenticated = $ionicAuth.isAuthenticated();
+
+      if (!$ionicAuth.isAuthenticated()) {
+        $ionicHistory.nextViewOptions({
+          disableAnimate: true,
+          disableBack: true
+        });
+        $state.go('menu.login');
+      }
+
+      $scope.userInfo = $ionicUser.details;
     }
 
     $scope.start();
@@ -65,6 +72,8 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
 
   .controller('myAccountsCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $timeout, $ionicLoading, svcUsers, svcAccounts, svcAssets, svcBalances, svcNodeSettings, accAliasFilter) {
+
+
     if (!$ionicAuth.isAuthenticated()) {
       $state.go('menu.login');
     }
@@ -536,54 +545,82 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
   )
 
 
-  .controller('loginCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory) {
+  .controller('loginCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory, svcNodeSettings) {
     if ($ionicAuth.isAuthenticated()) {
       $ionicHistory.nextViewOptions({
         disableAnimate: true,
         disableBack: true
       });
-      $state.go('menu.myaccount');
+      $state.go('menu.myAccounts');
     }
 
-    $scope.autheticatedUser = $ionicUser.email;
+    // Set up the API services
+    $scope.svcNodeSettings = svcNodeSettings;
 
-    $scope.loginForm = { name: '', email: '', password: '' };
+    $scope.start = function () {
+      // Fetch the default system settings on load
+      $scope.settings = svcNodeSettings.getSettings();
+
+      $scope.autheticatedUser = $ionicUser.email;
+      $scope.loginForm = { name: '', email: '', password: '' };
+
+    }
 
     $scope.formLogin = function (details) {
-      $ionicAuth.login('basic', details)
-        .then(function (data) {
-          $ionicHistory.nextViewOptions({
-            disableAnimate: true,
-            disableBack: true
-          });
-          $state.go('menu.availableTradeOffers', {});
-        }
-        );
-    }
-
-    // Only used when deploying app to actual devices
-    $scope.googleSignIn = function () {
       $ionicLoading.show({
         template: 'Logging in...'
       });
 
-      $ionicGoogleAuth.login()
+      $ionicAuth.login('basic', details)
         .then(function (data) {
+
           $ionicLoading.hide({
             template: 'Logging in...'
           });
-          $state.go('menu.myAccounts');
-        });
 
-    };
+          $ionicHistory.nextViewOptions({
+            disableAnimate: true,
+            disableBack: true
+          });
+          $rootScope.$broadcast('user:updated', data);
+
+          if ($scope.settings.clientToken == '' || $scope.settings.clientToken == null) {
+            $state.go('menu.settings', {});
+          } else {
+            $state.go('menu.availableTradeOffers', {});
+          }
+
+        }
+        );
+    }
+
+    // // Only used when deploying app to actual devices
+    // $scope.googleSignIn = function () {
+    //   $ionicLoading.show({
+    //     template: 'Logging in...'
+    //   });
+
+    //   $ionicGoogleAuth.login()
+    //     .then(function (data) {
+    //       $ionicLoading.hide({
+    //         template: 'Logging in...'
+    //       });
+    //       $state.go('menu.myAccounts');
+    //     });
+
+    // };
+
+
+    $scope.start();
+
   }
   )
 
 
-  .controller('logoutCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory) {
+  .controller('logoutCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory) {
 
     $ionicAuth.logout();
-    // $ionicGoogleAuth.logout();
+    $rootScope.$broadcast('user:updated');
     $ionicHistory.nextViewOptions({
       disableAnimate: true,
       disableBack: true
@@ -594,11 +631,11 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
 
   .controller('signupCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory, svcNodeSettings) {
+    $ionicHistory.nextViewOptions({
+      disableAnimate: true,
+      disableBack: true
+    });
     if ($ionicAuth.isAuthenticated()) {
-      $ionicHistory.nextViewOptions({
-        disableAnimate: true,
-        disableBack: true
-      });
       $state.go('menu.myAccounts');
     }
 
@@ -644,7 +681,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
             .then(function (data) {
               $scope.userProfiles = data;
             })
-            .then(function() {
+            .then(function () {
               return $ionicAuth.login('basic', form.details);
             })
             .finally(function () {
@@ -655,7 +692,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
                 disableAnimate: true,
                 disableBack: true
               });
-              
+
               $state.go('menu.myAccounts');
 
             });
