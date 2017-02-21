@@ -14,7 +14,7 @@
     </ion-header-bar>
     <ion-content padding="true" class="side-menu-left has-header ">
       <ion-list id="menu-list1" class="manual-list-fullwidth">
-        <ion-item class="item-icon-avatar" ui-sref="menu.myProfile" menu-close="" ng-show="isAuthenticated">
+        <ion-item class="item-icon-avatar" ui-sref="menu.myProfile" menu-close="" >
           <img ng-src="{{userInfo.image}}" />
           <h2>{{userInfo.username}}</h2>
           <p>{{userInfo.email}}</p>
@@ -31,11 +31,11 @@
         <ion-item class="item-icon-right" id="menu-list-item3" ui-sref="menu.newTrade" menu-close="">New Trade
           <i class="icon ion-ios-compose-outline"></i>
         </ion-item>
-<ion-item class="item-icon-right" id="menu-list-item103" ui-sref="menu.settings" menu-close="">Settings
-  <i class="icon ion-ios-cog-outline"></i>
-</ion-item><ion-item class="item-icon-right" id="menu-list-item103" ui-sref="menu.about" menu-close="">About the App
-  <i class="icon ion-ios-information-outline"></i>
-</ion-item>
+        <ion-item class="item-icon-right" id="menu-list-item103" ui-sref="menu.settings" menu-close="">Settings
+          <i class="icon ion-ios-cog-outline"></i>
+        </ion-item><ion-item class="item-icon-right" id="menu-list-item103" ui-sref="menu.about" menu-close="">About the App
+          <i class="icon ion-ios-information-outline"></i>
+        </ion-item>
         <ion-item class="item-icon-right" id="menu-list-item79" ui-sref="menu.logout"  menu-close="">Logout
           <i class="icon ion-log-out"></i>
       </ion-list>
