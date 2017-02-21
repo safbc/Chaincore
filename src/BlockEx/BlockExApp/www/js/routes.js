@@ -64,6 +64,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu', {
+        cache: false,
         url: '/side-menu21',
         templateUrl: 'templates/menu.html',
         controller: 'menuCtrl'

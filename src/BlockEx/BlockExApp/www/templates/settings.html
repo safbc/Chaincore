@@ -1,19 +1,17 @@
-<ion-view title="Settings" id="page13">
+<ion-view title="Settings">
   <ion-content padding="true" class="has-header" style="background: #0F0E0E">
-    <form id="settings-form7" class="list">
-      <label class="item item-input item-stacked-label" id="settings-input11">
-        <span class="input-label">API Url</span>
-        <input type="text" ng-bind="settings.BaseURL">
-      </label>
-      <label class="item item-input item-stacked-label" id="settings-input12">
+    <div class="list card" id="newTrade-card29">
+    <form class="list">
+      <label class="item item-input item-stacked-label">
         <span class="input-label">Chain Node Url</span>
         <input type="text"  ng-model="settings.nodeURL">
       </label>
-      <label class="item item-input item-stacked-label" id="settings-input13">
+      <label class="item item-input item-stacked-label">
         <span class="input-label">Chain Acces Token</span>
         <input type="text" ng-model="settings.clientToken">
       </label>
     </form>
-    <button id="settings-button11" class="button button-positive  button-block" ng-click="saveSettings(settings)">Save Settings</button>
+    <button class="button button-positive  button-block" ng-click="saveSettings(settings)">Save Settings</button>
+    </div>
   </ion-content>
 </ion-view>
