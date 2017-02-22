@@ -565,22 +565,22 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       // Fetch the default system settings on load
       $scope.settings = svcNodeSettings.getSettings();
 
-      $scope.autheticatedUser = $ionicUser.email;
+      // $scope.autheticatedUser = $ionicUser.email;
       $scope.loginForm = { name: '', email: '', password: '' };
 
     }
 
     $scope.formLogin = function (details) {
-      $ionicLoading.show({
-        template: 'Logging in...'
-      });
+      // $ionicLoading.show({
+      //   template: 'Logging in...'
+      // });
 
       $ionicAuth.login('basic', details)
         .then(function (data) {
 
-          $ionicLoading.hide({
-            template: 'Logging in...'
-          });
+          // $ionicLoading.hide({
+          //   template: 'Logging in...'
+          // });
 
           $ionicHistory.nextViewOptions({
             disableAnimate: true,
@@ -597,23 +597,6 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
         }
         );
     }
-
-    // // Only used when deploying app to actual devices
-    // $scope.googleSignIn = function () {
-    //   $ionicLoading.show({
-    //     template: 'Logging in...'
-    //   });
-
-    //   $ionicGoogleAuth.login()
-    //     .then(function (data) {
-    //       $ionicLoading.hide({
-    //         template: 'Logging in...'
-    //       });
-    //       $state.go('menu.myAccounts');
-    //     });
-
-    // };
-
 
     $scope.start();
 
