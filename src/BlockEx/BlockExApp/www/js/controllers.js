@@ -548,7 +548,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
   )
 
 
-  .controller('loginCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory, svcNodeSettings) {
+  .controller('loginCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicPush, $ionicLoading, $ionicHistory, $ionicDeploy, svcNodeSettings) {
     if ($ionicAuth.isAuthenticated()) {
       $ionicHistory.nextViewOptions({
         disableAnimate: true,
@@ -568,6 +568,24 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       // $scope.autheticatedUser = $ionicUser.email;
       $scope.loginForm = { name: '', email: '', password: '' };
 
+      $ionicDeploy.check().then(function (snapshotAvailable) {
+        if (snapshotAvailable) {
+      $ionicLoading.show({
+        template: 'Downloading update...'
+      });
+          // When snapshotAvailable is true, you can apply the snapshot
+          $ionicDeploy.download().then(function () {
+      $ionicLoading.show({
+        template: 'Installing update...'
+      });
+            return $ionicDeploy.extract();
+          }).then(function () {
+            $ionicDeploy.load();
+          });
+        }
+      });
+
+
     }
 
     $scope.formLogin = function (details) {
@@ -577,14 +595,10 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
       $ionicAuth.login('basic', details)
         .then(function (data) {
-
-          // $ionicLoading.hide({
-          //   template: 'Logging in...'
-          // });
-
-          $ionicHistory.nextViewOptions({
-            disableAnimate: true,
-            disableBack: true
+          $ionicPush.register().then(function (t) {
+            return $ionicPush.saveToken(t);
+          }).then(function (t) {
+            console.log('Token saved:', t.token);
           });
           $rootScope.$broadcast('user:updated', data);
 
@@ -604,8 +618,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
   )
 
 
-  .controller('logoutCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory) {
+  .controller('logoutCtrl', function ($scope, $rootScope, $state, $stateParams,$ionicPush, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory) {
 
+$ionicPush.unregister();
     $ionicAuth.logout();
     $rootScope.$broadcast('user:updated');
     $ionicHistory.nextViewOptions({

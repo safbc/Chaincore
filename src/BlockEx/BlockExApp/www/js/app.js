@@ -20,6 +20,18 @@ angular.module('app', [
     $ionicCloudProvider.init({
       "core": {
         "app_id": "1b48128d"
+      },
+      "push": {
+        "sender_id": "777580572465",
+        "pluginConfig": {
+          "ios": {
+            "badge": true,
+            "sound": true
+          },
+          "android": {
+            "iconColor": "#343434"
+          }
+        }
       }
     });
   })
@@ -30,19 +42,8 @@ angular.module('app', [
   })
 
 
-  .run(function ($ionicPlatform, $ionicDeploy) {
+  .run(function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
-
-      $ionicDeploy.check().then(function (snapshotAvailable) {
-        if (snapshotAvailable) {
-          // When snapshotAvailable is true, you can apply the snapshot
-          $ionicDeploy.download().then(function () {
-            return $ionicDeploy.extract();
-          }).then(function() {
-            $ionicDeploy.load();
-          }) ;
-        }
-      });
 
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
