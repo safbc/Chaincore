@@ -591,7 +591,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
           if ($scope.settings.clientToken == '' || $scope.settings.clientToken == null) {
             $state.go('menu.settings', {});
           } else {
-            $state.go('menu.availableTradeOffers', {});
+            $state.go('menu.about', {});
           }
 
         }
@@ -732,9 +732,15 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
     }
 
     $scope.saveSettings = function (_settings) {
-      $scope.svcNodeSettings.set("BaseURL", _settings.BaseURL);
       $scope.svcNodeSettings.set("nodeURL", _settings.nodeURL);
       $scope.svcNodeSettings.set("clientToken", _settings.clientToken);
+      
+      $scope.settings = svcNodeSettings.getSettings();
+      if ($scope.settings.clientToken == '' || $scope.settings.clientToken == null) {
+        $state.go('menu.settings', {});
+      } else {
+        $state.go('menu.about', {});
+      }
     };
 
     $scope.start();
