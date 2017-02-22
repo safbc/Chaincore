@@ -19,7 +19,4 @@
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
-    <plugin name="cordova-plugin-googleplus" spec="~5.1.1">
-        <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.777580572465-nek7jo4n1he20876ode8lp9fieqfh6jj" />
-    </plugin>
 </widget>
