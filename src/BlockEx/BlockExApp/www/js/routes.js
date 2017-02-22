@@ -65,7 +65,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.assetInfo', {
-        url: '/assetDetail',
+        url: '/assetDetail/{assetId}',
         views: {
           'side-menu21': {
             templateUrl: 'templates/assetInfo.html',
@@ -179,6 +179,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.about', {
+        cache: false,
         url: '/about',
         views: {
           'side-menu21': {

@@ -230,11 +230,27 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
     }
     // Set up the API services
     $scope.svcNodeSettings = svcNodeSettings;
-
+    $scope.newaccForm = {
+      alias: '',
+      image: ''
+    };
+    $scope.symbolsList = [
+      'img/tokens/Bcoin.png',
+      'img/tokens/candle.png',
+      'img/tokens/Circuit.png',
+      'img/tokens/feather.png',
+      'img/tokens/mega.png',
+      'img/tokens/Ncoin.png',
+      'img/tokens/T.png'
+    ];
     $scope.start = function () {
       // Fetch the default system settings on load
       $scope.settings = svcNodeSettings.getSettings();
     }
+
+    $scope.setSymbol = function (image) {
+      $scope.newaccForm.image = image
+    };
 
     $scope.start();
   })
@@ -248,7 +264,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
     // Set up the API services
     $scope.svcNodeSettings = svcNodeSettings;
-
+    $scope.param = $stateParams.assetId;
     $scope.start = function () {
       // Fetch the default system settings on load
       $scope.settings = svcNodeSettings.getSettings();
@@ -276,7 +292,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.Request = {};
       $scope.Request.connection = $scope.connection;
       $scope.Request.asset = {
-        alias: "BankservCoin" //FIXME: get this from page request.
+        id: $stateParams.assetId //FIXME: get this from page request.
       };
 
 
@@ -574,7 +590,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
         password: ''
       };
       $scope.isError = true;
-      $scope.errormessage = err;
+      $scope.errormessage = '';
 
 
       // $ionicDeploy.check().then(function (snapshotAvailable) {
@@ -778,9 +794,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
   .controller('aboutCtrl', function ($scope, $state, $ionicHistory, $cordovaAppVersion) {
     $scope.version = '0.0.5';
-    $scope.appBuild = '6';
+    $scope.appBuild = '9';
     $scope.appName = 'BlockEx';
-    $scope.appPackage = 'package';
+    $scope.appPackage = '';
 
     // $ionicPlatform.ready(function () {
 
