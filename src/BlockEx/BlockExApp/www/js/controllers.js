@@ -732,6 +732,10 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
   })
 
   .controller('aboutCtrl', function ($scope, $state, $ionicHistory, $cordovaAppVersion) {
+    $scope.version = '0.0.5';
+    $scope.appBuild = '6';
+    $scope.appName = 'BlockEx';
+    $scope.appPackage = 'package';
 
     $ionicPlatform.ready(function () {
 
