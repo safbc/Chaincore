@@ -9,6 +9,7 @@ angular.module('app', [
   'ionic',
   'ionic.cloud',
   'ngResource',
+  'ngCordova',
   'app.constants',
   'app.controllers',
   'app.routes',
@@ -44,6 +45,49 @@ angular.module('app', [
 
   .run(function ($ionicPlatform) {
     $ionicPlatform.ready(function () {
+
+      $ionicDeploy.check().then(function (snapshotAvailable) {
+        if (snapshotAvailable) {
+          // When snapshotAvailable is true, you can apply the snapshot
+          $ionicDeploy.download().then(function () {
+            return $ionicDeploy.extract();
+          }).then(function () {
+            $ionicDeploy.load();
+          });
+        }
+      });
+
+      $rootScope.checkPermission = function () {
+        setLocationPermission = function () {
+          cordova.plugins.diagnostic.requestLocationAuthorization(function (status) {
+            switch (status) {
+              case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:
+                break;
+              case cordova.plugins.diagnostic.permissionStatus.DENIED:
+                break;
+              case cordova.plugins.diagnostic.permissionStatus.GRANTED:
+                break;
+              case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
+                break;
+            }
+          }, function (error) { }, cordova.plugins.diagnostic.locationAuthorizationMode.ALWAYS);
+        };
+        cordova.plugins.diagnostic.getPermissionAuthorizationStatus(function (status) {
+          switch (status) {
+            case cordova.plugins.diagnostic.runtimePermissionStatus.GRANTED:
+              break;
+            case cordova.plugins.diagnostic.runtimePermissionStatus.NOT_REQUESTED:
+              setLocationPermission();
+              break;
+            case cordova.plugins.diagnostic.runtimePermissionStatus.DENIED:
+              setLocationPermission();
+              break;
+            case cordova.plugins.diagnostic.runtimePermissionStatus.DENIED_ALWAYS:
+              setLocationPermission();
+              break;
+          }
+        }, function (error) { }, cordova.plugins.diagnostic.runtimePermission.ACCESS_COARSE_LOCATION);
+      };
 
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)

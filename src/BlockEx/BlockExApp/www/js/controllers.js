@@ -727,12 +727,13 @@ $ionicPush.unregister();
     $scope.start = function () {
       // Fetch the default system settings on load
       $scope.settings = svcNodeSettings.getSettings();
+
     }
 
     $scope.saveSettings = function (_settings) {
       $scope.svcNodeSettings.set("nodeURL", _settings.nodeURL);
       $scope.svcNodeSettings.set("clientToken", _settings.clientToken);
-      
+
       $scope.settings = svcNodeSettings.getSettings();
       if ($scope.settings.clientToken == '' || $scope.settings.clientToken == null) {
         $state.go('menu.settings', {});
@@ -745,7 +746,32 @@ $ionicPush.unregister();
 
   })
 
-  .controller('aboutCtrl', function ($scope, $state, $ionicHistory) {
+  .controller('aboutCtrl', function ($scope, $state, $ionicHistory, $cordovaAppVersion) {
+    $scope.version = '0.0.5';
+    $scope.appBuild = '6';
+    $scope.appName = 'BlockEx';
+    $scope.appPackage = 'package';
+
+    $ionicPlatform.ready(function () {
+
+      $cordovaAppVersion.getVersionNumber().then(function (version) {
+        $scope.version = version;
+      });
+
+      $cordovaAppVersion.getVersionCode().then(function (build) {
+        $scope.appBuild = build;
+      });
+
+      $cordovaAppVersion.getAppName().then(function (name) {
+        $scope.appName = name;
+      });
+
+      $cordovaAppVersion.getPackageName().then(function (package) {
+        $scope.appPackage = package;
+      });
+
+    }, false);
+
 
     $ionicHistory.nextViewOptions({
       disableAnimate: true,
