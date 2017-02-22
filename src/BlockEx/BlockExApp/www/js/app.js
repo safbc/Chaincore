@@ -3,8 +3,8 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
+// 'app.services' is found in services.js
+// 'app.controllers' is found in controllers.js
 angular.module('app', [
   'ionic',
   'ionic.cloud',
@@ -15,19 +15,11 @@ angular.module('app', [
   'app.directives',
   'app.services',
   'app.filters'
-  // ,'stormpath'
-  // ,'stormpath.templates'
 ])
   .config(function ($ionicCloudProvider) {
     $ionicCloudProvider.init({
       "core": {
         "app_id": "1b48128d"
-      },
-      "auth": {
-        "google": {
-          "webClientId": "777580572465-7ndlhec6srusgbobl6nfj9fkfqd7lvso.apps.googleusercontent.com",
-          "scope": ["permission1", "permission2"]
-        }
       }
     });
   })
@@ -37,16 +29,6 @@ angular.module('app', [
 
   })
 
-  // .config(function (STORMPATH_CONFIG) {
-  //   // Specify your Client API domain here:
-  //   STORMPATH_CONFIG.ENDPOINT_PREFIX = 'https://noble-tsunami.apps.stormpath.io';
-  // })
-  // .run(function ($stormpath) {
-  //   $stormpath.uiRouter({
-  //     loginState: 'menu.login',
-  //     defaultPostLoginState: 'menu.availableTradeOffers'
-  //   });
-  // })
 
   .run(function ($ionicPlatform, $ionicDeploy) {
     $ionicPlatform.ready(function () {
@@ -74,57 +56,3 @@ angular.module('app', [
       }
     });
   })
-
-  /*
-    This directive is used to disable the "drag to open" functionality of the Side-Menu
-    when you are dragging a Slider component.
-  */
-  .directive('disableSideMenuDrag', ['$ionicSideMenuDelegate', '$rootScope', function ($ionicSideMenuDelegate, $rootScope) {
-    return {
-      restrict: "A",
-      controller: ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {
-
-        function stopDrag() {
-          $ionicSideMenuDelegate.canDragContent(false);
-        }
-
-        function allowDrag() {
-          $ionicSideMenuDelegate.canDragContent(true);
-        }
-
-        $rootScope.$on('$ionicSlides.slideChangeEnd', allowDrag);
-        $element.on('touchstart', stopDrag);
-        $element.on('touchend', allowDrag);
-        $element.on('mousedown', stopDrag);
-        $element.on('mouseup', allowDrag);
-
-      }]
-    };
-  }])
-
-  /*
-    This directive is used to open regular and dynamic href links inside of inappbrowser.
-  */
-  .directive('hrefInappbrowser', function () {
-    return {
-      restrict: 'A',
-      replace: false,
-      transclude: false,
-      link: function (scope, element, attrs) {
-        var href = attrs['hrefInappbrowser'];
-
-        attrs.$observe('hrefInappbrowser', function (val) {
-          href = val;
-        });
-
-        element.bind('click', function (event) {
-
-          window.open(href, '_system', 'location=yes');
-
-          event.preventDefault();
-          event.stopPropagation();
-
-        });
-      }
-    };
-  });

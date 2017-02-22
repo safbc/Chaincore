@@ -1,9 +1,5 @@
 angular.module('app.constants', ['ionic'])
 
-  // .constant( 'AUTH_EVENTS', {
-  // 	notAuthenticated: "auth-not-authenticated",
-  // 	notAuthorized: "auth-not-authorized"
-  // } )
 
   .constant('svcURI', {
     // API URL
@@ -21,15 +17,11 @@ angular.module('app.constants', ['ionic'])
     restChainBalances: "/chain/balances"
   })
 
-  // .constant('APP_SETTINGS', {
-  //   // API Url
-  //   BaseURI: "http://localhost:8080/BlockEx/0.0.1"
-
-  // })
-
   .constant('NODE_SETTINGS',
   {
+    // Specify the URL to access your own Chain Node
     nodeURL: "http://localhost:1999",
+    // Your client access creditials to access this node
     clientToken: ""
   })
   ;
