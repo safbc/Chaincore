@@ -26,8 +26,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.userInfo = $ionicUser.details;
     }
 
-  }
-  )
+  })
 
 
   .controller('myProfileCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $timeout, $ionicHistory, svcUsers, svcNodeSettings) {
@@ -56,22 +55,22 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       // Set up the API services
       $scope.SVCappUsers = svcUsers;
 
-      $scope.SVCappUsers.query({ userName: $scope.userInfo.username }).$promise
+      $scope.SVCappUsers.query({
+          userName: $scope.userInfo.username
+        }).$promise
         .then(function (data) {
           $scope.userProfile = data;
           if (data.length > 0) {
             $scope.userInfo.createdAt = data[0].createdAt;
           }
         })
-        .finally(function () {
-        });
+        .finally(function () {});
     }
 
     $scope.start();
 
 
-  }
-  )
+  })
 
 
   .controller('myAccountsCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $timeout, $ionicLoading, svcUsers, svcAccounts, svcAssets, svcBalances, svcNodeSettings, accAliasFilter) {
@@ -150,7 +149,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
           console.log('Done: ');
         });
 
-    }// end of start()
+    } // end of start()
 
 
     // Update the asset balances for all accounts in the current accountsList
@@ -160,7 +159,10 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
         this['sr' + element.alias] = {};
         this['sr' + element.alias].connection = JSON.parse(JSON.stringify($scope.connection));
         this['sr' + element.alias].query = {};
-        this['sr' + element.alias].query = { queryType: "AccountBalance", alias: element.alias };
+        this['sr' + element.alias].query = {
+          queryType: "AccountBalance",
+          alias: element.alias
+        };
         //console.log(JSON.stringify(this['sr' + element.alias]));
         a.push($scope.getAssetBalances(this['sr' + element.alias]));
       }, this);
@@ -235,8 +237,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
     }
 
     $scope.start();
-  }
-  )
+  })
 
 
   .controller('assetInfoCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, svcNodeSettings, svcAssets, svcBalances, accAliasFilter) {
@@ -274,7 +275,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
       $scope.Request = {};
       $scope.Request.connection = $scope.connection;
-      $scope.Request.asset = { alias: "BankservCoin" };
+      $scope.Request.asset = {
+        alias: "BankservCoin" //FIXME: get this from page request.
+      };
 
 
       $scope.assetList = [];
@@ -303,7 +306,10 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
         this['sr' + element.alias] = {};
         this['sr' + element.alias].connection = JSON.parse(JSON.stringify($scope.connection));
         this['sr' + element.alias].query = {};
-        this['sr' + element.alias].query = { queryType: "AssetBalance", alias: element.alias };
+        this['sr' + element.alias].query = {
+          queryType: "AssetBalance",
+          alias: element.alias
+        };
         //console.log(JSON.stringify(this['sr' + element.alias]));
         a.push($scope.getAssetBalances(this['sr' + element.alias]));
       }, this);
@@ -357,8 +363,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
 
 
-  }
-  )
+  })
 
 
   .controller('availableTradeOffersCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory, svcTrades, svcUsers, svcNodeSettings) {
@@ -378,7 +383,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       // Fetch the default system settings on load
       $scope.settings = svcNodeSettings.getSettings();
 
-      $scope.Offers = { trades: [] };
+      $scope.Offers = {
+        trades: []
+      };
       // Set up the API services
       $scope.SVCappTrades = svcTrades;
 
@@ -423,8 +430,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
     };
 
     $scope.start();
-  }
-  )
+  })
 
 
   .controller('bidsMadeForOfferIdCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, svcNodeSettings) {
@@ -442,8 +448,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
     $scope.start();
 
-  }
-  )
+  })
 
 
   .controller('newTradeCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory, svcNodeSettings) {
@@ -464,8 +469,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
     }
 
     $scope.start();
-  }
-  )
+  })
 
 
   .controller('bidOnTradeIDCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, svcNodeSettings) {
@@ -482,8 +486,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
     }
 
     $scope.start();
-  }
-  )
+  })
 
 
   .controller('confirmTradeCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, svcNodeSettings) {
@@ -500,8 +503,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
     }
 
     $scope.start();
-  }
-  )
+  })
 
 
   .controller('transactionsCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory, svcNodeSettings) {
@@ -522,8 +524,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
     }
 
     $scope.start();
-  }
-  )
+  })
 
 
   .controller('transactionDetailCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory, svcNodeSettings) {
@@ -544,11 +545,12 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
     }
 
     $scope.start();
-  }
-  )
+  })
 
 
-  .controller('loginCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicPush, $ionicLoading, $ionicHistory, $ionicDeploy, svcNodeSettings) {
+  .controller('loginCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicPopup,
+    $ionicAuth, $ionicUser, $ionicPush, $ionicLoading, $ionicHistory, svcNodeSettings) {
+
     if ($ionicAuth.isAuthenticated()) {
       $ionicHistory.nextViewOptions({
         disableAnimate: true,
@@ -566,24 +568,31 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.settings = svcNodeSettings.getSettings();
 
       // $scope.autheticatedUser = $ionicUser.email;
-      $scope.loginForm = { name: '', email: '', password: '' };
+      $scope.loginForm = {
+        name: '',
+        email: '',
+        password: ''
+      };
+      $scope.isError = true;
+      $scope.errormessage = err;
 
-      $ionicDeploy.check().then(function (snapshotAvailable) {
-        if (snapshotAvailable) {
-      $ionicLoading.show({
-        template: 'Downloading update...'
-      });
-          // When snapshotAvailable is true, you can apply the snapshot
-          $ionicDeploy.download().then(function () {
-      $ionicLoading.show({
-        template: 'Installing update...'
-      });
-            return $ionicDeploy.extract();
-          }).then(function () {
-            $ionicDeploy.load();
-          });
-        }
-      });
+
+      // $ionicDeploy.check().then(function (snapshotAvailable) {
+      //   if (snapshotAvailable) {
+      // $ionicLoading.show({
+      //   template: 'Downloading update...'
+      // });
+      //     // When snapshotAvailable is true, you can apply the snapshot
+      //     $ionicDeploy.download().then(function () {
+      // $ionicLoading.show({
+      //   template: 'Installing update...'
+      // });
+      //       return $ionicDeploy.extract();
+      //     }).then(function () {
+      //       $ionicDeploy.load();
+      //     });
+      //   }
+      // });
 
 
     }
@@ -595,11 +604,11 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
       $ionicAuth.login('basic', details)
         .then(function (data) {
-          $ionicPush.register().then(function (t) {
-            return $ionicPush.saveToken(t);
-          }).then(function (t) {
-            console.log('Token saved:', t.token);
-          });
+          // $ionicPush.register().then(function (t) {
+          //   return $ionicPush.saveToken(t);
+          // }).then(function (t) {
+          //   console.log('Token saved:', t.token);
+          // });
           $rootScope.$broadcast('user:updated', data);
 
           if ($scope.settings.clientToken == '' || $scope.settings.clientToken == null) {
@@ -608,19 +617,34 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
             $state.go('menu.about', {});
           }
 
-        }
-        );
+        })
+        .catch(function (err) {
+          $scope.isError = true;
+          $scope.errormessage = err;
+          $scope.showAlert('Error during login', err);
+        });
     }
+
+    // An alert dialog
+    $scope.showAlert = function (title, err) {
+      var alertPopup = $ionicPopup.alert({
+        title: title,
+        template: 'Message: ' + err
+      });
+
+      alertPopup.then(function (res) {
+        console.log('Thank you for not eating my delicious ice cream cone');
+      });
+    };
 
     $scope.start();
 
-  }
-  )
+  })
 
 
-  .controller('logoutCtrl', function ($scope, $rootScope, $state, $stateParams,$ionicPush, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory) {
+  .controller('logoutCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicPush, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory) {
 
-$ionicPush.unregister();
+    // $ionicPush.unregister();
     $ionicAuth.logout();
     $rootScope.$broadcast('user:updated');
     $ionicHistory.nextViewOptions({
@@ -642,15 +666,23 @@ $ionicPush.unregister();
     }
 
     $scope.start = function () {
-      $scope.signupForm = { details: { username: '', name: '', email: '', password: '', image: '' }, passwordMatch: '' };
+      $scope.signupForm = {
+        details: {
+          username: '',
+          name: '',
+          email: '',
+          password: '',
+          image: ''
+        },
+        passwordMatch: ''
+      };
       $scope.avatarsList = [
-        'http://megaicons.net/static/img/icons_sizes/189/462/256/tv-smith-icon.png',
-        'http://icons.iconarchive.com/icons/mattahan/ultrabuuf/256/Comics-Older-Superman-icon.png',
-        'http://icons.iconarchive.com/icons/mattahan/ultrabuuf/256/Comics-Hulk-Happy-icon.png',
-        'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRsqG_v6UxjxQU4dXK70ih48ByBPffeqoYH2cYeF-R3HRMtOGew',
-        'http://icons.iconarchive.com/icons/hopstarter/superhero-avatar/256/Avengers-Hawkeye-icon.png',
-        'http://icons.iconarchive.com/icons/hopstarter/iron-man-avatar/512/Iron-Man-Mark-III-01-icon.png',
-        "data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDU4IDU4IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1OCA1ODsiIHhtbDpzcGFjZT0icHJlc2VydmUiIHdpZHRoPSI1MTJweCIgaGVpZ2h0PSI1MTJweCI+CjxjaXJjbGUgc3R5bGU9ImZpbGw6I0Y3NjM2MzsiIGN4PSIyOSIgY3k9IjI5IiByPSIyOSIvPgo8cGF0aCBzdHlsZT0iZmlsbDojRjdCNTYzOyIgZD0iTTUyLjkzMiw0NS4zNzZDNTIuMjc1LDM4Ljk4NSw0Ni44NzYsMzQsNDAuMzExLDM0aC01Ljk0NkMzMy42MTEsMzQsMzMsMzMuMzg5LDMzLDMyLjYzNVYzMS45OSAgYzAtMC41ODMsMC4zNzktMS4wODIsMC45MjUtMS4yODdjNS44MDQtMi4xODIsOS43NzgtMTEuNzA0LDguOTcxLTE4LjQzM0M0Mi4xMzQsNS45MTksMzYuOTcsMC44MDEsMzAuNjE0LDAuMDkgIGMtMC41MTctMC4wNTgtMS4wMjktMC4wODYtMS41MzUtMC4wODhjLTAuMDE2LDAtMC4wMzItMC4wMDEtMC4wNDgtMC4wMDFDMjEuMjg1LTAuMDE2LDE1LDYuMjU4LDE1LDE0ICBjMCw2LjAyNCwzLjgwNywxNC43NTUsOS4xNDUsMTYuNzI5QzI0LjY2OCwzMC45MjIsMjUsMzEuNDQyLDI1LDMydjAuNjM1QzI1LDMzLjM4OSwyNC4zODksMzQsMjMuNjM1LDM0aC01Ljk0NiAgYy02LjU2NSwwLTExLjk2NCw0Ljk4NS0xMi42MjEsMTEuMzc2QzEwLjI5Myw1Mi45OTgsMTkuMDYxLDU4LDI5LDU4UzQ3LjcwNyw1Mi45OTgsNTIuOTMyLDQ1LjM3NnoiLz4KPHBhdGggc3R5bGU9ImZpbGw6I0Y3RTcxNDsiIGQ9Ik0zMy40OTIsNi42MWMzLjcxNSwxLjAyMSw3LjIxMywzLjMwNiw5LjQ1Myw2LjMyMmMtMC4wMTYtMC4yMjEtMC4wMjMtMC40NDctMC4wNDktMC42NjMgIEM0Mi4xMzQsNS45MTksMzYuOTcsMC44MDEsMzAuNjE0LDAuMDljLTAuNTE3LTAuMDU4LTEuMDI5LTAuMDg2LTEuNTM1LTAuMDg4Yy0wLjAxNiwwLTAuMDMyLTAuMDAxLTAuMDQ4LTAuMDAxICBjLTYuOTItMC4wMTUtMTIuNjYsNC45OTUtMTMuODA4LDExLjU4M2wwLjAwNSwwYzAuMTc5LDAuMjUyLDAuMzU0LDAuNTA3LDAuNTQ1LDAuNzVjMC4wNy0wLjA4NywwLjE0MS0wLjE3MywwLjIxMy0wLjI1OCAgYzItMi4zOCw1LjM0MS0yLjkzMSw4LjE4My0xLjY3MUMyNS4wMzQsMTAuNzg3LDI1Ljk5MiwxMSwyNywxMUMyOS45NDIsMTEsMzIuNDU2LDkuMTgyLDMzLjQ5Miw2LjYxeiIvPgo8Zz4KCTxwYXRoIHN0eWxlPSJmaWxsOiNGN0U3MTQ7IiBkPSJNMzMuOTI1LDMwLjcwM0MzMy4zNzksMzAuOTA4LDMzLDMxLjQwNywzMywzMS45OXYwLjY0NUMzMywzMy4zODksMzMuNjExLDM0LDM0LjM2NSwzNGg1Ljk0NiAgIGMwLjkyMywwLDEuODIyLDAuMTA0LDIuNjg5LDAuMjkyVjE0aC0wLjAxMkM0My4wMDIsMjAuMjQsMzkuMjM2LDI4LjcwNiwzMy45MjUsMzAuNzAzeiIvPgoJPHBhdGggc3R5bGU9ImZpbGw6I0Y3RTcxNDsiIGQ9Ik0xNy42ODksMzRoNS45NDZDMjQuMzg5LDM0LDI1LDMzLjM4OSwyNSwzMi42MzVWMzJjMC0wLjU1OC0wLjMzMi0xLjA3OC0wLjg1NS0xLjI3MSAgIEMxOC44MDcsMjguNzU1LDE1LDIwLjAyNCwxNSwxNHYyMC4yOTJDMTUuODY3LDM0LjEwNCwxNi43NjYsMzQsMTcuNjg5LDM0eiIvPgo8L2c+CjxwYXRoIHN0eWxlPSJmaWxsOiNEMzk0NTA7IiBkPSJNMzgsNDBjLTMuOTYxLDAtNy4zODIsMi4zMjItOSw1LjY3QzI3LjM4Miw0Mi4zMjIsMjMuOTYxLDQwLDIwLDQwYy0wLjU1MywwLTEsMC40NDctMSwxczAuNDQ3LDEsMSwxICBjNC40MTEsMCw4LDMuNTg5LDgsOHYzaDJ2LTNjMC00LjQxMSwzLjU4OS04LDgtOGMwLjU1MywwLDEtMC40NDcsMS0xUzM4LjU1Myw0MCwzOCw0MHoiLz4KPHBhdGggc3R5bGU9ImZpbGw6IzI1QUU4ODsiIGQ9Ik01Mi45MzIsNDUuMzc2Yy0wLjM4My0zLjcyNi0yLjM4NS02Ljk2NS01LjI4My05LjAyNkwyOSw1M0wxMC4zNSwzNi4zNSAgYy0yLjg5OCwyLjA2MS00Ljg5OSw1LjMtNS4yODMsOS4wMjZDMTAuMjkzLDUyLjk5OCwxOS4wNjEsNTgsMjksNThTNDcuNzA3LDUyLjk5OCw1Mi45MzIsNDUuMzc2eiIvPgo8Zz4KCTxwYXRoIHN0eWxlPSJmaWxsOiMyMjk5NzQ7IiBkPSJNNDMsNDd2Ny4zOTJjMC42ODUtMC4zNzksMS4zNS0wLjc4OSwyLTEuMjJWNDdINDN6Ii8+Cgk8cGF0aCBzdHlsZT0iZmlsbDojMjI5OTc0OyIgZD0iTTEzLDUzLjE3MmMwLjY1LDAuNDMxLDEuMzE1LDAuODQxLDIsMS4yMlY0N2gtMlY1My4xNzJ6Ii8+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPC9zdmc+Cg=="
+        'img/avatars/AgentSmith.png',
+        'img/avatars/Hawkeye.png',
+        'img/avatars/Superman.png',
+        'img/avatars/Hulk-Happy.png',
+        'img/avatars/wolverine.jpeg',
+        'img/avatars/Iron-Man.png'
       ]
     };
 
@@ -667,7 +699,6 @@ $ionicPush.unregister();
 
         $ionicAuth.signup(form.details).then(function () {
           // `$ionicUser` is now registered
-
 
           var appUser = {
             "username": form.details.username,
@@ -715,8 +746,7 @@ $ionicPush.unregister();
     }
 
     $scope.start();
-  }
-  )
+  })
 
 
   .controller('settingsCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, svcNodeSettings) {
@@ -752,25 +782,25 @@ $ionicPush.unregister();
     $scope.appName = 'BlockEx';
     $scope.appPackage = 'package';
 
-    $ionicPlatform.ready(function () {
+    // $ionicPlatform.ready(function () {
 
-      $cordovaAppVersion.getVersionNumber().then(function (version) {
-        $scope.version = version;
-      });
+    //   $cordovaAppVersion.getVersionNumber().then(function (version) {
+    //     $scope.version = version;
+    //   });
 
-      $cordovaAppVersion.getVersionCode().then(function (build) {
-        $scope.appBuild = build;
-      });
+    //   $cordovaAppVersion.getVersionCode().then(function (build) {
+    //     $scope.appBuild = build;
+    //   });
 
-      $cordovaAppVersion.getAppName().then(function (name) {
-        $scope.appName = name;
-      });
+    //   $cordovaAppVersion.getAppName().then(function (name) {
+    //     $scope.appName = name;
+    //   });
 
-      $cordovaAppVersion.getPackageName().then(function (package) {
-        $scope.appPackage = package;
-      });
+    //   $cordovaAppVersion.getPackageName().then(function (package) {
+    //     $scope.appPackage = package;
+    //   });
 
-    }, false);
+    // }, false);
 
 
     $ionicHistory.nextViewOptions({
