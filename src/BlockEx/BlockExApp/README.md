@@ -7,7 +7,13 @@ A proof-of-concept app to demonstrate the asset trading process on a blockchain.
 
 After cloning this repo you will need to install its dependencies first.
 
-In the cloned directory folder:
+This app uses the Ionic Framework and Cordova tools. With a admin level account do the following to install the tools:
+
+```
+$ npm install -g ionic cordova
+```
+
+The in the cloned directory folder to download the app dependencies:
 
 ```
 $ npm install
@@ -19,9 +25,10 @@ The app can be run in your browser:
 $ ionic serve
 ```
 
-To see it running on your mobile, you need to install the [Ionic View](http://view.ionic.io/) app from your App Store.
+You can also try the published version on your phone/tablet. 
+First you need to install the [Ionic View](http://view.ionic.io/) app from your App Store.
 
-Then choose `Preview an App` from the menu and enter *1b48128d* as the APP ID
+Then choose `Preview an App` from the menu and enter **1b48128d** as the APP ID
 
 ## Credits
 
