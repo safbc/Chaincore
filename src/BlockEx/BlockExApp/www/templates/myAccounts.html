@@ -4,19 +4,17 @@
   </ion-nav-buttons>
   <ion-content padding="true" class="has-header" style="background: #0F0E0E">
     <div class="list card" ng-repeat="row in accountsList">
-      <ion-item class="item">
-        <!--<img ng-src=" {{row.avatar}} " ng-click="getBalances(row) " />-->
-        <h2>{{row.alias}}</h2>
-        <p>{{row.accountId}}</p>
+
+      <div class="item item-divider item-icon-right" ui-sref="menu.transactions({accountId: row.id})">
+        {{row.alias}}
+        <i class="icon ion-ios-paper-outline"></i>
+      </div>
+      <ion-item class="item item-avatar" ui-sref="menu.assetInfo({assetId: asset.sumBy.assetId})" ng-repeat="asset in row.assets ">
+        <img src="img/tokens/bw-icons/quarkcoin.svg" /> <strong>{{asset.sumBy.assetAlias | accAlias}}</strong><br /> {{asset.sumBy.assetId
+        | limitTo: 20 : 0}}...
+        <span class="item-note assertive">{{asset.amount}}</span>
       </ion-item>
 
-      <ion-item class="item-avatar assertive " ui-sref="menu.assetInfo({assetId: asset.sumBy.assetId})" ng-repeat="asset in row.assets ">
-        <img src="img/tokens/3.png" />
-        <h2>{{asset.sumBy.assetId}}</h2>
-        <p>{{asset.sumBy.assetAlias | accAlias}}</p>
-        <span class="item-note ">{{asset.amount}}</span>
-        <ion-option-button class="button-energized " ng-click=" ">Sell</ion-option-button>
-      </ion-item>
     </div>
   </ion-content>
 </ion-view>

@@ -56,15 +56,15 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.SVCappUsers = svcUsers;
 
       $scope.SVCappUsers.query({
-          userName: $scope.userInfo.username
-        }).$promise
+        userName: $scope.userInfo.username
+      }).$promise
         .then(function (data) {
           $scope.userProfile = data;
           if (data.length > 0) {
             $scope.userInfo.createdAt = data[0].createdAt;
           }
         })
-        .finally(function () {});
+        .finally(function () { });
     }
 
     $scope.start();
@@ -73,7 +73,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
   })
 
 
-  .controller('myAccountsCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $timeout, $ionicLoading, svcUsers, svcAccounts, svcAssets, svcBalances, svcNodeSettings, accAliasFilter) {
+  .controller('myAccountsCtrl', function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $timeout, $ionicLoading, svcUsers, svcAccounts, svcAssets, svcBalances, svcNodeSettings, accAliasFilter, assetIcons) {
 
 
     if (!$ionicAuth.isAuthenticated()) {
@@ -88,6 +88,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       });
       // Fetch the default system settings on load
       $scope.settings = svcNodeSettings.getSettings();
+      $scope.icons = assetIcons;
 
       $scope.connection = {};
       $scope.connection.nodeURL = $scope.settings.nodeURL;
@@ -533,6 +534,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
     // Set up the API services
     $scope.svcNodeSettings = svcNodeSettings;
+    $scope.accountId = $stateParams.accountId;
 
     $scope.start = function () {
       // Fetch the default system settings on load

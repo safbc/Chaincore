@@ -83,7 +83,7 @@ angular.module('app.routes', [])
 
       .state('menu.transactions', {
         cache: false,
-        url: '/txList',
+        url: '/txList/{accountId}',
         views: {
           'side-menu21': {
             templateUrl: 'templates/transactions.html',
