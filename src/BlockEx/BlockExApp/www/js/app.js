@@ -6,21 +6,21 @@
 // 'app.services' is found in services.js
 // 'app.controllers' is found in controllers.js
 angular.module('app', [
-  'ionic',
-  'ionic.cloud',
-  'ngResource',
-  'ngCordova',
-  'app.constants',
-  'app.controllers',
-  'app.routes',
-  'app.directives',
-  'app.services',
-  'app.filters'
-])
+    'ionic',
+    'ionic.cloud',
+    'ngResource',
+    'ngCordova',
+    'app.constants',
+    'app.controllers',
+    'app.routes',
+    'app.directives',
+    'app.services',
+    'app.filters'
+  ])
   .config(function ($ionicCloudProvider) {
     $ionicCloudProvider.init({
       "core": {
-        "app_id": "1b48128d"
+        "app_id": "689a9f13"
       },
       "push": {
         "sender_id": "777580572465",

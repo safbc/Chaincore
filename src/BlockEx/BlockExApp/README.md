@@ -28,7 +28,7 @@ $ ionic serve
 You can also try the published version on your phone/tablet. 
 First you need to install the [Ionic View](http://view.ionic.io/) app from your App Store.
 
-Then choose `Preview an App` from the menu and enter **1b48128d** as the APP ID
+Then choose `Preview an App` from the menu and enter **689A9F13** as the APP ID
 
 ## Credits
 

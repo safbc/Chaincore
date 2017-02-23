@@ -1,6 +1,6 @@
 {
-  "name": "blockex-ionic",
-  "version": "0.0.4",
+  "name": "blockexapp",
+  "version": "0.0.5",
   "description": "An Ionic & Chain Core DLT powered asset trading app",
   "dependencies": {
     "@ionic/cloud": "^0.16.0",
