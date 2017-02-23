@@ -10,7 +10,10 @@
         <p>{{row.accountId}}</p>
       </ion-item>
 
-      <ion-item class="assertive " ui-sref="menu.assetInfo({assetId: asset.sumBy.assetId})" ng-repeat="asset in row.assets ">{{asset.sumBy.assetAlias | accAlias}}
+      <ion-item class="item-avatar assertive " ui-sref="menu.assetInfo({assetId: asset.sumBy.assetId})" ng-repeat="asset in row.assets ">
+        <img src="img/tokens/3.png" />
+        <h2>{{asset.sumBy.assetId}}</h2>
+        <p>{{asset.sumBy.assetAlias | accAlias}}</p>
         <span class="item-note ">{{asset.amount}}</span>
         <ion-option-button class="button-energized " ng-click=" ">Sell</ion-option-button>
       </ion-item>
