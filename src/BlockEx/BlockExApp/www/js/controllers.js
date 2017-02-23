@@ -56,15 +56,15 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.SVCappUsers = svcUsers;
 
       $scope.SVCappUsers.query({
-        userName: $scope.userInfo.username
-      }).$promise
+          userName: $scope.userInfo.username
+        }).$promise
         .then(function (data) {
           $scope.userProfile = data;
           if (data.length > 0) {
             $scope.userInfo.createdAt = data[0].createdAt;
           }
         })
-        .finally(function () { });
+        .finally(function () {});
     }
 
     $scope.start();
@@ -532,13 +532,72 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $state.go('menu.login');
     }
 
-    // Set up the API services
     $scope.svcNodeSettings = svcNodeSettings;
     $scope.accountId = $stateParams.accountId;
+
+    $scope.connection = {};
+    $scope.connection.nodeURL = $scope.settings.nodeURL;
+    $scope.connection.clientToken = $scope.settings.clientToken;
+
+    // Set up the API services
+    $scope.svcUsers = svcUsers;
+    $scope.svcAccounts = svcAccounts;
+    $scope.svcAssets = svcAssets;
+    $scope.svcBalances = svcBalances;
+
+
+
+    $scope.accountsList = [];
+    $scope.accountBalances = [];
+
+    // Base request object example
+    // $scope.Request = {
+    //   "connection": {
+    //     "nodeURL": "http://172.16.101.93:1999",
+    //     "clientToken": "UbuntuDev:e72629518809db4f5176d084f80f2261a3f4c70e044c6339251977c79f73c4bb"
+    //   },
+    //   "account": {},
+    //   "asset": {},
+    //   "transaction": {},
+    //   "hsmkey": [],
+    //   "query": {}
+    // };
+
+    $scope.Request = {};
+    $scope.Request.connection = {};
+
+    $scope.Request.connection.nodeURL = $scope.settings.nodeURL;
+    $scope.Request.connection.clientToken = $scope.settings.clientToken;
+
+    $scope.Request.query = {};
 
     $scope.start = function () {
       // Fetch the default system settings on load
       $scope.settings = svcNodeSettings.getSettings();
+
+      // $scope.svcAccounts.query($scope.Request).$promise
+      //   .then(function (data) {
+      //     return data;
+      //   })
+      //   .then(function (data) {
+      //     $scope.accountsList = data;
+      //   })
+      //   .catch(function (data) {
+      //     console.log('Error: ' + data);
+      //     $ionicLoading.hide({
+      //       template: 'Loading ...'
+      //     });
+      //     $state.go('menu.settings');
+      //   }).finally(function () {
+      //     $ionicLoading.hide({
+      //       template: 'Loading ...'
+      //     });
+      //     //TODO: Kick of ballance queries
+      //     $scope.getBalances();
+      //     console.log('Done: ');
+      //   });
+
+
     }
 
     $scope.start();
