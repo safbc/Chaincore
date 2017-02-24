@@ -1,13 +1,9 @@
-<ion-view title="{{tx.id}}">
-  <ion-content padding="true" class="has-header" style="background: #0F0E0E">
-    <div class="list card">
-      <ion-item class="item-avatar" id="transactionDetail-list-item31">
-        <h2>2017-02-14 18:56</h2>
-        <p>ID: 8920345703249587087</p>
-      </ion-item>
-      <div class="list card">
-        {{tx |json}}
-      </div>
-    </div>
+<ion-modal-view>
+  <ion-header-bar class="bar-positive">
+    <button class="button icon ion-close-round" ng-click="closeModal()"></button>
+    <h1 class="title">Raw Tx Data</h1>
+  </ion-header-bar>
+  <ion-content>
+    <json-formatter json="tx" open="1"></json-formatter>
   </ion-content>
-</ion-view>
+</ion-modal-view>
