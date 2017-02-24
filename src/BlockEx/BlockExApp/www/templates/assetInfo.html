@@ -1,7 +1,7 @@
 <ion-view title="Asset Info" style="background: #0F0E0E">
   <ion-content padding="true" class="has-header">
     <div class="list card" ng-repeat="asset in assetList">
-      <ion-item class="item">
+      <ion-item class="item" ui-sref="menu.transactions({queryType: 'TxAssets', assetId: row.id})">
         <h2>{{asset.alias | accAlias}}</h2>
         <p>{{asset.id}}</p>
       </ion-item>

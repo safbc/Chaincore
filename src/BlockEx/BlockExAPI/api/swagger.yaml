@@ -11,7 +11,7 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "192.168.1.19:443"
+host: "localhost:3000"
 basePath: "/BlockEx/0.0.1"
 tags:
 - name: "AppIO"
@@ -582,7 +582,7 @@ definitions:
       queryType:
         type: "string"
         example: "Balance"
-        description: "Balance | TxSpender | TxController | TxAsset | TxDateRange"
+        description: "Balance | TxAccount | TxAsset | TxDateRange"
       accountAlias:
         type: "string"
       accountId:
@@ -597,7 +597,7 @@ definitions:
         items:
           $ref: "#/definitions/Timestamp"
     description: "Model to be used for various type of Chain Node queries. Balance\
-      \ Equiry, Transaction Enquiry (Spender, Asset alias etc)"
+      \ Equiry, Transaction Enquiry (Account, Asset alias etc). Date range can be included with each query type."
   ChainRequest:
     required:
     - "connection"
