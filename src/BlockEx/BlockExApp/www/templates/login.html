@@ -1,10 +1,11 @@
 <ion-view title="Login" id="page9">
   <ion-content padding="true" class="has-header" style="background: #0F0E0E">
-    <form id="login-form6" class="list">
-      <ion-list id="login-list9">
+    <form class="list">
+      <ion-list>
+
         <label class="item item-input" id="login-input8">
           <span class="input-label">Email</span>
-          <input type="text" placeholder="" ng-model="loginForm.email">
+          <input type="text" style="width: 100%"  ng-model="loginForm.email">
         </label>
         <label class="item item-input" id="login-input9">
           <span class="input-label">Password</span>
@@ -12,8 +13,8 @@
         </label>
       </ion-list>
       <div class="spacer" style="height: 40px;"></div>
-      <a id="login-button5" class="button button-stable  button-block" ng-click="formLogin(loginForm)">Log in</a>
-      <a ui-sref="menu.signup" id="login-button6" class="button button-positive  button-block button-clear">Or create an account</a>
+      <a class="button button-positive  button-block" ng-click="formLogin(loginForm)">Log in</a>
+      <a ui-sref="menu.signup" class="button button-stable  button-block button-clear">Or sign-up for access. </a>
       <!--<hr />
       <a class="google-sign-in button button-block" ng-click="googleSignIn()">Sign in with Google</a>-->
     </form>

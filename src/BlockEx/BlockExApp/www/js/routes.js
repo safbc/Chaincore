@@ -11,11 +11,23 @@ angular.module('app.routes', [])
 
 
       .state('menu.myAccounts', {
-        url: '/myaccount',
+        cache: false,
+        url: '/myAccount',
         views: {
           'side-menu21': {
             templateUrl: 'templates/myAccounts.html',
             controller: 'myAccountsCtrl'
+          }
+        }
+      })
+
+      .state('menu.newAccount', {
+        cache: false,
+        url: '/accountNew',
+        views: {
+          'side-menu21': {
+            templateUrl: 'templates/newAccount.html',
+            controller: 'newAccountCtrl'
           }
         }
       })
@@ -31,6 +43,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.availableTradeOffers', {
+        cache: false,
         url: '/tradesList',
         views: {
           'side-menu21': {
@@ -41,6 +54,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.bidsMadeForOfferId', {
+        cache: false,
         url: '/tradeBids',
         views: {
           'side-menu21': {
@@ -51,7 +65,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.assetInfo', {
-        url: '/assetDetail',
+        url: '/assetDetail/{assetId}',
         views: {
           'side-menu21': {
             templateUrl: 'templates/assetInfo.html',
@@ -61,13 +75,15 @@ angular.module('app.routes', [])
       })
 
       .state('menu', {
+        cache: false,
         url: '/side-menu21',
         templateUrl: 'templates/menu.html',
         controller: 'menuCtrl'
       })
 
       .state('menu.transactions', {
-        url: '/txList',
+        cache: false,
+        url: '/txList/{queryType, accountId, assetId}',
         views: {
           'side-menu21': {
             templateUrl: 'templates/transactions.html',
@@ -87,6 +103,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.newTrade', {
+        cache: false,
         url: '/tradeNew',
         views: {
           'side-menu21': {
@@ -97,6 +114,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.bidOnTradeID', {
+        cache: false,
         url: '/tradeBid',
         views: {
           'side-menu21': {
@@ -106,13 +124,9 @@ angular.module('app.routes', [])
         }
       })
 
-      .state('menu.newAccount', {
-        url: '/accountNew',
-        templateUrl: 'templates/newAccount.html',
-        controller: 'newAccountCtrl'
-      })
 
       .state('menu.login', {
+        cache: false,
         url: '/login',
         views: {
           'side-menu21': {
@@ -123,6 +137,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.logout', {
+        cache: false,
         url: '/logout',
         views: {
           'side-menu21': {
@@ -143,6 +158,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.confirmTrade', {
+        cache: false,
         url: '/confirmTrade',
         views: {
           'side-menu21': {
@@ -158,6 +174,17 @@ angular.module('app.routes', [])
           'side-menu21': {
             templateUrl: 'templates/settings.html',
             controller: 'settingsCtrl'
+          }
+        }
+      })
+
+      .state('menu.about', {
+        cache: false,
+        url: '/about',
+        views: {
+          'side-menu21': {
+            templateUrl: 'templates/about.html',
+            controller: 'aboutCtrl'
           }
         }
       })
