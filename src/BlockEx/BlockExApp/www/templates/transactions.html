@@ -20,7 +20,7 @@
         <div class="item item-divider">
           {{input.accountAlias}}{{input.assetDefinition.issuer}} => {{input.type}}</div>
         <div class="item item-avatar">
-          <img ng-src="{{input.assetDefinition.image-svg-bw}}"></img> {{input.assetAlias}}
+          <img ng-src="{{icon.img }}" ng-repeat="icon in icons | filter: input.assetAlias"></img> {{input.assetAlias}}
           <span class="item-note">{{input.amount}}</span>
           <p>{{input.assetId }}</p>
         </div>
@@ -29,7 +29,7 @@
         <div class="item item-divider">
           {{output.type}} => {{output.accountAlias}}</div>
         <div class="item item-avatar">
-          <img src="{{icon.img }}" ng-repeat="icon in icons | filter: output.assetAlias"></img> {{output.assetAlias}}
+          <img ng-src="{{icon.img }}" ng-repeat="icon in icons | filter: output.assetAlias"></img> {{output.assetAlias}}
           <span class="item-note">{{output.amount}}</span>
           <p>{{output.assetId }}</p>
         </div>
