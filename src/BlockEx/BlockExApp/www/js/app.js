@@ -10,6 +10,7 @@ angular.module('app', [
     'ionic.cloud',
     'ngResource',
     'ngCordova',
+    'jsonFormatter',
     'app.constants',
     'app.controllers',
     'app.routes',
