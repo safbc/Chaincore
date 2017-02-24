@@ -509,8 +509,7 @@ exports.getTransactions = function (args, res, next) {
   // Decide which action to perform based on value of queryType
   switch (request.query.queryType) {
     case 'TxAccount':
-      myFilter.filter = '\'inputs(account_id=\$1) OR outputs(account_id =\$1)\'';
-      // myFilter.filter = '\'inputs(account_id=\'' + request.query.accountAlias + '\')\ OR outputs(account_id =\'' + request.query.accountAlias + '\')\'';
+      myFilter.filter = "inputs(account_id=\$1) OR outputs(account_id =\$1)";
       myFilter.filterParams = [request.query.accountId]
       if (request.query.dateRange != undefined) {
         myFilter.setStartTime = request.query.dateRange[0]
@@ -518,8 +517,8 @@ exports.getTransactions = function (args, res, next) {
       }
       break;
     case 'TxAsset':
-      myFilter.filter = '\'inputs(asset_id=\$1) OR outputs(asset_id =\$1\'';
-      myFilter.filterParams = [request.query.assetId]
+      myFilter.filter = "inputs(asset_id=\$1) OR outputs(asset_id =\$1)";
+      myFilter.filterParams = [request.query.assetId];
       if (request.query.dateRange != undefined) {
         myFilter.setStartTime = request.query.dateRange[0]
         myFilter.setEndTime = request.query.dateRange[1]
@@ -536,7 +535,8 @@ exports.getTransactions = function (args, res, next) {
       myFilter = {}
   }
   client.transactions.queryAll({
-      myFilter
+      filter: myFilter.filter,
+      filterParams: myFilter.filterParams
     }, (transaction, next, done) => {
       console.log('Transaction: ' + transaction.id + ')')
       transactions.push(transaction)
