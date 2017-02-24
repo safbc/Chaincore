@@ -613,7 +613,20 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
         $scope.svcTransactions.query($scope.Request).$promise
           .then(function (data) {
+            data.forEach(function (element) {
 
+              element.inputs.forEach(function (input) {
+                if (input.assetAlias == null) {
+                  input.assetAlias = 'external';
+                }
+              }, this);
+              element.outputs.forEach(function (output) {
+                if (output.assetAlias == null) {
+                  output.assetAlias = 'external';
+                }
+              }, this);
+
+            }, this);
             return data;
           })
           .then(function (data) {
@@ -637,6 +650,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
 
       }
+
+
+
 
       $scope.start();
     })

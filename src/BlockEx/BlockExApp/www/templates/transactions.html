@@ -20,8 +20,7 @@
         <div class="item item-divider">
           {{input.accountAlias}}{{input.assetDefinition.issuer}} => {{input.type}}</div>
         <div class="item item-avatar">
-          <img ng-src="{{icon.img }}" ng-repeat="icon in icons | filter: input.assetAlias | accAlias"></img> {{input.assetAlias
-          | accAlias}}
+          <img ng-src="{{icon.img }}" ng-repeat="icon in icons | filter: input.assetAlias"></img> {{input.assetAlias | accAlias}}
           <span class="item-note">{{input.amount}}</span>
           <p>{{input.assetId }}</p>
         </div>
