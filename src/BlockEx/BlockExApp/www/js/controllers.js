@@ -669,6 +669,8 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
         $state.go('menu.login');
       }
 
+      $scope.tx = $stateParams.tx;
+
       // Set up the API services
       $scope.svcNodeSettings = svcNodeSettings;
 

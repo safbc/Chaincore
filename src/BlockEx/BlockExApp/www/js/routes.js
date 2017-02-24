@@ -93,7 +93,7 @@ angular.module('app.routes', [])
       })
 
       .state('menu.transactionDetail', {
-        url: '/txDetail',
+        url: '/txDetail/{tx}',
         views: {
           'side-menu21': {
             templateUrl: 'templates/transactionDetail.html',

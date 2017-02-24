@@ -1,36 +1,26 @@
 <ion-view title="Txns {{ title }}">
   <ion-content padding="true" class="has-header" style="background: #0F0E0E">
-    <!--<form id="transactions-form2" class="list">
-      <ion-toggle toggle-class="toggle-positive" ng-checked="true" id="transactions-toggle2" name="chkMine">My transactions</ion-toggle>
-      <label class="item item-select" id="transactions-select1" name="ddlAssetList">
-        <span class="input-label">Filter by asset</span>
-        <select>
-          <option>All</option>
-          <option>Gold</option>
-          <option>Silver</option>
-        </select>
-      </label>
-    </form>-->
     <div class="list card" ng-repeat="tx in txList">
-      <div class="item item-divider" ui-sref="menu.transactionDetail({txId: tx.id})">
-        <h2>ID: {{tx.id}}</h2>
+      <div class="item item-divider item-icon-right">
+        <i class="icon ion-code" ui-sref="menu.transactionDetail({tx: tx})"></i>
+        <h2>Id: {{tx.id}}</h2>
         <p>{{tx.timestamp | date:'medium'}}</p>
       </div>
       <div class="list card" ng-repeat="input in tx.inputs">
         <div class="item item-divider">
-          {{input.accountAlias}}{{input.assetDefinition.issuer}} => {{input.type}}</div>
+          {{input.accountAlias | accAlias}}{{input.assetDefinition.issuer}} => {{input.type}}</div>
         <div class="item item-avatar">
           <img ng-src="{{icon.img }}" ng-repeat="icon in icons | filter: input.assetAlias"></img> {{input.assetAlias | accAlias}}
-          <span class="item-note">{{input.amount}}</span>
+          <span class="item-note {{input.type}}">{{input.amount}}</span>
           <p>{{input.assetId }}</p>
         </div>
       </div>
       <div class="list card" ng-repeat="output in tx.outputs">
         <div class="item item-divider">
-          {{output.type}} => {{output.accountAlias}}</div>
+          {{output.type}} => {{output.accountAlias | accAlias}}</div>
         <div class="item item-avatar">
           <img ng-src="{{icon.img }}" ng-repeat="icon in icons | filter: output.assetAlias"></img> {{output.assetAlias}}
-          <span class="item-note">{{output.amount}}</span>
+          <span class="item-note {{output.type}}">{{output.amount}}</span>
           <p>{{output.assetId }}</p>
         </div>
       </div>
