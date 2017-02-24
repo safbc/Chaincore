@@ -5,7 +5,7 @@
   <ion-content padding="true" class="has-header" style="background: #0F0E0E">
     <div class="list card" ng-repeat="row in accountsList">
 
-      <div class="item item-divider item-icon-right" ui-sref="menu.transactions({queryType: 'TxAccount', accountId: row.id})">
+      <div class="item item-divider item-icon-right" ui-sref="menu.transactions({queryType: 'TxAccount', accountId: row.id, assetId: ''})">
         {{row.alias}}
         <i class="icon ion-ios-paper-outline"></i>
       </div>

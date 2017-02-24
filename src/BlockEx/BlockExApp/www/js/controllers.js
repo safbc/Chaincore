@@ -555,6 +555,8 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       }
 
       $scope.svcNodeSettings = svcNodeSettings;
+      // Fetch the default system settings on load
+      $scope.settings = svcNodeSettings.getSettings();
 
       $scope.query = {};
       $scope.query.queryType = $stateParams.queryType;
@@ -568,11 +570,11 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.connection.clientToken = $scope.settings.clientToken;
 
       // Set up the API services
-      $scope.svcUsers = svcUsers;
-      $scope.svcAccounts = svcAccounts;
-      $scope.svcAssets = svcAssets;
-      $scope.svcBalances = svcBalances;
-      $scope.
+      // $scope.svcUsers = svcUsers;
+      // $scope.svcAccounts = svcAccounts;
+      // $scope.svcAssets = svcAssets;
+      // $scope.svcBalances = svcBalances;
+      $scope.svcTransactions = svcTransactions;
 
 
       $scope.txList = [];
@@ -593,16 +595,11 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       // };
 
       $scope.Request = {};
-      $scope.Request.connection = {};
-
-      $scope.Request.connection.nodeURL = $scope.settings.nodeURL;
-      $scope.Request.connection.clientToken = $scope.settings.clientToken;
+      $scope.Request.connection = $scope.connection;
 
       $scope.Request.query = {};
 
       $scope.start = function () {
-        // Fetch the default system settings on load
-        $scope.settings = svcNodeSettings.getSettings();
 
         $scope.Request.query = $scope.query;
 
