@@ -152,7 +152,6 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
             $ionicLoading.hide({
               template: 'Loading ...'
             });
-            //TODO: Kick of ballance queries
             $scope.getBalances();
             console.log('Done: ');
           });
@@ -209,6 +208,11 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
           $scope.svcBalances.query(r).$promise
             .then(function (data) {
               //console.log("did resolve " + r.query.accountAlias + "data:" + data);
+              data.forEach(function (element) {
+                if (element.sumBy.assetAlias == null) {
+                  element.sumBy.assetAlias = 'external';
+                }
+              }, this);
               v = data;
             })
             .catch(function (err) {
@@ -273,7 +277,6 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
         $state.go('menu.login');
       }
 
-
       // Set up the API services
       $scope.svcNodeSettings = svcNodeSettings;
       $scope.param = $stateParams.assetId;
@@ -304,7 +307,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
         $scope.Request = {};
         $scope.Request.connection = $scope.connection;
         $scope.Request.asset = {
-          id: $stateParams.assetId //FIXME: get this from page request.
+          id: $stateParams.assetId
         };
 
 
@@ -321,6 +324,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
             console.log('Error: ' + data);
           }).finally(function () {
 
+            $scope.getBalances();
             console.log('Done: ');
           });
 
@@ -331,26 +335,31 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.getBalances = function () {
         var a = [];
         $scope.assetList.forEach(function (element) {
-          this['sr' + element.alias] = {};
-          this['sr' + element.alias].connection = JSON.parse(JSON.stringify($scope.connection));
-          this['sr' + element.alias].query = {};
-          this['sr' + element.alias].query = {
+          this['sr' + element.id] = {};
+          this['sr' + element.id].connection = JSON.parse(JSON.stringify($scope.connection));
+          this['sr' + element.id].query = {};
+          this['sr' + element.id].query = {
             queryType: "AssetBalance",
-            alias: element.alias
+            id: element.id
           };
           //console.log(JSON.stringify(this['sr' + element.alias]));
-          a.push($scope.getAssetBalances(this['sr' + element.alias]));
+          a.push($scope.getAssetBalances(this['sr' + element.id]));
         }, this);
 
         function pr(requests) {
-          //console.log(JSON.stringify(requests));
+          console.log(JSON.stringify(requests));
+          //FIXME: Get balances by assetId or alias so this work with external assets;
           Promise.all(requests)
             .then(function (items) {
               //console.log("results: " + JSON.stringify(items));
 
               // Inject results values into $scope.accountList
               for (var index = 0; index < items.length; index++) {
-                $scope.accountsList[index].assets = items[index];
+                var subitems = items[index];
+                for (var subindex = 0; subindex < subitems.length; subindex++) {
+                  $scope.assetList[subindex].circulation = subitems[subindex].amount;
+                }
+
               }
 
               items.forEach(function (element) {
@@ -543,8 +552,8 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
 
   .controller('transactionsCtrl',
-    function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory, assetIcons,
-      svcNodeSettings, svcTransactions, svcAccounts, svcAssets, svcBalances) {
+    function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory, $ionicModal,
+      assetIcons, svcNodeSettings, svcTransactions, svcAccounts, svcAssets, svcBalances) {
 
       if (!$ionicAuth.isAuthenticated()) {
         $ionicHistory.nextViewOptions({
@@ -571,10 +580,6 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.connection.clientToken = $scope.settings.clientToken;
 
       // Set up the API services
-      // $scope.svcUsers = svcUsers;
-      // $scope.svcAccounts = svcAccounts;
-      // $scope.svcAssets = svcAssets;
-      // $scope.svcBalances = svcBalances;
       $scope.svcTransactions = svcTransactions;
 
 
@@ -650,34 +655,37 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
 
       }
+      $scope.detail = function (tx) {
 
+        $scope.tx = tx
+        $scope.openModal();
+      };
 
+      $ionicModal.fromTemplateUrl('templates/transactionDetail.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function (modal) {
+        $scope.modal = modal;
+      });
+      $scope.openModal = function () {
+        $scope.modal.show();
+      };
+      $scope.closeModal = function () {
+        $scope.modal.hide();
+      };
+      // Cleanup the modal when we're done with it!
+      $scope.$on('$destroy', function () {
+        $scope.modal.remove();
+      });
+      // Execute action on hide modal
+      $scope.$on('modal.hidden', function () {
+        // Execute action
+      });
+      // Execute action on remove modal
+      $scope.$on('modal.removed', function () {
+        // Execute action
+      });
 
-
-      $scope.start();
-    })
-
-
-  .controller('transactionDetailCtrl',
-    function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory,
-      svcNodeSettings) {
-      if (!$ionicAuth.isAuthenticated()) {
-        $ionicHistory.nextViewOptions({
-          disableAnimate: true,
-          disableBack: true
-        });
-        $state.go('menu.login');
-      }
-
-      $scope.tx = $stateParams.tx;
-
-      // Set up the API services
-      $scope.svcNodeSettings = svcNodeSettings;
-
-      $scope.start = function () {
-        // Fetch the default system settings on load
-        $scope.settings = svcNodeSettings.getSettings();
-      }
 
       $scope.start();
     })
@@ -932,7 +940,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
   .controller('aboutCtrl',
     function ($scope, $state, $ionicHistory) {
       $scope.version = '0.0.5';
-      $scope.appBuild = '9';
+      $scope.appBuild = '11';
       $scope.appName = 'BlockEx';
       $scope.appPackage = '';
 

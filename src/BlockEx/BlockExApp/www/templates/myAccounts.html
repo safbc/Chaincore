@@ -10,8 +10,8 @@
         <i class="icon ion-ios-paper-outline"></i>
       </div>
       <div class="item item-avatar" ui-sref="menu.assetInfo({assetId: asset.sumBy.assetId})" ng-repeat="asset in row.assets ">
-        <img src="img/tokens/bw-icons/quarkcoin.svg"></img>
-        <span class="item-note assertive">{{asset.amount}}</span><strong>{{asset.sumBy.assetAlias | accAlias}}</strong>
+        <img ng-src="{{icon.img }}" ng-repeat="icon in icons | filter: asset.sumBy.assetAlias">
+        <span class="item-note assertive">{{asset.amount}}</span><strong>{{asset.sumBy.assetAlias}}</strong>
         <p>{{asset.sumBy.assetId }}...</p>
       </div>
 
