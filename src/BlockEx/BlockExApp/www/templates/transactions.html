@@ -2,7 +2,7 @@
   <ion-content padding="true" class="has-header" style="background: #0F0E0E">
     <div class="list card" ng-repeat="tx in txList">
       <div class="item item-divider item-icon-right">
-        <i class="icon ion-code" ui-sref="menu.transactionDetail({tx: tx})"></i>
+        <i class="icon ion-code" ng-click="detail(tx)"></i>
         <h2>Id: {{tx.id}}</h2>
         <p>{{tx.timestamp | date:'medium'}}</p>
       </div>
