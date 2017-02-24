@@ -9,11 +9,11 @@
         {{row.alias}}
         <i class="icon ion-ios-paper-outline"></i>
       </div>
-      <ion-item class="item item-avatar" ui-sref="menu.assetInfo({assetId: asset.sumBy.assetId})" ng-repeat="asset in row.assets ">
-        <img src="img/tokens/bw-icons/quarkcoin.svg" /> <strong>{{asset.sumBy.assetAlias | accAlias}}</strong><br /> {{asset.sumBy.assetId
-        | limitTo: 20 : 0}}...
-        <span class="item-note assertive">{{asset.amount}}</span>
-      </ion-item>
+      <div class="item item-avatar" ui-sref="menu.assetInfo({assetId: asset.sumBy.assetId})" ng-repeat="asset in row.assets ">
+        <img src="img/tokens/bw-icons/quarkcoin.svg"></img>
+        <span class="item-note assertive">{{asset.amount}}</span><strong>{{asset.sumBy.assetAlias | accAlias}}</strong>
+        <p>{{asset.sumBy.assetId }}...</p>
+      </div>
 
     </div>
   </ion-content>

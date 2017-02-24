@@ -543,7 +543,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
 
   .controller('transactionsCtrl',
-    function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory,
+    function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory, assetIcons,
       svcNodeSettings, svcTransactions, svcAccounts, svcAssets, svcBalances) {
 
       if (!$ionicAuth.isAuthenticated()) {
@@ -563,6 +563,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.query.assetId = $stateParams.assetId;
       $scope.query.accountId = $stateParams.accountId;
       $scope.title = '';
+      $scope.icons = assetIcons;
 
 
       $scope.connection = {};
