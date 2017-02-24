@@ -602,6 +602,13 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
       $scope.start = function () {
 
+        // Set page title
+        if ($scope.query.queryType == 'TxAccount') {
+          $scope.title = 'on ' + $scope.query.accountId;
+        } else {
+          $scope.title = 'with ' + $scope.query.assetId;
+        }
+
         $scope.Request.query = $scope.query;
 
         $scope.svcTransactions.query($scope.Request).$promise

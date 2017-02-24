@@ -1,4 +1,4 @@
-<ion-view title="Txns on {{ title }}">
+<ion-view title="Txns {{ title }}">
   <ion-content padding="true" class="has-header" style="background: #0F0E0E">
     <!--<form id="transactions-form2" class="list">
       <ion-toggle toggle-class="toggle-positive" ng-checked="true" id="transactions-toggle2" name="chkMine">My transactions</ion-toggle>
@@ -20,7 +20,8 @@
         <div class="item item-divider">
           {{input.accountAlias}}{{input.assetDefinition.issuer}} => {{input.type}}</div>
         <div class="item item-avatar">
-          <img ng-src="{{icon.img }}" ng-repeat="icon in icons | filter: input.assetAlias"></img> {{input.assetAlias}}
+          <img ng-src="{{icon.img }}" ng-repeat="icon in icons | filter: input.assetAlias | accAlias"></img> {{input.assetAlias
+          | accAlias}}
           <span class="item-note">{{input.amount}}</span>
           <p>{{input.assetId }}</p>
         </div>
