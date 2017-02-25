@@ -277,7 +277,7 @@ exports.getBalances = function (args, res, next) {
         } else if (request.query.id != undefined) {
           filter = {
             filter: 'account_id=$1',
-            filterParams: [request.query.account_id]
+            filterParams: [request.query.id]
           };
 
         }
@@ -297,6 +297,9 @@ exports.getBalances = function (args, res, next) {
 
           }).catch(function (err) {
             console.log("error:" + err)
+            res.setHeader('Content-Type', 'application/json');
+            var out = JSON.stringify(err)
+            res.end(out);
           });
         break;
 
@@ -317,7 +320,7 @@ exports.getBalances = function (args, res, next) {
         } else if (request.query.id != undefined) {
           filter = {
             filter: 'asset_id=$1',
-            filterParams: [request.query.asset_id]
+            filterParams: [request.query.id]
           }
 
         }
@@ -337,6 +340,9 @@ exports.getBalances = function (args, res, next) {
 
           }).catch(function (err) {
             console.log("error:" + err)
+            res.setHeader('Content-Type', 'application/json');
+            var out = JSON.stringify(err)
+            res.end(out);
           });
         break;
 
