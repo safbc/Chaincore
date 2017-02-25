@@ -276,8 +276,8 @@ exports.getBalances = function (args, res, next) {
 
         } else if (request.query.id != undefined) {
           filter = {
-            filter: 'asset_id=$1',
-            filterParams: [request.query.asset_id]
+            filter: 'account_id=$1',
+            filterParams: [request.query.account_id]
           };
 
         }

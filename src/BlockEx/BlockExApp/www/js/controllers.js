@@ -319,12 +319,12 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
           })
           .then(function (data) {
             $scope.assetList = data;
+            $scope.getBalances();
           })
           .catch(function (data) {
             console.log('Error: ' + data);
           }).finally(function () {
 
-            $scope.getBalances();
             console.log('Done: ');
           });
 
@@ -346,33 +346,31 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
           a.push($scope.getAssetBalances(this['sr' + element.id]));
         }, this);
 
-        function pr(requests) {
-          console.log(JSON.stringify(requests));
-          //FIXME: Get balances by assetId or alias so this work with external assets;
-          Promise.all(requests)
-            .then(function (items) {
-              //console.log("results: " + JSON.stringify(items));
 
-              // Inject results values into $scope.accountList
-              for (var index = 0; index < items.length; index++) {
-                var subitems = items[index];
-                for (var subindex = 0; subindex < subitems.length; subindex++) {
-                  $scope.assetList[subindex].circulation = subitems[subindex].amount;
-                }
+        //FIXME: Get balances by ssetId or alias so this work with external assets;
 
+        Promise.all(a)
+          .then(function (items) {
+            //console.log("results: " + JSON.stringify(items));
+
+            // Inject results values into $scope.accountList
+            for (var index = 0; index < items.length; index++) {
+              var subitems = items[index];
+              for (var subindex = 0; subindex < subitems.length; subindex++) {
+                $scope.assetList[subindex].circulation = subitems[subindex].amount;
               }
 
-              items.forEach(function (element) {
+            }
 
-              }, this);
+            items.forEach(function (element) {
 
-            })
-            .catch(function (err) {
-              console.log("err: " + err);
-            })
-        };
+            }, this);
 
-        pr(a);
+          })
+          .catch(function (err) {
+            console.log("err: " + err);
+          });
+
       }
 
       $scope.getAssetBalances = function (r) {
