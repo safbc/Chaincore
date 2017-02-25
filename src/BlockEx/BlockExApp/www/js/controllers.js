@@ -347,8 +347,6 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
         }, this);
 
 
-        //FIXME: Get balances by ssetId or alias so this work with external assets;
-
         Promise.all(a)
           .then(function (items) {
             //console.log("results: " + JSON.stringify(items));
@@ -492,7 +490,8 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
   .controller('newTradeCtrl',
     function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory,
-      svcNodeSettings) {
+      svcNodeSettings, assetIcons, svcTrades, svcAssets) {
+
       if (!$ionicAuth.isAuthenticated()) {
         $ionicHistory.nextViewOptions({
           disableAnimate: true,
@@ -503,11 +502,136 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
       // Set up the API services
       $scope.svcNodeSettings = svcNodeSettings;
+      // Fetch the default system settings on load
+      $scope.settings = svcNodeSettings.getSettings();
+      $scope.icons = assetIcons;
+      $scope.iconAlias = 'external';
+      $scope.svcAssets = svcAssets;
+      // $scope.svcBalances = svcBalances;
+      // $scope.svcUsers = svcUsers;
+      // $scope.svcAccounts = svcAccounts;
+
+      // Define base Chain Node connection object
+      $scope.connection = {};
+      $scope.connection.nodeURL = $scope.settings.nodeURL;
+      $scope.connection.clientToken = $scope.settings.clientToken;
+
+      // Page form data objects
+      $scope.form = {
+        tradeAction: 'Buy',
+        validDays: 4,
+        amount: 0,
+        asset: ''
+      };
+      $scope.isSale = false;
+
+
+      $scope.request = {
+        "expiryTimestamp": "2017-02-18T14:41:13.002Z",
+        "postedBy": $ionicUser.details.username
+      };
+
+      var saleData = {
+        "asset": {
+          "id": "",
+          "alias": ""
+        },
+        "account": {
+          "id": "",
+          "alias": ""
+        },
+        "amount": 0
+      };
+
+      var buyData = {
+        "asset": {
+          "id": "",
+          "alias": ""
+        },
+        "account": {
+          "id": "",
+          "alias": ""
+        },
+        "amount": 0
+      };
+
+      $scope.allAssets = [];
+      $scope.assetList = [];
 
       $scope.start = function () {
-        // Fetch the default system settings on load
-        $scope.settings = svcNodeSettings.getSettings();
-      }
+        // first time get all assets.
+        $scope.allAssets = $scope.getAssets();
+        $scope.assetList = $scope.allAssets;
+
+
+      };
+
+      $scope.setAction = function () {
+        if ($scope.isSale) {
+          $scope.isSale = false;
+          $scope.form.tradeAction = 'Buy';
+          // $scope.assetList = $scope.allAssets;
+          // $scope.form.asset = $scope.assetList[0].alias;
+        } else {
+          $scope.isSale = true;
+          $scope.form.tradeAction = 'Sell';
+          // might be able to filter all assets instead of having to look it up again.
+          // $scope.assetList = $scope.getAssets($ionicUser.details.username);
+
+        }
+      };
+
+      // Get the list of assets that can be traded
+      // This should only contain those you have in possesion if the trade is to be a sale.
+
+      $scope.getAssets = function (username) {
+
+        // set up query
+        var request = {};
+        request.connection = $scope.connection;
+
+        // TODO: how to look up accounts controlled by this user and then listing all assets controlled in those accounts.
+
+        $scope.svcAssets.query(request).$promise
+          .then(function (data) {
+            data.forEach(function (element) {
+              if (element.alias == null) {
+                // TODO: Look inside asset definition to see if freindly name has been saved and use that instead.
+                element.alias = element.id;
+              }
+            }, this);
+            return data;
+          })
+          .then(function (data) {
+            $scope.assetList = data;
+            // $scope.getBalances();    // TODO: Will need this before sale offer
+          })
+          .catch(function (data) {
+            console.log('Error: ' + data);
+          }).finally(function (data) {
+
+            console.log('Done: ');
+            return data;
+          });
+      };
+
+      // $scope.loadIcon = function (assetId) {
+
+      //   $scope.assetList.forEach(function (element) {
+      //     if (element.id == assetId) {
+      //       if (element.alias.length > 15) {
+      //         $scope.iconAlias = 'external';
+      //       } else {
+      //         $scope.iconAlias = element.alias;
+      //       }
+
+      //     }
+      //   }, this);
+      // };
+
+      $scope.makeOffer = function (formData) {
+        console.log(JSON.stringify(formData));
+      };
 
       $scope.start();
     })

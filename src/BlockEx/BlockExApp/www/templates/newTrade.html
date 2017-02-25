@@ -1,26 +1,36 @@
-<ion-view title="New Trade" id="page6">
-    <ion-content padding="true" class="has-header" style="background: #0F0E0E">
-        <div class="list card" id="newTrade-card29">
-            <form id="newTrade-form4" class="list">
-                <ion-item class="item-divider" id="newTrade-list-item-divider6"> Trade which asset?</ion-item>
-                <label class="item item-select" id="newTrade-select2" name="ddlAsset">
-          <span class="input-label">Asset</span>
-          <select>
-            <option>Gold</option>
-            <option>Silver</option>
+<ion-view title="New Trade">
+  <ion-content padding="true" class="has-header" style="background: #0F0E0E">
+    <div class="list card">
+      <div class="list">
+        <ion-item class="item-divider">Buy or Sell?</ion-item>
+        <li class="item item-toggle">
+          {{form.tradeAction}}
+          <label class="toggle toggle-assertive">
+            <input type="checkbox" ng-model="isSale" ng-change="setAction(allAssets)">
+              <div class="track">
+                <div class="handle"></div>
+              </div>
+          </label>
+        </li>
+        <ion-item class="item-divider">{{form.tradeAction}} which asset?</ion-item>
+        <label class="item item-select item-avatar">          
+          <img ng-src="{{icon.img}}" ng-repeat="icon in icons | filter: form.asset">
+          <select ng-model="form.asset" ng-init="form.asset = 'Quark'" >
+            <option selected></option>
+            <option ng-repeat="asset in assetList" ng-value="asset.alias" >{{asset.alias}}</option>
           </select>
         </label>
-                <ion-item class="item-divider" id="newTrade-list-item-divider5"> How much?</ion-item>
-                <label class="item item-input" id="newTrade-input6" name="tbAmount">
+        <ion-item class="item-divider">How much?</ion-item>
+        <label class="item item-input">
           <span class="input-label">Amount</span>
-          <input type="text" placeholder="100">
+          <input type="number" placeholder="100" ng-model="form.amount">
         </label>
-                <ion-item class="item-divider" id="newTrade-list-item-divider4"> Offer valid for?</ion-item>
-                <ion-item class="range range-positive" id="newTrade-range1">1 Day
-                    <input type="range" value="1" min="1" max="10" step="1" name="rngDays">
-                </ion-item>
-                <a ui-sref="menu.availableTradeOffers" id="newTrade-button2" class="button button-positive  button-block">Post Trade</a>
-            </form>
-        </div>
-    </ion-content>
+        <ion-item class="item-divider"> Offer valid for?</ion-item>
+        <ion-item class="range range-royal"><span class="input-label">{{form.validDays}} Days</span> 1
+          <input type="range" min="1" max="4" step="1" ng-model="form.validDays">4
+        </ion-item>
+        <a ng-click="makeOffer(form)" class="button button-positive  button-block">Post Trade</a>
+      </div>
+    </div>
+  </ion-content>
 </ion-view>
