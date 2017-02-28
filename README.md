@@ -18,6 +18,16 @@ The docker instance also includes full Chain documentation which is accessible v
 http://localhost:1999/docs
 ```
 
+### Version upgrade notes
+As Chain release newer versions of the Developer Edition, you will need to upgrade the docker image (and sometimes delete and reconfigure the data store).
+
+To get the latest docker image version
+```
+sudo docker pull chaincore/developer:latest
+```
+
+When there is a breaking change in Chaincore, then you will need to delete all of your node's data to re-install. Remove all files and folders from the configured **`$CHAINDATA`** folder on your host server.
+
 ### Traditional instance
 To install and run a host instance of Chain please see the official Chain repo documentation @ https://github.com/chain/chain
 
