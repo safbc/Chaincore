@@ -1,41 +1,6 @@
 'use strict';
 var db = require("./../models");
 
-exports.deleteTrade = function (args, res, next) {
-  /**
-   * Delete the specified trade from the system unless it has been completed
-   *
-   * tradeId Integer Id of trade to work with
-   * returns inline_response_200
-   **/
-
-  db.Trade.destroy({
-    where: { tradeId: args.tradeId.value, status: 'Cancelled' }
-  })
-    .then(trades => {
-      if (trades != undefined) {
-        console.log(trades)
-        res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify(trades || {}, null, 2));
-      } else {
-        res.end();
-      }
-    })
-
-}
-
-exports.deleteUser = function (args, res, next) {
-  /**
-   * Delete the specified user from the system unless they have completed/pending transactions
-   *
-   * userName String Id of user to work with
-   * returns inline_response_200
-   **/
-
-  // Connect to local sqlite db
-
-}
-
 exports.getTrade = function (args, res, next) {
   /**
    * Gets specified trade details
@@ -45,8 +10,10 @@ exports.getTrade = function (args, res, next) {
    **/
 
   db.Trade.findAll({
-    where: { tradeId: args.tradeId.value }
-  })
+      where: {
+        tradeId: args.tradeId.value
+      }
+    })
     .then(trades => {
       if (trades != undefined) {
         console.log(trades)
@@ -66,8 +33,49 @@ exports.getTrades = function (args, res, next) {
    * returns inline_response_200
    **/
   db.Trade.findAll({
-    order: 'createdAt DESC'
-  })
+      order: 'createdAt DESC'
+    })
+    .then(trades => {
+
+      res.setHeader('Content-Type', 'application/json');
+      if (trades != undefined) {
+        console.log(trades)
+        res.end(JSON.stringify(trades));
+      } else {
+        var trades = [];
+        res.end(JSON.stringify(trades));
+      }
+    })
+
+}
+
+exports.postTrade = function (args, res, next) {
+  /**
+   * Adds a new Trade to the system
+   *
+   * offerItem Trade Trade item to add to the system (optional)
+   * returns inline_response_200
+   **/
+
+  var offerItem = args.offerItem.value;
+
+  db.Trade.create({
+      tradeAction: offerItem.tradeAction,
+      // TODO: Figure out how to store JSON string properly
+      // offerData: JSON.stringify(offerItem.offerData),
+      offerData: offerItem.offerData,
+      // bidData: offerItem.bidData,
+      // TODO: CHECK FORMATTING OF TIMEZONE +2 TIMESTAMP
+      expiryTimestamp: offerItem.expiryTimestamp,
+      postedBy: offerItem.postedBy
+    })
+    .then(trade => {
+      return db.Trade.findAll({
+        where: {
+          tradeId: trade.dataValues.tradeId
+        }
+      })
+    })
     .then(trades => {
       if (trades != undefined) {
         console.log(trades)
@@ -77,9 +85,46 @@ exports.getTrades = function (args, res, next) {
         res.end();
       }
     })
+}
+
+exports.updateTrade = function (args, res, next) {
+  /**
+   * Updates an Offer Item
+   *
+   * offerItem TradeItem Offer to be updated (optional)
+   * returns inline_response_200
+   **/
+  // Connect to local sqlite db
 
 }
 
+exports.deleteTrade = function (args, res, next) {
+  /**
+   * Delete the specified trade from the system unless it has been completed
+   *
+   * tradeId Integer Id of trade to work with
+   * returns inline_response_200
+   **/
+
+  db.Trade.destroy({
+      where: {
+        tradeId: args.tradeId.value,
+        status: 'Cancelled'
+      }
+    })
+    .then(trades => {
+      if (trades != undefined) {
+        console.log(trades)
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(trades));
+      } else {
+        res.end();
+      }
+    })
+
+}
+
+// NOT USED
 exports.getUser = function (args, res, next) {
   /**
    * Gets the specified user details
@@ -91,8 +136,10 @@ exports.getUser = function (args, res, next) {
   var _username = args.userName.value;
 
   db.User.findAll({
-    where: { username: _username }
-  })
+      where: {
+        username: _username
+      }
+    })
     .then(users => {
       if (users != undefined) {
         console.log(users)
@@ -104,7 +151,7 @@ exports.getUser = function (args, res, next) {
     })
 
 }
-
+// NOT USED
 exports.getUsers = function (args, res, next) {
   /**
    * List users registered to use the app.
@@ -124,40 +171,7 @@ exports.getUsers = function (args, res, next) {
       }
     })
 }
-
-exports.postTrade = function (args, res, next) {
-  /**
-   * Adds a new Trade to the system
-   *
-   * offerItem Trade Trade item to add to the system (optional)
-   * returns inline_response_200
-   **/
-
-  var offerItem = args.offerItem.value;
-
-  db.Trade.create({
-    // TODO: Figure out how to store JSON string properly
-    saleData: JSON.stringify(offerItem.saleData || {}, null, 2),
-    // TODO: CHECK FORMATTING OF TIMEZONE +2 TIMESTAMP
-    expiryTimestamp: offerItem.expiryTimestamp,
-    postedBy: offerItem.postedBy
-  })
-    .then(trade => {
-      return db.Trade.findAll({
-        where: { tradeId: trade.dataValues.tradeId }
-      })
-    })
-    .then(trades => {
-      if (trades != undefined) {
-        console.log(trades)
-        res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify(trades || {}, null, 2));
-      } else {
-        res.end();
-      }
-    })
-}
-
+// NOT USED
 exports.postUser = function (args, res, next) {
   /**
    * Register a new User to the system
@@ -168,15 +182,15 @@ exports.postUser = function (args, res, next) {
   // Connect to local sqlite db
 
 }
-
-exports.updateTrade = function (args, res, next) {
+// Not used currently
+exports.deleteUser = function (args, res, next) {
   /**
-   * Updates an Offer Item
+   * Delete the specified user from the system unless they have completed/pending transactions
    *
-   * offerItem TradeItem Offer to be updated (optional)
+   * userName String Id of user to work with
    * returns inline_response_200
    **/
+
   // Connect to local sqlite db
 
 }
-

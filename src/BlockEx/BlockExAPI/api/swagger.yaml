@@ -15,16 +15,20 @@ host: "localhost:3000"
 basePath: "/BlockEx/0.0.1"
 tags:
 - name: "AppIO"
-  description: "The AppIO controller defines paths that deal with the logic of the\
-    \ app\n\n* **trades**: management of view, placing and accepting trades in the\
-    \ system.\n* **users**: manage app user info.\n"
+  description: "The AppIO controller defines paths that deal with the logic of the app\n\n\
+    \ * **trades** : management of viewing, placing and accepting trades in the system.\n\
+    \ * **users**  : manage app user info.\n\
+    \ * **system** : code first db initialise etc."
 - name: "ChainIO"
-  description: "The ChainIO controller handles operations to the Chain Core nodes\
-    \ using the Chain-SDK\n\nThe users local app stores and provides the connection\
-    \ information as required.\n\n* **accounts**    : list accounts\n* **account**\
-    \     : create account\n* **assets**      : list assets\n* **keys**        : list\
-    \ keys\n* **key**         : create key\n* **transactions**: list transactions\n\
-    * **sign**        : submit transactions\n"
+  description: "The ChainIO controller handles operations to the Chain Core nodes using the Chain-SDK\n\n \
+    \ The users local app stores and provides the connection information as required.\n\n\
+    \ * **accounts**    : list accounts\n\
+    \ * **account**     : create account\n\
+    \ * **assets**      : list assets\n\
+    \ * **keys**        : list keys\n\
+    \ * **key**         : create key\n\
+    \ * **transactions**: list transactions\n\
+    \ * **sign**        : submit transactions\n"
 schemes:
 - "http"
 consumes:
@@ -32,6 +36,32 @@ consumes:
 produces:
 - "application/json"
 paths:
+  /app/system:
+    get:
+      tags:
+      - "AppIO"
+      description: "Get status and table record count of database"
+      operationId: "getSystem"
+      parameters: []
+      responses:
+        200:
+        description: "OK"
+        schema:
+          $ref: "#/definitions/inline_response_200"
+      x-swagger-router-controller: "AppIO"
+    post:
+      tags:
+      - "AppIO"
+      description: "Work against DB files or tables. Create or Delete based on parameter values."
+      operationId: "initSystem"
+      parameters:
+      - in: "body"
+        name: "systemParams"
+        description: "Paramaters indicating which actions to perform on what targets."
+        required: false
+        schema:
+          $ref: "#/definitions/SystemInit"
+
   /app/trades:
     get:
       tags:
@@ -409,6 +439,23 @@ paths:
           description: "bad input parameter"
       x-swagger-router-controller: "ChainIO"
 definitions:
+  SystemInit:
+    type: "object"
+    properties:
+      traget:
+        type: "string"
+        description: "Which item to preform action against. FILE or TABLE "
+        example: "TABLE"
+      action:
+        type: "string"
+        description: "Action to perform.\n\n\ 
+        \If File: DELETE, CREATE, RECREATE, BACKUP or EXPORT.\n\
+        \  Table: DROP or CREATE or RECREATE"
+        example: "RECREATE"
+      name:
+        type: "string"
+        description: "Name of the target to perform action against"
+        example: "Trades"
   Trade:
     type: "object"
     properties:
@@ -418,7 +465,10 @@ definitions:
       parentId:
         type: "number"
         example: 1
-      saleData:
+      tradeAction:
+        type: "string"
+        example: "Buy"
+      offerData:
         $ref: "#/definitions/TradeItem"
       bidData:
         $ref: "#/definitions/TradeItem"
