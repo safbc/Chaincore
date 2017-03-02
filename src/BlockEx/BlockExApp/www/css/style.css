@@ -9,3 +9,7 @@
   color: limegreen;
   font-weight: bold;
 }
+
+.prettyJson {
+  white-space: pre !important;
+}
