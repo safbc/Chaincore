@@ -18,21 +18,20 @@
           <h2>Definition</h2>
         </div>
         <div class="show-list-numbers-and-dots">
-          <p style="margin-top:0px;color:#000000;">{{asset.definition | json }}
-          </p>
+          <p class="prettyJson" style="margin-top:0px;color:#000000;">{{asset.definition | json }}</p>
         </div>
         <div class="show-list-numbers-and-dots">
           <h2>Tags</h2>
         </div>
         <div class="show-list-numbers-and-dots">
-          <p style="margin-top:0px;color:#000000;">{{ asset.tags | json }}
+          <p class="prettyJson" style="margin-top:0px;color:#000000;">{{ asset.tags | json }}
           </p>
         </div>
         <div class="show-list-numbers-and-dots">
           <h2>Keys</h2>
         </div>
         <div class="show-list-numbers-and-dots" ng-repeat="key in asset.keys">
-          <p style="margin-top:0px;color:#000000;">{{key | json}}
+          <p class="prettyJson" style="margin-top:0px;color:#000000;">{{key | json}}
           </p>
         </div>
       </div>
