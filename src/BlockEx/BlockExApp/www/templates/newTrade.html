@@ -27,7 +27,7 @@
         </label>
         <ion-item class="item-divider"> Offer valid for?</ion-item>
         <ion-item class="range range-royal"><span class="input-label">{{form.validDays}} Days</span> 1
-          <input type="range" min="1" max="4" step="1" ng-model="form.validDays">4
+          <input type="range" min="1" max="4" step="1" ng-model="form.validDays" ng-change="calcExpirydate(form.validaDays)">4
         </ion-item>
         <a ng-click="makeOffer(form)" class="button button-positive  button-block">Post Trade</a>
       </div>

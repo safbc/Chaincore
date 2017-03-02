@@ -526,12 +526,13 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.isSale = false;
 
 
+      // TODO: Calculate expiry by adding validDays above to current date.
       $scope.request = {
-        "expiryTimestamp": "2017-02-18T14:41:13.002Z",
-        "postedBy": $ionicUser.details.username
+        expiryTimestamp: "2017-02-18T14:41:13.002Z",
+        postedBy: $ionicUser.details.username
       };
 
-      var saleData = {
+      var offerData = {
         "asset": {
           "id": "",
           "alias": ""
@@ -543,7 +544,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
         "amount": 0
       };
 
-      var buyData = {
+      var bidData = {
         "asset": {
           "id": "",
           "alias": ""
@@ -562,6 +563,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
         // first time get all assets.
         $scope.allAssets = $scope.getAssets();
         $scope.assetList = $scope.allAssets;
+        $scope.calcExpirydate(4);
 
 
       };
@@ -632,6 +634,11 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.makeOffer = function (formData) {
         console.log(JSON.stringify(formData));
       };
+
+      $scope.calcExpirydate = function (validDays) {
+
+        $scope.expiryTimestamp = new Date().setDate(today.getDate() + validDays);
+      }
 
       $scope.start();
     })
