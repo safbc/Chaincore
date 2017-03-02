@@ -39,3 +39,11 @@ module.exports.postUser = function postUser(req, res, next) {
 module.exports.updateTrade = function updateTrade(req, res, next) {
   AppIO.updateTrade(req.swagger.params, res, next);
 };
+
+
+module.exports.initSystem = function initSystem(req, res, next) {
+  AppIO.initSystem(req.swagger.params, res, next);
+};
+module.exports.getSystem = function getSystem(req, res, next) {
+  AppIO.getSystem(req.swagger.params, res, next);
+};

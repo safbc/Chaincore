@@ -37,18 +37,6 @@ produces:
 - "application/json"
 paths:
   /app/system:
-    get:
-      tags:
-      - "AppIO"
-      description: "Get status and table record count of database"
-      operationId: "getSystem"
-      parameters: []
-      responses:
-        200:
-        description: "OK"
-        schema:
-          $ref: "#/definitions/inline_response_200"
-      x-swagger-router-controller: "AppIO"
     post:
       tags:
       - "AppIO"
@@ -61,6 +49,16 @@ paths:
         required: false
         schema:
           $ref: "#/definitions/SystemInit"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        400:
+          description: "bad input parameter"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "AppIO"
 
   /app/trades:
     get:
@@ -442,14 +440,14 @@ definitions:
   SystemInit:
     type: "object"
     properties:
-      traget:
+      target:
         type: "string"
         description: "Which item to preform action against. FILE or TABLE "
         example: "TABLE"
       action:
         type: "string"
         description: "Action to perform.\n\n\ 
-        \If File: DELETE, CREATE, RECREATE, BACKUP or EXPORT.\n\
+        \ If File: DELETE, CREATE, RECREATE, BACKUP or EXPORT.\n\
         \  Table: DROP or CREATE or RECREATE"
         example: "RECREATE"
       name:

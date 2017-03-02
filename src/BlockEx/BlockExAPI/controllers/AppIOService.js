@@ -39,6 +39,12 @@ exports.getTrades = function (args, res, next) {
 
       res.setHeader('Content-Type', 'application/json');
       if (trades != undefined) {
+        trades.forEach(function (trade) {
+          var offerData = JSON.parse(trade.offerData);
+          var bidData = JSON.parse(trade.bidData);
+          trade.offerData = offerData;
+          trade.bidData = bidData;
+        }, this);
         console.log(trades)
         res.end(JSON.stringify(trades));
       } else {
@@ -63,13 +69,14 @@ exports.postTrade = function (args, res, next) {
       tradeAction: offerItem.tradeAction,
       // TODO: Figure out how to store JSON string properly
       // offerData: JSON.stringify(offerItem.offerData),
-      offerData: offerItem.offerData,
+      offerData: JSON.stringify(offerItem.offerData),
       // bidData: offerItem.bidData,
       // TODO: CHECK FORMATTING OF TIMEZONE +2 TIMESTAMP
       expiryTimestamp: offerItem.expiryTimestamp,
       postedBy: offerItem.postedBy
     })
     .then(trade => {
+      // TODO: Should I return this trade object or do the search as below and return array?
       return db.Trade.findAll({
         where: {
           tradeId: trade.dataValues.tradeId
@@ -78,9 +85,16 @@ exports.postTrade = function (args, res, next) {
     })
     .then(trades => {
       if (trades != undefined) {
-        console.log(trades)
+        trades.forEach(function (trade) {
+          var offerData = JSON.parse(trade.offerData);
+          var bidData = JSON.parse(trade.bidData);
+          trade.offerData = offerData;
+          trade.bidData = bidData;
+        }, this);
+        console.log(JSON.stringify(trades))
+
         res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify(trades || {}, null, 2));
+        res.end(JSON.stringify(trades));
       } else {
         res.end();
       }
@@ -121,6 +135,78 @@ exports.deleteTrade = function (args, res, next) {
         res.end();
       }
     })
+
+}
+
+exports.getSystem = function (args, res, next) {
+  /**
+   * Get status and table record count of database
+   *
+   * returns inline_response_200_1
+   **/
+
+
+}
+
+exports.initSystem = function (args, res, next) {
+  /**
+   * Work against DB files or tables. Create or Delete based on parameter values.
+   *
+   * systemParams Obhect Paramaters indicating which actions to perform on what targets.
+   * returns inline_response_200_1
+   **/
+
+
+  var systemParams = args.systemParams.value;
+
+  if (systemParams.target == 'FILE') {
+    // TODO: Should I cater for file based operations? Not using Sequelize?
+    switch (systemParams.action) {
+      case 'DELETE':
+
+        break;
+
+      default:
+        break;
+    }
+  } else if (systemParams.target == 'TABLE') {
+    switch (systemParams.action) {
+      case 'RECREATE':
+        if (systemParams.name == 'Trade') {
+          db.Trade.sync({
+              force: true
+            })
+            .then(function (data) {
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify(data));
+            })
+            .catch(function (err) {
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify(err));
+            });
+        } else if (systemParams.name == 'User') {
+          db.User.sync({
+              force: true
+            })
+            .then(function (data) {
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify(data));
+            })
+            .catch(function (err) {
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify(err));
+            });
+        }
+
+
+        break;
+
+      default:
+        break;
+    }
+  }
+
+
 
 }
 
