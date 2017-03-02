@@ -22,6 +22,21 @@ exports.createAccount = function (args, res, next) {
   var accountAlias = request.account.alias;
 
   // TODO: Cater for multiple keys
+  //   Promise.all([
+  //   client.mockHsm.keys.create(),    Need to dynamically generate promise Array based on keyCount and pass it in here
+  //   client.mockHsm.keys.create(),
+  //   client.mockHsm.keys.create(),
+  //   ])
+  //   .then(keys => {
+  //     assetKey = keys[0].xpub        Then use a forEach on the keys array to set the aliases and add to the signer.
+  //     aliceKey = keys[1].xpub
+  //     bobKey   = keys[2].xpub
+
+  //     signer.addKey(assetKey, client.mockHsm.signerConnection)  
+  //     signer.addKey(aliceKey, client.mockHsm.signerConnection)
+  //     signer.addKey(bobKey, client.mockHsm.signerConnection)
+  // })
+
   var keyAlias = '';
   if (request.account.keys.length == 0) {
     keyAlias = accountAlias + "Key";
@@ -29,7 +44,12 @@ exports.createAccount = function (args, res, next) {
     keyAlias = request.keys[0].alias;
   }
 
-  var quorum = request.account.quorum;
+  /**
+   * Overide the quorum value for now.
+   */
+  // var quorum = request.account.quorum;
+  var quorum = 1;
+
   var tags = request.account.tags;
   var accountId = void 0;
   let signKey;
@@ -55,9 +75,10 @@ exports.createAccount = function (args, res, next) {
       }).then(account => {
         accountId = account.id;
         console.log("Account created: " + accountId + "(" + accountAlias + ")");
+
+        res.setHeader('Content-Type', 'application/json');
         if (accountId != 0) {
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(account || {}, null, 2));
+          res.end(JSON.stringify(account));
         } else {
           res.end();
         }
@@ -99,9 +120,9 @@ exports.getAccounts = function (args, res, next) {
         next()
       })
       .then(() => {
+        res.setHeader('Content-Type', 'application/json');
         if (accounts.length > 0) {
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(accounts || {}, null, 2));
+          res.end(JSON.stringify(accounts));
         } else {
           res.end();
         }
@@ -339,8 +360,8 @@ exports.getBalances = function (args, res, next) {
             res.end(out);
 
           }).catch(function (err) {
-            console.log("error:" + err)
             res.setHeader('Content-Type', 'application/json');
+            console.log("error:" + err)
             var out = JSON.stringify(err)
             res.end(out);
           });
@@ -459,9 +480,9 @@ exports.getKeys = function (args, res, next) {
         next()
       })
       .then(() => {
+        res.setHeader('Content-Type', 'application/json');
         if (keys.length > 0) {
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(keys || {}, null, 2));
+          res.end(JSON.stringify(keys));
         } else {
           res.end();
         }
@@ -478,9 +499,9 @@ exports.getKeys = function (args, res, next) {
         next()
       })
       .then(() => {
+        res.setHeader('Content-Type', 'application/json');
         if (keys.length > 0) {
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(keys || {}, null, 2));
+          res.end(JSON.stringify(keys));
         } else {
           res.end();
         }
@@ -549,9 +570,9 @@ exports.getTransactions = function (args, res, next) {
       next()
     })
     .then(() => {
+      res.setHeader('Content-Type', 'application/json');
       if (transactions.length > 0) {
-        res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify(transactions || {}, null, 2));
+        res.end(JSON.stringify(transactions));
       } else {
         res.end();
       }
@@ -650,10 +671,11 @@ exports.signTransaction = function (args, res, next) {
         }
       })
       .then(result => {
+
+        res.setHeader('Content-Type', 'application/json');
         if (result != undefined) {
           console.log(result)
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(result || {}, null, 2));
+          res.end(JSON.stringify(result));
         } else {
           res.end();
         }

@@ -33,7 +33,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
   .controller('myProfileCtrl',
     function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $timeout, $ionicHistory,
-      svcUsers, svcNodeSettings) {
+      svcNodeSettings) {
 
       if (!$ionicAuth.isAuthenticated()) {
         $ionicHistory.nextViewOptions({
@@ -58,18 +58,18 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
         $scope.userProfile = [];
 
         // Set up the API services
-        $scope.SVCappUsers = svcUsers;
+        // $scope.SVCappUsers = svcUsers;
 
-        $scope.SVCappUsers.query({
-            userName: $scope.userInfo.username
-          }).$promise
-          .then(function (data) {
-            $scope.userProfile = data;
-            if (data.length > 0) {
-              $scope.userInfo.createdAt = data[0].createdAt;
-            }
-          })
-          .finally(function () {});
+        // $scope.SVCappUsers.query({
+        //     userName: $scope.userInfo.username
+        //   }).$promise
+        //   .then(function (data) {
+        //     $scope.userProfile = data;
+        //     if (data.length > 0) {
+        //       $scope.userInfo.createdAt = data[0].createdAt;
+        //     }
+        //   })
+        //   .finally(function () {});
       }
 
       $scope.start();
@@ -80,12 +80,14 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
   .controller('myAccountsCtrl',
     function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $timeout, $ionicLoading,
-      svcUsers, svcAccounts, svcAssets, svcBalances, svcNodeSettings, accAliasFilter, assetIcons) {
+      svcAccounts, svcAssets, svcBalances, svcNodeSettings, accAliasFilter, assetIcons) {
 
 
       if (!$ionicAuth.isAuthenticated()) {
         $state.go('menu.login');
       }
+
+      $scope.userInfo = $ionicUser.details;
 
       $scope.svcNodeSettings = svcNodeSettings;
 
@@ -102,7 +104,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
         $scope.connection.clientToken = $scope.settings.clientToken;
 
         // Set up the API services
-        $scope.svcUsers = svcUsers;
+        // $scope.svcUsers = svcUsers;
         $scope.svcAccounts = svcAccounts;
         $scope.svcAssets = svcAssets;
         $scope.svcBalances = svcBalances;
@@ -234,7 +236,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
   .controller('newAccountCtrl',
     function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory,
-      svcNodeSettings) {
+      svcNodeSettings, svcAccount) {
       if (!$ionicAuth.isAuthenticated()) {
         $ionicHistory.nextViewOptions({
           disableAnimate: true,
@@ -242,28 +244,84 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
         });
         $state.go('menu.login');
       }
+
       // Set up the API services
       $scope.svcNodeSettings = svcNodeSettings;
+      $scope.svcAccount = svcAccount;
+
+      // Fetch the default system settings on load
+      $scope.settings = svcNodeSettings.getSettings();
+      $scope.userInfo = $ionicUser.details;
+
       $scope.newaccForm = {
         alias: '',
-        image: ''
+        tags: {
+          "ownerAlias": $scope.userInfo.username,
+          "ownerName": $scope.userInfo.name,
+          "ownerEmail": $scope.userInfo.email
+        },
+        keyCount: 1,
+        keys: [],
+        quorum: 1
       };
-      $scope.symbolsList = [
-        'img/tokens/Bcoin.png',
-        'img/tokens/candle.png',
-        'img/tokens/Circuit.png',
-        'img/tokens/feather.png',
-        'img/tokens/mega.png',
-        'img/tokens/Ncoin.png',
-        'img/tokens/T.png'
-      ];
+
       $scope.start = function () {
-        // Fetch the default system settings on load
-        $scope.settings = svcNodeSettings.getSettings();
+
+        // Create Chain Node connection object
+        $scope.connection = {};
+        $scope.connection.nodeURL = $scope.settings.nodeURL;
+        $scope.connection.clientToken = $scope.settings.clientToken;
+
+        // Base request object example
+        // $scope.Request = {
+        //   "connection": {
+        //     "nodeURL": "http://172.16.101.93:1999",
+        //     "clientToken": "UbuntuDev:e72629518809db4f5176d084f80f2261a3f4c70e044c6339251977c79f73c4bb"
+        //   },
+        //   "account": {},
+        // };
+
+        $scope.Request = {};
+        $scope.Request.connection = $scope.connection;
+        $scope.Request.account = {};
+
+
       }
 
-      $scope.setSymbol = function (image) {
-        $scope.newaccForm.image = image
+      /**
+       * Create a new account in the blockchain node.
+       */
+      $scope.createAccount = function (form) {
+
+        for (var k = 0; k < form.keyCount; k++) {
+          var _key = {
+            alias: form.alias + 'Key' + k
+          };
+          form.keys.push(_key);
+        }
+
+        $scope.Request.account.alias = form.alias;
+        $scope.Request.account.tags = form.tags;
+        $scope.Request.account.quorum = form.quorum;
+        $scope.Request.account.keys = _keys;
+
+        /**
+         * Send the request to the server
+         */
+        $scope.svcAccount.save($scope.Request).$promise
+          .then(function (data) {
+
+          })
+          .catch(function (err) {
+            console.log(JSON.stringify(err));
+          })
+
+      };
+
+      $scope.setQuorum = function (keyCount) {
+        if (keyCount < $scope.newaccForm.quorum) {
+          $scope.newaccForm.quorum = keyCount;
+        }
       };
 
       $scope.start();
@@ -519,7 +577,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       // Page form data objects
       $scope.form = {
         tradeAction: 'Buy',
-        validDays: 4,
+        validDays: 1,
         amount: 0,
         asset: ''
       };
@@ -563,7 +621,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
         // first time get all assets.
         $scope.allAssets = $scope.getAssets();
         $scope.assetList = $scope.allAssets;
-        $scope.calcExpirydate(4);
+        $scope.calcExpirydate($scope.form.validDays);
 
 
       };
@@ -636,8 +694,12 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       };
 
       $scope.calcExpirydate = function (validDays) {
+        validDays = validDays * 1;
+        var date = new Date();
+        var newdate = new Date(date);
 
-        $scope.expiryTimestamp = new Date().setDate(today.getDate() + validDays);
+        newdate.setDate(newdate.getDate() + validDays);
+        $scope.request.expiryTimestamp = newdate;
       }
 
       $scope.start();
@@ -942,6 +1004,10 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       }
 
       $scope.start = function () {
+
+        // Save registered User information to app database
+        // $scope.SVCappUsers = svcUsers;
+
         $scope.signupForm = {
           details: {
             username: '',
@@ -952,6 +1018,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
           },
           passwordMatch: ''
         };
+
         $scope.avatarsList = [
           'http://megaicons.net/static/img/icons_sizes/189/462/256/tv-smith-icon.png',
           'http://icons.iconarchive.com/icons/mattahan/ultrabuuf/256/Comics-Older-Superman-icon.png',
@@ -984,36 +1051,32 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
           $ionicAuth.signup(form.details).then(function () {
             // `$ionicUser` is now registered
-
-            var appUser = {
-              "username": form.details.username,
-              "fullname": form.details.name,
-              "email": form.details.email,
-              "avatar": form.details.image
+            // redirect back to login page
+            if (!$ionicAuth.isAuthenticated()) {
+              $ionicHistory.nextViewOptions({
+                disableAnimate: true,
+                disableBack: true
+              });
+              $state.go('menu.login');
             }
 
-            // Save registered User information to app database
-            $scope.SVCappUsers = svcUsers;
+            //   var appUser = {
+            //     "username": form.details.username,
+            //     "fullname": form.details.name,
+            //     "email": form.details.email,
+            //     "avatar": form.details.image
+            //   }
 
-            $scope.SVCappUsers.save(appUser).$promise
-              .then(function (data) {
-                $scope.userProfiles = data;
-              })
-              .then(function () {
-                return $ionicAuth.login('basic', form.details);
-              })
-              .finally(function () {
-                // $ionicLoading.hide({
-                //   template: 'Registered'
-                // });
-                $ionicHistory.nextViewOptions({
-                  disableAnimate: true,
-                  disableBack: true
-                });
+            //   $scope.SVCappUsers.save(appUser).$promise
+            //     .then(function (data) {
+            //         $scope.userProfiles = data;
 
-                $state.go('menu.myAccounts');
+            //       }
+            //     })
+            // .then(function () {
 
-              });
+            //   // return $ionicAuth.login('basic', form.details);
+            // });
 
           }, function (err) {
             for (var e of err.details) {
