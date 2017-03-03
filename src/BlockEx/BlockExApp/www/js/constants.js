@@ -3,7 +3,8 @@ angular.module('app.constants', ['ionic'])
 
   .constant('svcURI', {
     // API URL
-    BaseURL: "http://41.76.226.170:3000/BlockEx/0.0.1",
+    BaseURL: "http://localhost:3000/BlockEx/0.0.1",
+    // BaseURL: "http://41.76.226.170:3000/BlockEx/0.0.1",
 
     restAppTrades: "/app/trades",
     restAppUsers: "/app/users",

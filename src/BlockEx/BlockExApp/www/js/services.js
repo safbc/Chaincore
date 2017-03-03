@@ -12,7 +12,7 @@ angular.module('app.services', ['ngResource'])
 
   }])
 
-  .factory('svcUsers', ['$resource', '$timeout', 'svcURI',  function ($resource, $timeout, svcURI) {
+  .factory('svcUsers', ['$resource', '$timeout', 'svcURI', function ($resource, $timeout, svcURI) {
 
     var restURI = svcURI.BaseURL + svcURI.restAppUsers + ":username";
     return $resource(restURI, { username: '@username' }, {});
@@ -33,16 +33,16 @@ angular.module('app.services', ['ngResource'])
 
   }])
 
-  .factory('svcAccount', ['$resource', '$timeout', 'svcURI',  function ($resource, $timeout, svcURI) {
+  .factory('svcAccount', ['$resource', '$timeout', 'svcURI', function ($resource, $timeout, svcURI) {
 
-    var restURI = svcURI.BaseURL + svcURI.restChainAccount;
+    var restURI = svcURI.BaseURL + svcURI.restChainAccounts;
     return $resource(restURI, {}, {
-      'save': { method: 'PUT', isArray: true }
+      'save': { method: 'PUT', isArray: false }
     });
 
   }])
 
-  .factory('svcAssets', ['$resource', '$timeout', 'svcURI',   function ($resource, $timeout, svcURI) {
+  .factory('svcAssets', ['$resource', '$timeout', 'svcURI', function ($resource, $timeout, svcURI) {
 
     var restURI = svcURI.BaseURL + svcURI.restChainAssets;
     return $resource(restURI, {}, {
@@ -50,7 +50,7 @@ angular.module('app.services', ['ngResource'])
     });
   }])
 
-  .factory('svcKeys', ['$resource', '$timeout', 'svcURI',   function ($resource, $timeout, svcURI) {
+  .factory('svcKeys', ['$resource', '$timeout', 'svcURI', function ($resource, $timeout, svcURI) {
 
     var restURI = svcURI.BaseURL + svcURI.restChainKeys;
     return $resource(restURI, {}, {
@@ -60,7 +60,7 @@ angular.module('app.services', ['ngResource'])
   }])
 
 
-  .factory('svcBalances', ['$resource', '$timeout', 'svcURI',   function ($resource, $timeout, svcURI) {
+  .factory('svcBalances', ['$resource', '$timeout', 'svcURI', function ($resource, $timeout, svcURI) {
 
     var restURI = svcURI.BaseURL + svcURI.restChainBalances;
     return $resource(restURI, {}, {
@@ -69,7 +69,7 @@ angular.module('app.services', ['ngResource'])
 
   }])
 
-  .factory('svcTransactions', ['$resource', '$timeout', 'svcURI',   function ($resource, $timeout, svcURI) {
+  .factory('svcTransactions', ['$resource', '$timeout', 'svcURI', function ($resource, $timeout, svcURI) {
 
     var restURI = svcURI.BaseURL + svcURI.restChainTransactions;
     return $resource(restURI, {}, {
@@ -78,7 +78,7 @@ angular.module('app.services', ['ngResource'])
 
   }])
 
-  .factory('svcSign', ['$resource', '$timeout', 'svcURI',   function ($resource, $timeout, svcURI) {
+  .factory('svcSign', ['$resource', '$timeout', 'svcURI', function ($resource, $timeout, svcURI) {
 
     var restURI = svcURI.BaseURL + svcURI.restChainSign;
     return $resource(restURI, {}, {

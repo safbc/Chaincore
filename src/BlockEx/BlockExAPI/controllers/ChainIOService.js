@@ -19,59 +19,43 @@ exports.createAccount = function (args, res, next) {
   // Create new chain client connection
   const client = new chain.Client(nodeURL, clientToken)
 
+  // var keyAlias = '';
+  // if (request.account.keys.length == 0) {
+  //   keyAlias = accountAlias + "Key";
+  // } else {
+  //   keyAlias = request.keys[0].alias;
+  // }
+
   var accountAlias = request.account.alias;
-
-  // TODO: Cater for multiple keys
-  //   Promise.all([
-  //   client.mockHsm.keys.create(),    Need to dynamically generate promise Array based on keyCount and pass it in here
-  //   client.mockHsm.keys.create(),
-  //   client.mockHsm.keys.create(),
-  //   ])
-  //   .then(keys => {
-  //     assetKey = keys[0].xpub        Then use a forEach on the keys array to set the aliases and add to the signer.
-  //     aliceKey = keys[1].xpub
-  //     bobKey   = keys[2].xpub
-
-  //     signer.addKey(assetKey, client.mockHsm.signerConnection)  
-  //     signer.addKey(aliceKey, client.mockHsm.signerConnection)
-  //     signer.addKey(bobKey, client.mockHsm.signerConnection)
-  // })
-
-  var keyAlias = '';
-  if (request.account.keys.length == 0) {
-    keyAlias = accountAlias + "Key";
-  } else {
-    keyAlias = request.keys[0].alias;
-  }
-
-  /**
-   * Overide the quorum value for now.
-   */
-  // var quorum = request.account.quorum;
-  var quorum = 1;
-
+  var quorum = request.account.quorum;
   var tags = request.account.tags;
   var accountId = void 0;
-  let signKey;
   var accounts = [];
   var xpubs = [];
 
-  Promise.all([
-      client.mockHsm.keys.create({
-        alias: keyAlias
-      }),
-    ])
+
+  // Set up promises for the multiple keys
+  var keyPromises = [];
+  request.account.keys.forEach(function (_key) {
+    keyPromises.push(client.mockHsm.keys.create({ alias: _key.alias }))
+  }, this);
+
+  Promise.all(keyPromises)
     .then(keys => {
-      signKey = keys[0].xpub
-      xpubs.push(signKey);
-      console.log("Key created: " + signKey)
+
+      keys.forEach(function (key) {
+        xpubs.push(key.xpub)
+        // Don't strictly need to add the keys to the signer cause I don't use it here
+        // signer.addKey(key.xpub, client.mockHsm.signerConnection)
+      }, this);
+
     })
     .then(() =>
       client.accounts.create({
-        alias: accountAlias,
+        alias: request.account.alias,
         rootXpubs: xpubs,
-        quorum: quorum,
-        tags: tags
+        quorum: request.account.quorum,
+        tags: request.account.tags
       }).then(account => {
         accountId = account.id;
         console.log("Account created: " + accountId + "(" + accountAlias + ")");
@@ -83,8 +67,37 @@ exports.createAccount = function (args, res, next) {
           res.end();
         }
       })
-
     ).catch(console.log.bind(console));
+
+  // Promise.all([
+  //     client.mockHsm.keys.create({
+  //       alias: keyAlias
+  //     }),
+  //   ])
+  //   .then(keys => {
+  //     signKey = keys[0].xpub
+  //     xpubs.push(signKey);
+  //     console.log("Key created: " + signKey)
+  //   })
+  //   .then(() =>
+  //     client.accounts.create({
+  //       alias: accountAlias,
+  //       rootXpubs: xpubs,
+  //       quorum: quorum,
+  //       tags: tags
+  //     }).then(account => {
+  //       accountId = account.id;
+  //       console.log("Account created: " + accountId + "(" + accountAlias + ")");
+
+  //       res.setHeader('Content-Type', 'application/json');
+  //       if (accountId != 0) {
+  //         res.end(JSON.stringify(account));
+  //       } else {
+  //         res.end();
+  //       }
+  //     })
+
+  //   ).catch(console.log.bind(console));
 }
 
 exports.getAccounts = function (args, res, next) {
@@ -115,10 +128,10 @@ exports.getAccounts = function (args, res, next) {
 
   if (request.account.alias == undefined) {
     client.accounts.queryAll({}, (account, next, done) => {
-        console.log('Account: ' + account.id + ' (' + account.alias + ')')
-        accounts.push(account)
-        next()
-      })
+      console.log('Account: ' + account.id + ' (' + account.alias + ')')
+      accounts.push(account)
+      next()
+    })
       .then(() => {
         res.setHeader('Content-Type', 'application/json');
         if (accounts.length > 0) {
@@ -129,13 +142,13 @@ exports.getAccounts = function (args, res, next) {
       });
   } else {
     client.accounts.queryAll({
-        filter: 'alias=$1',
-        filterParams: [request.account.alias]
-      }, (account, next, done) => {
-        console.log('Account: ' + account.id + ' (' + account.alias + ')')
-        accounts.push(account)
-        next()
-      })
+      filter: 'alias=$1',
+      filterParams: [request.account.alias]
+    }, (account, next, done) => {
+      console.log('Account: ' + account.id + ' (' + account.alias + ')')
+      accounts.push(account)
+      next()
+    })
       .then(() => {
         if (accounts.length > 0) {
           res.setHeader('Content-Type', 'application/json');
@@ -218,10 +231,10 @@ exports.getAssets = function (args, res, next) {
   }
 
   client.assets.queryAll(filter, (asset, next, done) => {
-      console.log('Asset: ' + asset.id + ' (' + asset.alias + ')')
-      assets.push(asset)
-      next()
-    })
+    console.log('Asset: ' + asset.id + ' (' + asset.alias + ')')
+    assets.push(asset)
+    next()
+  })
     .then(() => {
 
       res.setHeader('Content-Type', 'application/json');
@@ -305,11 +318,11 @@ exports.getBalances = function (args, res, next) {
 
         // Perform the search
         client.balances.queryAll(filter, (balance, next, done) => {
-            console.log(JSON.stringify(balance))
-            //balance.accountAlias = request.query.accountAlias;
-            balances.push(balance)
-            next()
-          })
+          console.log(JSON.stringify(balance))
+          //balance.accountAlias = request.query.accountAlias;
+          balances.push(balance)
+          next()
+        })
           .then(() => {
 
             res.setHeader('Content-Type', 'application/json');
@@ -348,11 +361,11 @@ exports.getBalances = function (args, res, next) {
 
         // Perform the search
         client.balances.queryAll(filter, (balance, next, done) => {
-            console.log(JSON.stringify(balance))
-            //balance.accountAlias = request.query.accountAlias;
-            balances.push(balance)
-            next()
-          })
+          console.log(JSON.stringify(balance))
+          //balance.accountAlias = request.query.accountAlias;
+          balances.push(balance)
+          next()
+        })
           .then(() => {
 
             res.setHeader('Content-Type', 'application/json');
@@ -475,10 +488,10 @@ exports.getKeys = function (args, res, next) {
   // Is this going to be filtered search or not?
   if (request.hsmkey.length == 0) {
     client.mockHsm.keys.queryAll({}, (key, next, done) => {
-        console.log('Key: ' + key.id + ' (' + key.alias + ')')
-        keys.push(key)
-        next()
-      })
+      console.log('Key: ' + key.id + ' (' + key.alias + ')')
+      keys.push(key)
+      next()
+    })
       .then(() => {
         res.setHeader('Content-Type', 'application/json');
         if (keys.length > 0) {
@@ -492,12 +505,12 @@ exports.getKeys = function (args, res, next) {
       keyAliases.push(key.alias);
     }, this);
     client.mockHsm.keys.queryAll({
-        aliases: keyAliases
-      }, (key, next, done) => {
-        console.log('Key: ' + key.id + ' (' + key.alias + ')')
-        keys.push(key)
-        next()
-      })
+      aliases: keyAliases
+    }, (key, next, done) => {
+      console.log('Key: ' + key.id + ' (' + key.alias + ')')
+      keys.push(key)
+      next()
+    })
       .then(() => {
         res.setHeader('Content-Type', 'application/json');
         if (keys.length > 0) {
@@ -562,13 +575,13 @@ exports.getTransactions = function (args, res, next) {
       myFilter = {}
   }
   client.transactions.queryAll({
-      filter: myFilter.filter,
-      filterParams: myFilter.filterParams
-    }, (transaction, next, done) => {
-      console.log('Transaction: ' + transaction.id + ')')
-      transactions.push(transaction)
-      next()
-    })
+    filter: myFilter.filter,
+    filterParams: myFilter.filterParams
+  }, (transaction, next, done) => {
+    console.log('Transaction: ' + transaction.id + ')')
+    transactions.push(transaction)
+    next()
+  })
     .then(() => {
       res.setHeader('Content-Type', 'application/json');
       if (transactions.length > 0) {
@@ -627,13 +640,13 @@ exports.signTransaction = function (args, res, next) {
   //        Add this xpub to the signer
 
   client.accounts.queryAll({
-      filter: 'alias=$1',
-      filterParams: [accountSpender]
-    }, (account, next, done) => {
-      accountSpenderXpub = account.keys[0].rootXpub
-      console.log('Account: ' + account.alias + ' (' + accountSpenderXpub + ')')
-      next()
-    })
+    filter: 'alias=$1',
+    filterParams: [accountSpender]
+  }, (account, next, done) => {
+    accountSpenderXpub = account.keys[0].rootXpub
+    console.log('Account: ' + account.alias + ' (' + accountSpenderXpub + ')')
+    next()
+  })
     .then(() => {
       signer.addKey(accountSpenderXpub, hsmConnection)
       console.log(signer.signers)
@@ -657,29 +670,29 @@ exports.signTransaction = function (args, res, next) {
           amount: amountController
         })
       })
-      .then((transaction) => {
-        if (allowAdditionalActions == 'yes') {
-          transaction.allowAdditionalActions = true;
-        }
-        return signer.sign(transaction)
-      })
-      .then((signed) => {
-        if (allowAdditionalActions == 'no') {
-          return client.transactions.submit(signed)
-        } else {
-          return signed
-        }
-      })
-      .then(result => {
+        .then((transaction) => {
+          if (allowAdditionalActions == 'yes') {
+            transaction.allowAdditionalActions = true;
+          }
+          return signer.sign(transaction)
+        })
+        .then((signed) => {
+          if (allowAdditionalActions == 'no') {
+            return client.transactions.submit(signed)
+          } else {
+            return signed
+          }
+        })
+        .then(result => {
 
-        res.setHeader('Content-Type', 'application/json');
-        if (result != undefined) {
-          console.log(result)
-          res.end(JSON.stringify(result));
-        } else {
-          res.end();
-        }
-      }))
+          res.setHeader('Content-Type', 'application/json');
+          if (result != undefined) {
+            console.log(result)
+            res.end(JSON.stringify(result));
+          } else {
+            res.end();
+          }
+        }))
     .catch(err => process.nextTick(() => {
       throw err
     }))

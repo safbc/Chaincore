@@ -92,16 +92,6 @@ angular.module('app.routes', [])
         }
       })
 
-      // .state('menu.transactionDetail', {
-      //   url: '/txDetail/{tx}',
-      //   views: {
-      //     'side-menu21': {
-      //       templateUrl: 'templates/transactionDetail.html',
-      //       controller: 'transactionDetailCtrl'
-      //     }
-      //   }
-      // })
-
       .state('menu.newTrade', {
         cache: false,
         url: '/tradeNew',
