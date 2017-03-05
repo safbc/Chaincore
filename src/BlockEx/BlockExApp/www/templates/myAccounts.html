@@ -1,6 +1,6 @@
 <ion-view title="My Accounts">
   <ion-nav-buttons side="right" class="has-header">
-    <button class="button icon ion-android-add" ui-sref="menu.newAccount"></button>
+    <button class="button icon ion-android-add" ui-sref="menu.newAccount" ng-show="needAccount"></button>
   </ion-nav-buttons>
   <ion-content padding="true" class="has-header" style="background: #0F0E0E">
     <div class="list card" ng-repeat="row in accountsList">

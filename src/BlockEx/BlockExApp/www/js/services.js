@@ -8,14 +8,25 @@ angular.module('app.services', ['ngResource'])
   .factory('svcTrades', ['$resource', '$timeout', 'svcURI', function ($resource, $timeout, svcURI) {
 
     var restURI = svcURI.BaseURL + svcURI.restAppTrades;
-    return $resource(restURI);
+    return $resource(restURI, {}, {
+      'save': {
+        method: 'POST',
+        isArray: true
+      },
+      'update': {
+        method: 'PUT',
+        isArray: true
+      },
+    });
 
   }])
 
   .factory('svcUsers', ['$resource', '$timeout', 'svcURI', function ($resource, $timeout, svcURI) {
 
     var restURI = svcURI.BaseURL + svcURI.restAppUsers + ":username";
-    return $resource(restURI, { username: '@username' }, {});
+    return $resource(restURI, {
+      username: '@username'
+    }, {});
 
   }])
 
@@ -27,7 +38,10 @@ angular.module('app.services', ['ngResource'])
 
     var restURI = svcURI.BaseURL + svcURI.restChainAccounts;
     return $resource(restURI, {}, {
-      'query': { method: 'POST', isArray: true }
+      'query': {
+        method: 'POST',
+        isArray: true
+      }
     });
     // return $resource(restURI);
 
@@ -37,7 +51,10 @@ angular.module('app.services', ['ngResource'])
 
     var restURI = svcURI.BaseURL + svcURI.restChainAccounts;
     return $resource(restURI, {}, {
-      'save': { method: 'PUT', isArray: false }
+      'save': {
+        method: 'PUT',
+        isArray: false
+      }
     });
 
   }])
@@ -46,7 +63,10 @@ angular.module('app.services', ['ngResource'])
 
     var restURI = svcURI.BaseURL + svcURI.restChainAssets;
     return $resource(restURI, {}, {
-      'query': { method: 'POST', isArray: true }
+      'query': {
+        method: 'POST',
+        isArray: true
+      }
     });
   }])
 
@@ -54,7 +74,10 @@ angular.module('app.services', ['ngResource'])
 
     var restURI = svcURI.BaseURL + svcURI.restChainKeys;
     return $resource(restURI, {}, {
-      'query': { method: 'POST', isArray: true }
+      'query': {
+        method: 'POST',
+        isArray: true
+      }
     });
 
   }])
@@ -64,7 +87,10 @@ angular.module('app.services', ['ngResource'])
 
     var restURI = svcURI.BaseURL + svcURI.restChainBalances;
     return $resource(restURI, {}, {
-      'query': { method: 'POST', isArray: true }
+      'query': {
+        method: 'POST',
+        isArray: true
+      }
     });
 
   }])
@@ -73,7 +99,10 @@ angular.module('app.services', ['ngResource'])
 
     var restURI = svcURI.BaseURL + svcURI.restChainTransactions;
     return $resource(restURI, {}, {
-      'query': { method: 'POST', isArray: true }
+      'query': {
+        method: 'POST',
+        isArray: true
+      }
     });
 
   }])
@@ -82,7 +111,10 @@ angular.module('app.services', ['ngResource'])
 
     var restURI = svcURI.BaseURL + svcURI.restChainSign;
     return $resource(restURI, {}, {
-      'query': { method: 'POST', isArray: true }
+      'query': {
+        method: 'POST',
+        isArray: true
+      }
     });
 
   }])

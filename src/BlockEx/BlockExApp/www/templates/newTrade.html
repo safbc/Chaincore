@@ -3,6 +3,13 @@
     <div class="list card">
       <div class="list">
         <ion-item class="item-divider">Buy or Sell?</ion-item>
+        <ion-item class="item-divider">{{form.tradeAction}}er Details</ion-item>
+        <label class="item item-input">
+          <span class="input-label">Account</span>
+          <input type="hidden" ng-repeat="account in accountsList" 
+          readonly ng-model="form.account" ng-init="form.account = account | json" >
+          <input type="text" readonly ng-model="form.username">
+        </label>
         <li class="item item-toggle">
           {{form.tradeAction}}
           <label class="toggle toggle-assertive">
@@ -13,19 +20,21 @@
           </label>
         </li>
         <ion-item class="item-divider">{{form.tradeAction}} which asset?</ion-item>
-        <label class="item item-select item-avatar">          
-          <img ng-src="{{icon.img}}" ng-repeat="icon in icons | filter: form.asset">
-          <select ng-model="form.asset" ng-init="form.asset = 'Quark'" >
-            <option selected></option>
-            <option ng-repeat="asset in assetList" ng-value="asset.alias" >{{asset.alias}}</option>
+        <label class="item item-select">          
+          <!--<img ng-src="{{icon.img}}" ng-repeat="icon in icons | filter: form.asset.alias">-->
+          <select ng-model="form.asset" >
+          <!--<select ng-model="form.asset" ng-init="form.asset.alias = 'external'" >-->
+            <!--<option selected></option>-->
+            <option ng-repeat="asset in assetList" ng-value="asset | json" >{{asset.alias}}</option>
           </select>
         </label>
         <ion-item class="item-divider">How much?</ion-item>
         <label class="item item-input">
           <span class="input-label">Amount</span>
-          <input type="number" placeholder="100" ng-model="form.amount">
+          <input type="number" ng-model="form.amount">
         </label>
-        <ion-item class="item-divider"> Offer valid for? ({{request.expiryTimestamp | date}})</ion-item>
+        <ion-item class="item-divider"> Offer valid for? ({{form.expiryTimestamp}})</ion-item>
+        <input type="hidden" readonly ng-model="form.expiryTimestamp">
         <ion-item class="range range-royal"><span class="input-label">{{form.validDays}} Days</span> 1
           <input type="range" min="1" max="4" step="1" ng-model="form.validDays" ng-change="calcExpirydate(form.validDays)">4
         </ion-item>
