@@ -3,22 +3,21 @@
     <button class="button icon ion-android-add" ui-sref="menu.newTrade"></button>
   </ion-nav-buttons>
   <ion-content padding="true" class="has-header" style="background: #0F0E0E">
-    <ion-refresher
-      pulling-text="Pull to refresh..."
-      on-refresh="doRefresh()">
+    <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()">
     </ion-refresher>
     <div class="list card" ng-repeat="row in Offers.trades">
+      <div class="item item-divider">Offer Id: {{row.tradeId}}</div>
       <ion-item class="item-avatar" ui-sref="menu.transactions">
-        <img ng-repeat="user in userProfiles | filter:row.postedBy" ng-src="{{user.avatar}}" />
-        <h2>{{row.postedBy}}</h2>
-        <p>{{row.expiryTimestamp}}</p>
+        <img ng-src="{{userInfo.image}}" />
+        <h2>{{row.postedBy}} wants to {{row.tradeAction}}</h2>
+        <p>Posted on: {{row.createdAt}}</p>
       </ion-item>
-      <ion-item class="item-icon-right" ui-sref="menu.bidOnTradeID">{{row.saleData.asset.alias}}
-        <span class="item-note">{{row.saleData.amount}}</span>
+      <ion-item class="item-icon-right" ui-sref="menu.bidOnTradeID({tradeId: row.tradeId})">{{row.offerData.asset.alias}}
+        <span class="item-note"><h2>{{row.offerData.amount}}</h2></span>
         <i class="icon ion-ios-cart-outline"></i>
       </ion-item>
-      <ion-item id="availableTradeOffers-list-item80" ui-sref="menu.bidsMadeForOfferId">Bids on this offer
-        <span class="item-note">1</span>
+      <ion-item ui-sref="menu.bidsMadeForOfferId">Bids on this offer
+        <span class="badge badge-assertive">{{row.bidCount}}</span>
       </ion-item>
     </div>
     <div class="list card" ng-show="noData">

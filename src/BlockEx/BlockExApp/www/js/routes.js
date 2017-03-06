@@ -105,7 +105,7 @@ angular.module('app.routes', [])
 
       .state('menu.bidOnTradeID', {
         cache: false,
-        url: '/tradeBid',
+        url: '/tradeBid{tradeId}',
         views: {
           'side-menu21': {
             templateUrl: 'templates/bidOnTradeID.html',

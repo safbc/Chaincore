@@ -1,5 +1,8 @@
 angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
+  /**
+   * menuCtrl ------------------------------------------------------------------------------------------------
+   */
   .controller('menuCtrl',
     function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory,
       svcNodeSettings) {
@@ -31,6 +34,10 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
     })
 
 
+
+  /**
+   * myProfileCtrl ------------------------------------------------------------------------------------------------
+   */
   .controller('myProfileCtrl',
     function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $timeout, $ionicHistory,
       svcNodeSettings) {
@@ -77,7 +84,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
     })
 
-
+  /**
+   * myAccountsCtrl ------------------------------------------------------------------------------------------------
+   */
   .controller('myAccountsCtrl',
     function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $timeout, $ionicLoading, $ionicModal,
       svcAccounts, svcAssets, svcBalances, svcNodeSettings, accAliasFilter, assetIcons) {
@@ -265,6 +274,10 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
     })
 
+
+  /**
+   * newAccountCtrl ------------------------------------------------------------------------------------------------
+   */
   .controller('newAccountCtrl',
     function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory,
       svcNodeSettings, svcAccount) {
@@ -359,7 +372,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.start();
     })
 
-
+  /**
+   * assetInfoCtrl ------------------------------------------------------------------------------------------------
+   */
   .controller('assetInfoCtrl',
     function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading,
       svcNodeSettings, svcAssets, svcBalances, accAliasFilter) {
@@ -488,7 +503,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
     })
 
-
+  /**
+   * availableTradeOffersCtrl ------------------------------------------------------------------------------------------------
+   */
   .controller('availableTradeOffersCtrl',
     function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory,
       svcTrades, svcUsers, svcNodeSettings) {
@@ -500,6 +517,7 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
         $state.go('menu.login');
       }
 
+      $scope.userInfo = $ionicUser.details;
       $scope.start = function () {
         $ionicLoading.show({
           template: 'Retreiving offers ...'
@@ -512,19 +530,28 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
           trades: []
         };
         // Set up the API services
-        $scope.SVCappTrades = svcTrades;
+        $scope.svcTrades = svcTrades;
 
-        $scope.SVCappTrades.query().$promise
+        $scope.svcTrades.query().$promise
           .then(function (data) {
 
             if (data.length > 0) {
+              data.forEach(function (offer) {
+
+                if (offer.bidData != null) {
+                  offer.bidCount = offer.bidData.length;
+                } else {
+                  offer.bidCount = 0;
+                }
+
+              }, this);
               $scope.Offers.trades = data;
               $scope.noData = false;
               $scope.getUsers();
             } else {
               $scope.noData = true;
             }
-            // $scope.Offers.trades.saleData = JSON.parse(data.saleData);
+
           })
           .finally(function () {
             $ionicLoading.hide({
@@ -557,7 +584,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.start();
     })
 
-
+  /**
+   * bidsMadeForOfferIdCtrl ------------------------------------------------------------------------------------------------
+   */
   .controller('bidsMadeForOfferIdCtrl',
     function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading,
       svcNodeSettings) {
@@ -577,7 +606,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
     })
 
-
+  /**
+   * newTradeCtrl ------------------------------------------------------------------------------------------------
+   */
   .controller('newTradeCtrl',
     function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory,
       svcNodeSettings, assetIcons, svcTrades, svcAssets, svcAccounts, svcBalances) {
@@ -858,12 +889,16 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.start();
     })
 
-
+  /**
+   * bidOnTradeIDCtrl ------------------------------------------------------------------------------------------------
+   */
   .controller('bidOnTradeIDCtrl',
     function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, svcNodeSettings) {
       if (!$ionicAuth.isAuthenticated()) {
         $state.go('menu.login');
       }
+
+      $scope.tradeId = $stateParams.tradeId;
 
       // Set up the API services
       $scope.svcNodeSettings = svcNodeSettings;
@@ -876,7 +911,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.start();
     })
 
-
+  /**
+   * confirmTradeCtrl ------------------------------------------------------------------------------------------------
+   */
   .controller('confirmTradeCtrl',
     function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, svcNodeSettings) {
       if (!$ionicAuth.isAuthenticated()) {
@@ -894,7 +931,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.start();
     })
 
-
+  /**
+   * transactionsCtrl ------------------------------------------------------------------------------------------------
+   */
   .controller('transactionsCtrl',
     function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory, $ionicModal,
       assetIcons, svcNodeSettings, svcTransactions, svcAccounts, svcAssets, svcBalances) {
@@ -1034,7 +1073,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.start();
     })
 
-
+  /**
+   * loginCtrl ------------------------------------------------------------------------------------------------
+   */
   .controller('loginCtrl',
     function ($scope, $rootScope, $state, $stateParams, $ionicPopup, $ionicAuth, $ionicUser, $ionicPush, $ionicLoading, $ionicHistory,
       svcNodeSettings) {
@@ -1129,7 +1170,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
     })
 
-
+  /**
+   * logoutCtrl ------------------------------------------------------------------------------------------------
+   */
   .controller('logoutCtrl',
     function ($scope, $rootScope, $state, $stateParams, $ionicPush, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory) {
 
@@ -1144,7 +1187,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
     })
 
-
+  /**
+   * signupCtrl ------------------------------------------------------------------------------------------------
+   */
   .controller('signupCtrl',
     function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading, $ionicHistory,
       svcNodeSettings) {
@@ -1252,7 +1297,9 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
       $scope.start();
     })
 
-
+  /**
+   * settingsCtrl ------------------------------------------------------------------------------------------------
+   */
   .controller('settingsCtrl',
     function ($scope, $state, $stateParams, $ionicAuth, $ionicUser, $ionicLoading,
       svcNodeSettings) {
@@ -1282,6 +1329,10 @@ angular.module('app.controllers', ['ionic', 'ionic.cloud', 'ngResource'])
 
     })
 
+
+  /**
+   * aboutCtrl ------------------------------------------------------------------------------------------------
+   */
   .controller('aboutCtrl',
     function ($scope, $state, $ionicHistory) {
       $scope.version = '0.0.5';

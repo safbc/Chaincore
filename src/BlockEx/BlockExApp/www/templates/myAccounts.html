@@ -5,8 +5,8 @@
   <ion-content padding="true" class="has-header" style="background: #0F0E0E">
     <div class="list card" ng-repeat="row in accountsList">
 
-      <div class="item item-divider item-icon-right" ng-click="detail(row)">
-        {{row.alias}}
+      <div class="item item-divider item-icon-right">
+        <span ng-click="detail(row)">{{row.alias}}</span>
         <i class="icon ion-ios-paper-outline" ui-sref="menu.transactions({queryType: 'TxAccount', accountId: row.id, assetId: ''})"></i>
       </div>
       <div class="item item-avatar" ui-sref="menu.assetInfo({assetId: asset.sumBy.assetId})" ng-repeat="asset in row.assets ">
