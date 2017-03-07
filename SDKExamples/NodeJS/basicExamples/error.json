@@ -1,0 +1,63 @@
+// contents of signer
+``
+`
+{ "http://41.76.xxx.xxx:1999/mockhsm-AppDev:bd274a89e0d8fbe31d62a04353d83678c4c42acddf9....": 
+   { connection: 
+      Connection {
+        baseUrl: "http://41.76.xxx.xxx:1999/mockhsm",
+        token: "AppDev:bd274a89e0d8fbe31d62a04353d83678c4c42acddf9....." },
+     xpubs: 
+      [ "5c8095a5c3a14ce3fe08e16a86f00751c7e6ef214a54518f37bc9d9b7b23f19e3b8a2d2e1c4d48f92de14670bacd5d19c3992d06a5e1a6087214d4e2bd92223c",
+        "afdd7dc4ea80b83ff4e0330cf90fef40d875b6c32c50ef9fdd65435c79692d4727c53bd7f910c1e4f741f06530921924021f641ee61aa42a453c319d77d8a9cd",
+        "92f76041487c35070ce0e0348e851f89c62c9a46636555fb7773b534b90272a3652cf61f291eeff6f8e93cab0ab79d8e076b5922440b70e6c8a2a56ad04f16e8" ] } }
+
+// contents of signed transaction
+{ local: true,
+  rawTransaction: "07010c83cbe9bbaa2be3f2fbbbaa2b0001012c0008c6ef50093cf4a0d847c28accef60748c7723de4e19b708907329589494b5a91af73cae47f5cad421e80700eb02cc7b9f0ea5ddd9953ae475763ad095f1a5e7b8f8e8815eb0e2c9f720e0e20ea8337b0a202022697373756572223a202242616e6b73657276416672696361222c0a20202274797065223a2022746f6b656e220a7d016d766baa20ecd046d0464ac4bdcb038a130e1389a6f6ec680cde75ebc12e9c906c78595245202f68cc0f9fa3abde11723a629b134d31e386c3e195d45250ecacc5fde076d1ab20f7b04fa9b5683fa3be4b1b128eef5e73798883079ed20994aae45c1095a938e95253ad696c00c0040040db5a1ca102e0fd35bb97b74e8dfc64c51299c74e9c3725e08682a417c4973596fc36edf6d9249a156f6f22670650ff8a28df8743babf9c323bb3f5ea9838200e40db5a1ca102e0fd35bb97b74e8dfc64c51299c74e9c3725e08682a417c4973596fc36edf6d9249a156f6f22670650ff8a28df8743babf9c323bb3f5ea9838200e23204840f20eb23c059472f8a68c8675d8cf1d0141e70cde846f106d796b86a8b55bae870101910147c28accef60748c7723de4e19b708907329589494b5a91af73cae47f5cad421e807016d766baa2048dea8f27629cdd3f275b4102535f499ff2b0b6dfb2b3800e9309f0ff9f7b5fc2048dea8f27629cdd3f275b4102535f499ff2b0b6dfb2b3800e9309f0ff9f7b5fc2048dea8f27629cdd3f275b4102535f499ff2b0b6dfb2b3800e9309f0ff9f7b5fc5253ad696c00c0000000",
+  signingInstructions: 
+   [ { position: 0,
+       amount: 1000,
+       assetId: "47c28accef60748c7723de4e19b708907329589494b5a91af73cae47f5cad421",
+       witnessComponents: [Object] } ],
+  allowAdditionalActions: false }
+
+// contentes of the witnessComponents object above
+{ type: "signature",
+  quorum: 2,
+  keys: 
+   [ { xpub: "afdd7dc4ea80b83ff4e0330cf90fef40d875b6c32c50ef9fdd65435c79692d4727c53bd7f910c1e4f741f06530921924021f641ee61aa42a453c319d77d8a9cd",
+       derivationPath: [Object] },
+     { xpub: "afdd7dc4ea80b83ff4e0330cf90fef40d875b6c32c50ef9fdd65435c79692d4727c53bd7f910c1e4f741f06530921924021f641ee61aa42a453c319d77d8a9cd",
+       derivationPath: [Object] },
+     { xpub: "afdd7dc4ea80b83ff4e0330cf90fef40d875b6c32c50ef9fdd65435c79692d4727c53bd7f910c1e4f741f06530921924021f641ee61aa42a453c319d77d8a9cd",
+       derivationPath: [Object] } ],
+  signatures: 
+   [ "db5a1ca102e0fd35bb97b74e8dfc64c51299c74e9c3725e08682a417c4973596fc36edf6d9249a156f6f22670650ff8a28df8743babf9c323bb3f5ea9838200e",
+     "db5a1ca102e0fd35bb97b74e8dfc64c51299c74e9c3725e08682a417c4973596fc36edf6d9249a156f6f22670650ff8a28df8743babf9c323bb3f5ea9838200e",
+     "db5a1ca102e0fd35bb97b74e8dfc64c51299c74e9c3725e08682a417c4973596fc36edf6d9249a156f6f22670650ff8a28df8743babf9c323bb3f5ea9838200e" ] }
+`
+``
+// Error message I get on running the Issue request
+``
+`
+{ Error: Code: CH735 Message: Transaction rejected Detail: validation failed in script execution, input 0
+    at Object.newBatchError (/Users/GaryD/Code/Chaincore/SDKExamples/NodeJS/basicExamples/node_modules/chain-sdk/dist/errors.js:32:15)
+    at Object.create (/Users/GaryD/Code/Chaincore/SDKExamples/NodeJS/basicExamples/node_modules/chain-sdk/dist/errors.js:9:17)
+    at checkForError (/Users/GaryD/Code/Chaincore/SDKExamples/NodeJS/basicExamples/node_modules/chain-sdk/dist/api/transactions.js:13:18)
+    at /Users/GaryD/Code/Chaincore/SDKExamples/NodeJS/basicExamples/node_modules/chain-sdk/dist/api/transactions.js:452:16
+    at process._tickCallback (internal/process/next_tick.js:103:7)
+  code: "CH735",
+  chainMessage: "Transaction rejected",
+  detail: "validation failed in script execution, input 0",
+  requestId: false,
+  resp: undefined,
+  body: 
+   { code: "CH735",
+     message: "Transaction rejected",
+     detail: "validation failed in script execution, input 0",
+     data: { badtx: [Object] },
+     temporary: false },
+  chainClientError: true,
+  type: "BAD_REQUEST" }
+  `
+``
