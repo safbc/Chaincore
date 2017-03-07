@@ -1,11 +1,14 @@
-/// Title   : assetIssue.js
-/// Purpose : Issue amount of assets and assign them to an account
-/// Author  : Gary de Beer
-/// Creation: 24/01/2017
-/// Updated : 27/01/2017
-/// Usage   : node assetIssue.js assetAlias accountAlias assetAmount
-/// Notes   : The values in the variables below are specific to a private instance of Chain
-///           They need to be replaced if using in another environment.
+/**
+ * Title   : assetIssue.js
+ * Purpose : Issue amount of assets and assign them to an accountAlias
+ * Author  : Gary de Beer
+ * Creation: 24/01/2017
+ * Updated : 27/01/2017
+ * Usage   : node assetIssue.js assetAlias accountAlias assetAmount quorumKeys
+ * Notes   : Insert your node specific connection and token details below.
+ *           This program assumes that multiple keys using the assetAlias as the base where created when the asset was defined.
+ *           eg. assetAlias = "MyAsset" with key(s) [MyAssetKey1, MyAssetKey2, MyAssetKey3 etc.]
+ */
 
 const chain = require('chain-sdk')
 
@@ -28,13 +31,13 @@ var quorumKeys = argv._[3];
 var signKeyAlias = [];
 
 for (var k = 1; k <= quorumKeys; k++) {
-  signKeyAlias.push(assetAlias + k);
+  signKeyAlias.push(assetAlias + 'Key' + k);
   //signKeyAlias.push('BankservCoinKey');
 }
 
-console.log('client is', client)
+//console.log('client is', client)
 console.log('Intention: Issue ' + assetAmount + ' ' + assetAlias + ' and give it to ' + accountAlias + ' signing with ' + signKeyAlias.length + ' keys.')
-let signKey
+//let signKey
 
 Promise.all([
     client.mockHsm.keys.queryAll({
@@ -42,6 +45,7 @@ Promise.all([
     }, (key, next, done) => {
       signer.addKey(key.xpub, hsmConnection)
       console.log('key: ' + key.alias + ' : ' + key.xpub)
+      console.log('\nSigner:\n');
       console.log(signer.signers);
       next()
     })
@@ -59,7 +63,9 @@ Promise.all([
       })
     }).then(issuance => signer.sign(issuance))
     .then(function (signed) {
+      console.log('\nSigned output:\n');
       console.log(signed)
+      console.log('\nContents of  \'signed.signingInstructions[0].witnessComponents[0]\'\n');
       console.log(signed.signingInstructions[0].witnessComponents[0])
       client.transactions.submit(signed)
         .then(function (result) {
@@ -67,6 +73,8 @@ Promise.all([
           return result
         })
         .catch(function (err) {
+          console.log('\nError Output:\n');
+
           console.log(err)
           return err
         })
