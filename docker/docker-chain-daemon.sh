@@ -10,7 +10,7 @@ Welcome to
   \___||__|  |__|\_||____||__|__||___,_||_____||_____| \___/ \____||__|\_|
 
 
-The South African Private Blockchain Network
+The South African Financial Blockchain Consortium
 
 
 This script starts a daemon instance of the latest Chain Core Developer Edition node in a Docker vm
