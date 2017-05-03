@@ -53,10 +53,10 @@ CHAINDATA="$WORKDIR/data"
 CHAINLOGS="$WORKDIR/logs"
 
 if [ ! -d "$WORKDIR" ]; then
- mkdir $WORKDIR
+ mkdir -p $WORKDIR
  if [ ! -d "$CHAINDATA" ]; then
-  mkdir $CHAINDATA
-  mkdir $CHAINLOGS
+  mkdir -p $CHAINDATA
+  mkdir -p $CHAINLOGS
  fi
 fi
 
